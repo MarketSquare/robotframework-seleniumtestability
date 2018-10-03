@@ -11,10 +11,10 @@ img {
 }
 
 .crossRotate {
-  -webkit-transition-duration: 10s;
-  -moz-transition-duration: 10s;
-  -o-transition-duration: 10s;
-  transition-duration: 10s;
+  -webkit-transition-duration: 4s;
+  -moz-transition-duration: 4s;
+  -o-transition-duration: 4s;
+  transition-duration: 4s;
   -webkit-transition-property: -webkit-transform;
   -moz-transition-property: -moz-transform;
   -o-transition-property: -o-transform;
@@ -38,7 +38,7 @@ img {
 
 .animationBox.active {
     animation-name: abox;
-    animation-duration: 10s;
+    animation-duration: 4s;
 }
 
 @keyframes abox {
@@ -53,7 +53,7 @@ img {
   <script type="text/javascript" src="bindings.js"></script>
   <script type="text/javascript" src="code.js"></script>
   <body>
-  <button id="shorttimeout-button" type="button" name="short-timeout" onClick="setTimeout(simpleButtonCallback,3000)">Generate Short Timeout</button>
+  <button id="shorttimeout-button" type="button" name="short-timeout" onClick="setTimeout(simpleButtonCallback,4000)">Generate Short Timeout</button>
   <p>
   <button id="fetch-button" type="button" name="fetch" onClick="fetchCallback()">Generate Fetch Request</button>
 

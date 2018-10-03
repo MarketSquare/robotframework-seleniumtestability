@@ -25,7 +25,7 @@ def code():
 
 @app.route("/fetch")
 def fetch():
-    sleep(10)
+    sleep(4)
     return render_template('index.html', api_code=inj_api, bindings_code =
             inj_bindings)
 

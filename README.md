@@ -43,6 +43,14 @@ source venv/bin/activate
 robot tb.robot
 ```
 
-
 Also, you need webdriver and browsers installed .. 
+
+# Browser compatibility
+
+you could pass --variable BROWSER:Firefox or  --BROWSER:Chromne see how things
+work in each browser .. 
+
+Known issue is that atleast chrome, not sure about other webkit based
+browsers, doesnt trigger transition start event.
+
 
