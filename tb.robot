@@ -10,11 +10,20 @@ ${URL}        http://localhost:5000
 ${BROWSER}    Firefox
 ${TIMEOUT}    4.0
 
+${INJECT_FROM_RF}     0
+
 *** Keywords ***
 Setup Browser and Selenium
+  ${URL}=   Set Variable    ${URL}?inject=${INJECT_FROM_RF}
   Set Selenium Timeout        15 seconds
+  Log To Console              About to open ${BROWSER} with url ${URL}
   Open Browser                ${URL}    browser=${BROWSER}
+  Run Keyword If    ${INJECT_FROM_RF}==1   Inject Testability
   Instrument Browser
+
+Inject Testability
+  Execute Javascript          ${EXEC_DIR}/www/api.js
+  Execute Javascript          ${EXEC_DIR}/www/bindings.js
 
 Instrument Browser
   Execute Javascript          instrumentBrowser(window)

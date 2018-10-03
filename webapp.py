@@ -1,9 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from time import sleep
 app = Flask(__name__)
-
-inj_api = None
-inj_bindings  = None
 
 def rf(name):
     content = ""
@@ -26,11 +23,15 @@ def code():
 @app.route("/fetch")
 def fetch():
     sleep(4)
-    return render_template('index.html', api_code=inj_api, bindings_code =
-            inj_bindings)
+    return render_template('fetch.json')
 
 @app.route('/')
 def index():
-    print(inj_api)
-    return render_template('index.html', api_code=inj_api, bindings_code =
+    inj_api = '<script type="text/javascript" src="api.js"></script>'
+    inj_bindings = '<script type="text/javascript" src="bindings.js"></script>'
+    inject = request.args.get('inject', default = 1, type = int) == 1
+    if not inject:
+        inj_api = ''
+        inj_bindings = ''
+    return render_template('index.html', apitag=inj_api, bindingstag=
             inj_bindings)
