@@ -4,7 +4,34 @@
     <title>
       testability test
     </title>
+    <style type="text/css">
+img {
+  display: block;
+  margin: 20px;
+}
+
+.crossRotate {
+  -webkit-transition-duration: 10s;
+  -moz-transition-duration: 10s;
+  -o-transition-duration: 10s;
+  transition-duration: 10s;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  -o-transition-property: -o-transform;
+  transition-property: transform;
+  outline: 0;
+}
+
+.crossRotate.active {
+  -webkit-transform: rotate(1080deg);
+  -moz-transform: rotate(1080deg);
+  -ms-transform: rotate(1080deg);
+  -o-transform: rotate(1080deg);
+  transform: rotate(1080deg);
+}
+    </style>
   </head>
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script type="text/javascript" src="api.js"></script>
   <script type="text/javascript" src="bindings.js"></script>
   <script type="text/javascript" src="code.js"></script>
@@ -15,5 +42,10 @@
 
   <p>
   <button id="xhr-button" type="button" name="xhr" onClick="xhrCallback()">Generate XHR Request</button>
+  <p>
+  <button id="animate-button" type="button" name="animate" onClick="animateCallback()">Generate Animation</button>
+  <img class="crossRotate" src="http://placehold.it/100" alt="Cross Menu button" tabindex="1" />
+  <p>
+
   </body>
 </html>

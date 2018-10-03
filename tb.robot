@@ -9,8 +9,9 @@ Instrument Browser
   Execute Javascript          instrumentBrowser(window)
 
 Wait For Testability Ready
-  Log To Console              Wait For Testability Ready
+  Log To Console              Wait For Testability Ready: Waiting
   Execute Async Javascript    var cb = arguments[arguments.length - 1]; window.testability.when.ready(function() {cb()});
+  Log To Console              Wait For Testability Ready: Done
 
 *** Test Cases ***
 Run Poc
@@ -32,6 +33,10 @@ Run Poc
   Log To Console              Click xhr-button
   Click Element               id:xhr-button
 
+  Wait For Testability Ready
+
+  Log To Console              Click animate-button
+  CLick Element               id:animate-button
   Wait For Testability Ready
 
   Log To Console              All Done

@@ -176,8 +176,10 @@ var instrumentBrowser = function (window) {
     }
 
     //TODO: Find a way to handle transitions as transitionstart is not standard
-    //document.addEventListener(events.transitionstart, startHandler);
-    //document.addEventListener(events.transitionend, endHandler);
+    //XXX: It seems that edge/ie10/firefox will support these but chrome do
+    //not trigger transition start at all, transition end does trigger.
+    document.addEventListener(events.transitionstart, startHandler);
+    document.addEventListener(events.transitionend, endHandler);
 
     document.addEventListener(events.animationstart, startHandler);
     document.addEventListener(events.animationend, endHandler);

@@ -22,3 +22,7 @@ var xhrCallback = function() {
 var testabilityReadyCallback = function () {
   console.log("testabilityReadyCallback: triggered");
 }
+
+var animateCallback = function () {
+  $('.crossRotate').toggleClass('active');
+}
