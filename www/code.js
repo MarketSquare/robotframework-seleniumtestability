@@ -23,6 +23,10 @@ var testabilityReadyCallback = function () {
   console.log("testabilityReadyCallback: triggered");
 }
 
-var animateCallback = function () {
+var transitionCallback = function () {
   $('.crossRotate').toggleClass('active');
+}
+
+var animationCallback = function () {
+  $('.animationBox').toggleClass('active');
 }

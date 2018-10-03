@@ -29,6 +29,23 @@ img {
   -o-transform: rotate(1080deg);
   transform: rotate(1080deg);
 }
+
+.animationBox {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+}
+
+.animationBox.active {
+    animation-name: abox;
+    animation-duration: 10s;
+}
+
+@keyframes abox {
+    from {background-color: red;}
+    to {background-color: yellow;}
+}
+
     </style>
   </head>
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -43,9 +60,11 @@ img {
   <p>
   <button id="xhr-button" type="button" name="xhr" onClick="xhrCallback()">Generate XHR Request</button>
   <p>
-  <button id="animate-button" type="button" name="animate" onClick="animateCallback()">Generate Animation</button>
+  <button id="transition-button" type="button" name="transition" onClick="transitionCallback()">Generate Animation</button>
   <img class="crossRotate" src="http://placehold.it/100" alt="Cross Menu button" tabindex="1" />
   <p>
+  <button id="animate-button" type="button" name="animate" onClick="animationCallback()">Generate Animation</button>
+  <div id="animationBox" class="animationBox"></div>
 
   </body>
 </html>

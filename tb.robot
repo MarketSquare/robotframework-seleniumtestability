@@ -35,6 +35,10 @@ Run Poc
 
   Wait For Testability Ready
 
+  Log To Console              Click transition-button
+  CLick Element               id:transition-button
+  Wait For Testability Ready
+
   Log To Console              Click animate-button
   CLick Element               id:animate-button
   Wait For Testability Ready
