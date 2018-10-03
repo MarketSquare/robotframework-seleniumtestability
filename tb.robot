@@ -59,3 +59,17 @@ Test transition
 
 Test Animation
   Click and Verify            animate-button        ${TIMEOUT}
+
+Test Everything
+  Log To Console              Click Everything
+  ${start}=   Get Time        epoch
+  Click Element               id:fetch-button
+  Click Element               id:shorttimeout-button
+  Click Element               id:xhr-button
+  Click Element               id:transition-button
+  Click Element               id:animate-button
+  Wait For Testability Ready
+  ${end}=   Get Time        epoch
+  ${diff}=  Subtract Date From Date   ${end}  ${start}
+  Should Be True              ${diff} >= 4.0
+  
