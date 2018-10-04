@@ -27,10 +27,10 @@ def fetch():
 
 @app.route('/')
 def index():
-    inj_api = '<script type="text/javascript" src="api.js"></script>'
     inj_bindings = '<script type="text/javascript" src="bindings.js"></script>'
+    inj_api = '<script type="text/javascript" src="api.js"></script>'
     inject = request.args.get('inject', default = 1, type = int) == 1
-    if not inject:
+    if inject:
         inj_api = ''
         inj_bindings = ''
     return render_template('index.html', apitag=inj_api, bindingstag=
