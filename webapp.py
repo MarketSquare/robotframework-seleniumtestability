@@ -6,7 +6,15 @@ def rf(name):
     content = ""
     with open(name,'r') as buf:
         content = buf.read()
-    return content 
+    return content
+
+@app.after_request
+def add_header(r):
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
 
 @app.route("/api.js")
 def api():
