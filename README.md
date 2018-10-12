@@ -14,16 +14,18 @@ anything is running in the background..
 # What needs to be done
 
 * Find a way to hook the implementation of "Wait For Testability Ready"
-  functionality into selenium library
+  functionality into selenium library (DONE)
 * Find and document strategies to inject testability code into sut. Currently
   im just injecting them with script tags. Key thing here is that the js part
   should be injected into SUT as early as possible but with my limited
   experience with selenium/robot & seleniumlibrary, i dunno how  .. 
   but other strategies could be:
   * mitm proxy that modifies the html before its received by selenium/browser
-  * provide keywords to inject the code into running sut
+  * provide keywords to inject the code into running sut (DONE)
   * something  else ? 
-  Key issue 
+* Provide bindings for wrapping Promise
+* Make a proper reusable library out of the poc.
+
 
 # Running
 
@@ -40,7 +42,7 @@ flask run
 
 ```
 source venv/bin/activate
-robot tb.robot
+robot --include manual tb.robot
 ```
 
 Also, you need webdriver and browsers installed .. 
