@@ -46,21 +46,27 @@ Click And Verify
 
 *** Test Cases ***
 Test Fetch
+  [Tags]    manual
   Click And Verify            fetch-button          ${TIMEOUT}
 
 Test Timeout
+  [Tags]    manual
   Click And Verify            shorttimeout-button   ${TIMEOUT}
 
 Test XHR
+  [Tags]    manual
   Click and Verify            xhr-button            ${TIMEOUT}
 
 Test transition
+  [Tags]    manual
   Click and Verify            transition-button     ${TIMEOUT}
 
 Test Animation
+  [Tags]    manual
   Click and Verify            animate-button        ${TIMEOUT}
 
 Test Everything
+  [Tags]    auto
   Log To Console              Click Everything
   ${start}=   Get Time        epoch
   Click Element               id:fetch-button
