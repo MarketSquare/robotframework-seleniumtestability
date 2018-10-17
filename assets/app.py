@@ -18,15 +18,15 @@ def add_header(r):
 
 @app.route("/api.js")
 def api():
-    return  rf('www/api.js')
+    return  rf('../src/SeleniumTestability/testability/api.js')
 
 @app.route("/bindings.js")
 def bindings():
-    return  rf('www/bindings.js')
+    return  rf('../src/SeleniumTestability/testability/bindings.js')
 
 @app.route("/code.js")
 def code():
-    return  rf('www/code.js')
+    return  render_template('code.js')
 
 @app.route("/fetch")
 def fetch():

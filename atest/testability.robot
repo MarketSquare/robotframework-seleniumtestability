@@ -1,8 +1,9 @@
 *** Settings ***
-Library         TestabilityLibrary.py
+Library         SeleniumTestability
 Library         DateTime
-Test Setup      Setup Browser and Selenium
-Test Teardown   Close Browser
+Library         Process
+Test Setup      Setup Test Environment
+Test Teardown   Teardown Test Environment
 
 
 *** Variables ***
@@ -12,14 +13,27 @@ ${TIMEOUT}    4.0
 
 ${INJECT_FROM_RF}     0
 
+${FLASK_HANDLE}   None
+
 *** Keywords ***
-Setup Browser and Selenium
+Start Flask App
+  ${FLASK_HANDLE}=            Start Process   flask   run   shell=True    cwd=${EXEC_DIR}/assets
+
+Stop Flask App
+  Terminate Process           ${FLASK_HANDLE}   kill=True
+
+Setup Test Environment
+  Start Flask App
   ${URL}=   Set Variable    ${URL}?inject=${INJECT_FROM_RF}
   Set Selenium Timeout        120 seconds
   Log To Console              About to open ${BROWSER} with url ${URL}
   Open Browser                ${URL}    browser=${BROWSER}
   Run Keyword If    ${INJECT_FROM_RF}==1   Inject Testability
   Instrument Browser
+
+Teardown Test Environment
+  Stop Flask App
+  Close Browser
 
 #Inject Testability
 #  Execute Javascript          ${EXEC_DIR}/www/api.js
