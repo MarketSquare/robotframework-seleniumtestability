@@ -1,5 +1,5 @@
 *** Settings ***
-Library         SeleniumTestability
+Library         SeleniumTestability     wait_on_run_keyword=False
 Library         DateTime
 Library         Process
 Test Setup      Setup Test Environment
@@ -29,9 +29,11 @@ Setup Test Environment
   Log To Console              About to open ${BROWSER} with url ${URL}
   Open Browser                ${URL}    browser=${BROWSER}
   Run Keyword If    ${INJECT_FROM_RF}==1   Inject Testability
+  Patch Run Keyword
   Instrument Browser
 
 Teardown Test Environment
+  Restore Run Keyword
   Stop Flask App
   Close Browser
 
