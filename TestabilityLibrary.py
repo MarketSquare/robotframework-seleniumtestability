@@ -13,14 +13,6 @@ class TestabilityLibrary(SeleniumLibrary):
             self.wait_for_testability_ready()
         SeleniumLibrary.run_keyword(self, name, args, kwargs)
 
-    def find_elements(self, locator, parent=None):
-        logger.warn("find_elements: {}".format(locator))
-        SeleniumLibrary.find_elements(self, locator, parent)
-
-    def find_element(self, locator, parent=None):
-        logger.warn("find_element: {}".format(locator))
-        SeleniumLibrary.find_element(self, locator, parent)
-
     @keyword
     def inject_testability(self):
         js = JavaScriptKeywords(self)
