@@ -30,9 +30,6 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Framework :: Robot Framework',
-        'Framework :: Robot Framework :: Library'
-        'Intended Audience :: Developers',
-        'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Testing',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent'
