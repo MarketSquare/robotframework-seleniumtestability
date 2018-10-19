@@ -67,7 +67,7 @@ class SeleniumTestability(SeleniumLibrary):
         # TODO:  Not a good way to go but lets start with this
         self.safe_keywords = ['add_cookie', 'add_location_strategy', 'close_all_browsers', 'close_browser', 'close_window', 'create_webdriver', 'get_selenium_implicit_wait', 'get_selenium_speed', 'get_selenium_timeout', 'get_session_id', 'get_source', 'get_window_handles', 'get_window_identifiers', 'get_window_names', 'get_window_position', 'get_window_size', 'get_window_titles', 'list_windows', 'log_location', 'log_source', 'log_title', 'maximize_browser_window', 'open_browser', 'patch_run_keyword', 'remove_location_strategy', 'restore_run_keyword', 'select_window', 'set_browser_implicit_wait', 'set_screenshot_directory', 'set_selenium_implicit_wait', 'set_selenium_speed', 'set_selenium_timeout', 'set_window_position', 'set_window_size', 'switch_browser', 'wait_for_testability_ready']
 
-    def force_reload(self):
+    def _force_reload(self):
         BuiltIn().reload_library("SeleniumTestability")
 
     @keyword
@@ -75,14 +75,14 @@ class SeleniumTestability(SeleniumLibrary):
         if self.old_run_keyword:
             self.run_keyword = self.old_run_keyword
             self.old_run_keyword = None
-            self.force_reload()
+            self._force_reload()
 
     @keyword
     def patch_run_keyword(self):
         if not self.old_run_keyword:
             self.old_run_keyword = self.run_keyword
             self.run_keyword = self.testability_run_keyword
-            self.force_reload()
+            self._force_reload()
 
 
     def testability_run_keyword(self, name, args, kwargs):
