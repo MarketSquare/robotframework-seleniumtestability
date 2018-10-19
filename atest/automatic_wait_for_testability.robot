@@ -10,8 +10,11 @@ ${INJECT_FROM_RF}       0
 ${FLASK_HANDLE}         None
 
 *** Test Cases ***
-Patched Run Keywords    Firefox   20.0   30.0   True
-Unpatched Run Keywords  Firefox   4.0    5.0    False
+Patched Run Keywords In Firefox    Firefox   20.0   30.0   True
+Unpatched Run Keywords In Firefox  Firefox   4.0    5.0    False
+
+Patched Run Keywords In Chrome    Firefox   20.0   30.0   True
+Unpatched Run Keywords In Chrome  Chrome    4.0    9.0    False
 
 
 *** Keywords ***
@@ -25,11 +28,17 @@ Automatically Call Testability Ready
 Click All And Verify
   [Arguments]   ${HIGHER_THAN}  ${LOWER_THAN}
   ${start}=   Get Time        epoch
+  Log To Console              click!
   Click Element               id:fetch-button
+  Log To Console              click!
   Click Element               id:shorttimeout-button
+  Log To Console              click!
   Click Element               id:xhr-button
+  Log To Console              click!
   Click Element               id:transition-button
+  Log To Console              click!
   Click Element               id:animate-button
+  Log To Console              Wait
   Wait For Testability Ready
   ${end}=   Get Time        epoch
   ${diff}=  Subtract Date From Date   ${end}  ${start}

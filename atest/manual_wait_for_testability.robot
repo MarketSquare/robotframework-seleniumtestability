@@ -10,11 +10,18 @@ ${INJECT_FROM_RF}       0
 ${FLASK_HANDLE}         None
 
 *** Test Cases ***
-Verify Fetch            Firefox   4.0   fetch-button
-Verify Timeout          Firefox   4.0   shorttimeout-button
-Verify XHR              Firefox   4.0   xhr-button
-Verify CSS Transition   Firefox   4.0   transition-button
-Verify CSS Animation    Firefox   4.0   animate-button
+Verify Fetch In Firefox             Firefox   4.0   fetch-button
+Verify Timeout In Firefox           Firefox   4.0   shorttimeout-button
+Verify XHR In Firefox               Firefox   4.0   xhr-button
+Verify CSS Transition In Firefox    Firefox   4.0   transition-button
+Verify CSS Animation In Firefox     Firefox   4.0   animate-button
+
+Verify Fetch In Chrome              Chrome    4.0   fetch-button
+Verify Timeout In Chrome            Chrome    4.0   shorttimeout-button
+Verify XHR In Chrome                Chrome    4.0   xhr-button
+Verify CSS Transition In Chrome     Chrome    4.0   transition-button
+Verify CSS Animation In Chrome      Chrome    4.0   animate-button
+
 
 *** Keywords ***
 Manual Wait For Testability Ready
