@@ -1,3 +1,4 @@
 Flask==1.0.2
 twine
 m2r
+python-language-server[all]

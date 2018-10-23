@@ -1,5 +1,5 @@
 *** Settings ***
-Library         SeleniumTestability
+Library         SeleniumTestability       5.0   0.0   Capture Page Screenshot    None  True
 Library         DateTime
 Library         Process
 Test Template   Automatically Call Testability Ready
@@ -7,7 +7,6 @@ Test Template   Automatically Call Testability Ready
 *** Variables ***
 ${URL}                  http://localhost:5000
 ${INJECT_FROM_RF}       0
-${FLASK_HANDLE}         None
 
 *** Test Cases ***
 Patched Run Keywords In Firefox    Firefox   20.0   30.0   True
@@ -48,9 +47,10 @@ Click All And Verify
 
 Start Flask App
   ${FLASK_HANDLE}=            Start Process   flask   run   shell=True    cwd=${EXEC_DIR}/assets
+  Set Suite Variable        ${FH}   ${FLASK_HANDLE}
 
 Stop Flask App
-  Terminate Process           ${FLASK_HANDLE}   kill=True
+  Terminate Process           ${FH}   kill=True
 
 Setup Test Environment
   [Arguments]   ${BROWSER}    ${PATCH}

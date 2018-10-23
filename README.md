@@ -40,10 +40,10 @@ waiting in the begining for a good state when your testing script can start.
 ## Initialize library
 
 ```
-Library         SeleniumTestability     implicit_testability_wait=False
+Library         SeleniumTestability     wait_testability=False
 ```
 
-If `implicit_testability_wait`is set to true, just before a selenium library keyword is
+If `wait_testability`is set to true, just before a selenium library keyword is
 executed, SeleniumTestability library will wait until testability.js api call
 returns. If the value is set to false, user needs to call `Wait For
 Testability Ready` keyword.

@@ -1,5 +1,5 @@
 *** Settings ***
-Library         SeleniumTestability     wait_on_run_keyword=False
+Library         SeleniumTestability       5.0   0.0   Capture Page Screenshot    None  False
 Library         DateTime
 Library         Process
 Test Template   Manual Wait For Testability Ready
@@ -7,7 +7,6 @@ Test Template   Manual Wait For Testability Ready
 *** Variables ***
 ${URL}                  http://localhost:5000
 ${INJECT_FROM_RF}       0
-${FLASK_HANDLE}         None
 
 *** Test Cases ***
 Verify Fetch In Firefox             Firefox   4.0   fetch-button
@@ -34,9 +33,10 @@ Manual Wait For Testability Ready
 
 Start Flask App
   ${FLASK_HANDLE}=            Start Process   flask   run   shell=True    cwd=${EXEC_DIR}/assets
+  Set Suite Variable        ${FH}   ${FLASK_HANDLE}
 
 Stop Flask App
-  Terminate Process           ${FLASK_HANDLE}   kill=True
+  Terminate Process           ${FH}   kill=True
 
 Setup Test Environment
   [Arguments]   ${BROWSER}
