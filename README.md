@@ -69,4 +69,5 @@ Do note that CSS animations and transitions do not work properly in Chrome.
 * Addon possibility to for bindings. For example, one might want to extend the
   functionality to support asyncronous actions of any web framework (like
   Angular, React and what not)
-
+* Figure out how to pass *only* named parameters to SeleniumTestability -
+  currently one has to pass everything..
