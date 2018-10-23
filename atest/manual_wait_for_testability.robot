@@ -1,5 +1,5 @@
 *** Settings ***
-Library         SeleniumTestability       5.0   0.0   Capture Page Screenshot    None  False
+Library         ${CURDIR}/../src/SeleniumTestability       5.0   0.0   Capture Page Screenshot    None  False
 Library         DateTime
 Library         Process
 Test Template   Manual Wait For Testability Ready
