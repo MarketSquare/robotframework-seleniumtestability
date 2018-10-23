@@ -53,7 +53,7 @@ class SeleniumTestability(SeleniumLibrary):
 
     def __init__(self, timeout=5.0, implicit_wait=0.0,
                  run_on_failure='Capture Page Screenshot',
-                 screenshot_root_directory=None, wait_on_run_keyword=False):
+                 screenshot_root_directory=None, implicit_testability_wait=False):
         SeleniumLibrary.__init__(self, timeout=timeout, implicit_wait=implicit_wait,
                                  run_on_failure=run_on_failure,
                                  screenshot_root_directory=screenshot_root_directory)
@@ -61,7 +61,7 @@ class SeleniumTestability(SeleniumLibrary):
                       InstrumentationKeywords(self)]
         self.add_library_components(components)
         self.old_run_keyword = None
-        if wait_on_run_keyword:
+        if implicit_testability_wait:
             self.patch_run_keyword()
         methods = []
         # TODO:  Not a good way to go but lets start with this
