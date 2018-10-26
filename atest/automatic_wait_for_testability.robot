@@ -1,5 +1,5 @@
 *** Settings ***
-Library         ${CURDIR}/../src/SeleniumTestability       5.0   0.0   Capture Page Screenshot    None  True
+Library         ${CURDIR}/../src/SeleniumTestability     wait_testability=True
 Library         DateTime
 Library         Process
 Test Template   Automatically Call Testability Ready
