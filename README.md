@@ -51,6 +51,39 @@ Testability Ready` keyword.
 You can pass any parameters that SeleniumLibrary accepts also to
 SeleniumTestability.
 
+## Instrumenting the browser.
+
+In "How things work ?"_ section, we are describing ways how the SUT should be
+instrumented. Scenarios 1 & 2 are not covered by this documentation. Scenario
+3 goes as follows:
+
+```
+  Inject Testability
+  Instrument Browser
+```
+
+## Waiting
+
+If SeleniumTestability library was initialized with wait_testability set to
+False, user / testscripts will need to explicitly call `Wait For Testability
+Ready` keyword. Example:
+
+```
+  Click Element   id:button_that_triggers_ajax_request
+  Wait For Testability Ready
+  Click Element   id:some_other_element
+```
+
+In this case, Wait For Testability Ready will wait until the ajax request has
+finished its operation and only then it will pass the execution to the next
+keyword.
+
+However, if SeleniumTestability was initialized with wait_testability set to
+True, Wait For Testability Ready keyword can be omitted. Do note: waiting
+happens only for keywords that directly try to access the browser in ways that
+a asyncronous action within the SUT could affect the result of the keyword.
+
+
 # Current Features
 
 * Can detect setTimeout & setImmediate calls and wait for them.
@@ -69,5 +102,3 @@ Do note that CSS animations and transitions do not work properly in Chrome.
 * Addon possibility to for bindings. For example, one might want to extend the
   functionality to support asyncronous actions of any web framework (like
   Angular, React and what not)
-* Figure out how to pass *only* named parameters to SeleniumTestability -
-  currently one has to pass everything..
