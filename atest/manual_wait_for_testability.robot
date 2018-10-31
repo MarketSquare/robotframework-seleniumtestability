@@ -46,6 +46,7 @@ Setup Test Environment
   Open Browser                ${URL}    browser=${BROWSER}
   Run Keyword If    ${INJECT_FROM_RF}==1   Inject Testability
   Instrument Browser
+  Wait For Document Ready
 
 Teardown Test Environment
   Restore Run Keyword

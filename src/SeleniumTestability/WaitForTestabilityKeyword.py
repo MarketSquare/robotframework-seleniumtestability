@@ -19,3 +19,7 @@ class WaitForTestabilityKeyword(LibraryComponent):
     @keyword
     def wait_for_testability_ready(self):
         self.js_keywords.execute_async_javascript("var readyCallback = arguments[arguments.length - 1]; window.testability.when.ready(function() {readyCallback()});")
+
+    @keyword
+    def wait_for_document_ready(self):
+        self.js_keywords.execute_async_javascript("var readyCallback = arguments[arguments.length - 1]; var checkReadyState=function() { document.readyState !== 'complete' ?  setTimeout(checkReadyState, 11) : readyCallback();}; checkReadyState()")

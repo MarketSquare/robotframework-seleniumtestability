@@ -60,6 +60,7 @@ Setup Test Environment
   Open Browser                ${URL}    browser=${BROWSER}
   Instrument Browser
   Run Keyword If    ${PATCH}==True   Patch Run Keyword
+  Wait For Document Ready
 
 Teardown Test Environment
   Restore Run Keyword
