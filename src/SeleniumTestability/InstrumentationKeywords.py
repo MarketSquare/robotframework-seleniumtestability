@@ -17,6 +17,9 @@ class InstrumentationKeywords(LibraryComponent):
 
     @keyword
     def inject_testability(self):
+        """
+        TODO: Inject Testability docs
+        """
         with open("{}/testability/api_inject.js".format(self.base_path), 'r') as f:
             buf = f.read()
             self.js_keywords.execute_javascript("{}; window.testability = testability;".format(buf))
@@ -27,5 +30,8 @@ class InstrumentationKeywords(LibraryComponent):
 
     @keyword
     def instrument_browser(self):
+        """
+        TODO: Instrument Browser docs
+        """
         js = JavaScriptKeywords(self)
         js.execute_javascript("window.instrumentBrowser(window)")

@@ -9,6 +9,9 @@ from .InstrumentationKeywords import InstrumentationKeywords
 
 
 class SeleniumTestability(SeleniumLibrary):
+    """
+    TODO: Add main body of docs herei
+    """
 
     def __init__(self, timeout=5.0, implicit_wait=0.0,
                  run_on_failure='Capture Page Screenshot',
@@ -33,6 +36,9 @@ class SeleniumTestability(SeleniumLibrary):
 
     @keyword
     def restore_run_keyword(self):
+        """
+        TODO: Restore Run Keywords docs
+        """
         if self.old_run_keyword:
             self.run_keyword = self.old_run_keyword
             self.old_run_keyword = None
@@ -40,6 +46,9 @@ class SeleniumTestability(SeleniumLibrary):
 
     @keyword
     def patch_run_keyword(self, wait_testability=False):
+        """
+        TODO: Patch Run Keywords docs
+        """
         if not self.old_run_keyword:
             self.old_run_keyword = self.run_keyword
             self.run_keyword = self.testability_run_keyword
