@@ -10,7 +10,33 @@ from .InstrumentationKeywords import InstrumentationKeywords
 
 class SeleniumTestability(SeleniumLibrary):
     """
-    TODO: Add main body of docs herei
+    = SeleniumTestability Library =
+    SeleniumTestability is extension library for SeleniumLibrary that provides
+    either manual or automatic waiting asyncronous events within SUT.
+
+    This is accomplished by utilizing following 2 libraries. First one provides
+    API and second one provides bindings.
+
+    - https://github.com/alfonso-presa/testability.js
+    - https://github.com/alfonso-presa/testability-browser-bindings
+
+    When the SUT has been instrumented for testability, library provides a
+    keyword that user can call in the testcode that prevents execution of
+    seleniun keyword until the state of the SUT allows it. Alternatively,
+    depending on how the the library has initialized, this waiting can happen
+    automatically so that there is no extra code required from test code
+    itself.
+
+    == Usage ==
+
+    == Instrumentation ==
+    TODO
+    ==  Waiting ==
+    === Explicit ===
+    TODO
+    === Implicit Waiting ===
+    TODO
+
     """
 
     def __init__(self, timeout=5.0, implicit_wait=0.0,
