@@ -7,12 +7,19 @@ SeleniumTestability
 import codecs
 from os.path import abspath, dirname, join
 from setuptools import setup, find_packages
+import sys
+
+IS_PYTHON3 = sys.version_info[0] >= 3
 
 def read_file(filename):
     buff = None
-    with open(filename,'r',encoding='utf-8') as f:
+    with open(filename,'r') as f:
         buff = f.read()
-    return buff
+
+    if IS_PYTHON3:
+        return buff.decode('utf-8')
+    else:
+        return buff
 
 LIBRARY_NAME = 'SeleniumTestability'
 CWD = abspath(dirname(__file__))
