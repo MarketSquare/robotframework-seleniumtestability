@@ -17,7 +17,11 @@ def read_file(filename):
         buff = f.read()
 
     if IS_PYTHON3:
-        return buff.decode('utf-8')
+        try:
+            #hack
+            return buff.decode('utf-8')
+        except:
+            return buff
     else:
         return buff
 
