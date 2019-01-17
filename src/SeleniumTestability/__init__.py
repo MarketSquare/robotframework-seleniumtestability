@@ -7,6 +7,7 @@ from SeleniumLibrary.base import keyword
 from .WaitForTestabilityKeyword import WaitForTestabilityKeyword
 from .InstrumentationKeywords import InstrumentationKeywords
 
+from .version import get_version
 
 class SeleniumTestability(SeleniumLibrary):
     """

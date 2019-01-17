@@ -8,7 +8,9 @@ import codecs
 from os.path import abspath, dirname, join
 from setuptools import setup, find_packages
 import sys
+from src.SeleniumTestability import get_version
 
+CWD = abspath(dirname(__file__))
 IS_PYTHON3 = sys.version_info[0] >= 3
 
 def read_file(filename):
@@ -26,10 +28,6 @@ def read_file(filename):
         return buff
 
 LIBRARY_NAME = 'SeleniumTestability'
-CWD = abspath(dirname(__file__))
-VERSION_PATH = join(CWD, 'src', LIBRARY_NAME, 'version.py')
-exec(compile(open(VERSION_PATH).read(), VERSION_PATH, 'exec'))
-
 LONG_DESCRIPTION = read_file(join(CWD,'README.md'))
 REQUIREMENTS = read_file(join(CWD,'requirements.txt'))
 
@@ -47,7 +45,7 @@ Framework :: Robot Framework :: Library
 
 setup(
     name='robotframework-%s' % LIBRARY_NAME.lower(),
-    version=VERSION,
+    version=get_version(),
     description='SeleniunTestability library that helps speed up tests with'
                 'asyncronous evens',
     long_description=LONG_DESCRIPTION,
