@@ -1,5 +1,5 @@
-Robotframework-seleniumtestability
-============================
+robotframework-seleniumtestability
+==================================
 
 Extension library for SeleniumLibrary that provides either manual or automatic
 waiting asyncronous events within SUT.

@@ -8,3 +8,4 @@ selenium-screenshot-*.png
 build/
 dist/
 *.egg-info/
+legacy/

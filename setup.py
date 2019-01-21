@@ -4,7 +4,6 @@
 SeleniumTestability
 """
 
-import codecs
 from os.path import abspath, dirname, join
 from setuptools import setup, find_packages
 import sys
@@ -13,23 +12,24 @@ from src.SeleniumTestability import get_version
 CWD = abspath(dirname(__file__))
 IS_PYTHON3 = sys.version_info[0] >= 3
 
+
 def read_file(filename):
     buff = None
-    with open(filename,'r') as f:
+    with open(filename, 'r') as f:
         buff = f.read()
 
     if IS_PYTHON3:
         try:
-            #hack
             return buff.decode('utf-8')
-        except:
+        except Exception:
             return buff
     else:
         return buff
 
+
 LIBRARY_NAME = 'SeleniumTestability'
-LONG_DESCRIPTION = read_file(join(CWD,'README.md'))
-REQUIREMENTS = read_file(join(CWD,'requirements.txt'))
+LONG_DESCRIPTION = read_file(join(CWD, 'README.md'))
+REQUIREMENTS = read_file(join(CWD, 'requirements.txt'))
 
 CLASSIFIERS = '''
 Development Status :: 3 - Alpha
@@ -55,7 +55,7 @@ setup(
     author_email='jani.mikkonen@siili.com',
     license='Apache License 2.0',
     classifiers=CLASSIFIERS,
-    install_requires = REQUIREMENTS,
+    install_requires=REQUIREMENTS,
     keywords='robot framework testing automation selenium seleniumlibrary'
              'testability async javascript softwaretesting',
     platforms='any',

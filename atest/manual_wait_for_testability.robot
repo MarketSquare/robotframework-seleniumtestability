@@ -1,5 +1,6 @@
 *** Settings ***
-Library         ${CURDIR}/../src/SeleniumTestability       wait_testability=False
+Library         SeleniumLibrary
+Library         ${CURDIR}/../src/SeleniumTestability     enable_implicit_wait=False
 Library         DateTime
 Library         Process
 Test Template   Manual Wait For Testability Ready
@@ -44,14 +45,12 @@ Setup Test Environment
   ${URL}=   Set Variable    ${URL}?inject=${INJECT_FROM_RF}
   Set Selenium Timeout        120 seconds
   Open Browser                ${URL}    browser=${BROWSER}
-  Run Keyword If    ${INJECT_FROM_RF}==1   Inject Testability
   Instrument Browser
   Wait For Document Ready
 
 Teardown Test Environment
-  Restore Run Keyword
-  Stop Flask App
   Close Browser
+  Stop Flask App
 
 Click And Verify
   [Arguments]   ${id}    ${duration}

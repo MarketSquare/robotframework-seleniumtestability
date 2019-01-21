@@ -7,7 +7,7 @@ Test Template   Automatically Call Testability Ready
 
 *** Variables ***
 ${URL}                  http://localhost:5000
-${INJECT_FROM_RF}       0
+${INJECT_FROM_RF}       1
 
 *** Test Cases ***
 Testability in Firefox  Firefox   20.0   30.0
