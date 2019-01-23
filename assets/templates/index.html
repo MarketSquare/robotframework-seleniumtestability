@@ -53,11 +53,47 @@ img {
   {{bindingstag|safe}}
   <script type="text/javascript" src="code.js"></script>
   <body>
-    <p><button id="shorttimeout-button" type="button" name="short-timeout" onClick="setTimeout(simpleButtonCallback,4000)">Generate Short Timeout</button></p>
-    <p><button id="fetch-button" type="button" name="fetch" onClick="fetchCallback()">Generate Fetch Request</button></p>
-    <p><button id="xhr-button" type="button" name="xhr" onClick="xhrCallback()">Generate XHR Request</button></p>
-    <p><button id="transition-button" type="button" name="transition" onClick="transitionCallback()">Generate Transition</button> <img class="crossRotate" src="http://placehold.it/100" alt="Cross Menu button" tabindex="1" /> </p>
-    <p><button id="animate-button" type="button" name="animate" onClick="animationCallback()">Generate Animation</button><div id="animationBox" class="animationBox"></div> </p>
-
+      <table>
+        <tr>
+            <td>
+              <button id="shorttimeout-button" type="button" name="short-timeout" onClick="shortTimeoutTrigger()">Generate Short Timeout</button>
+            </td>
+            <td>
+              <div id="shorttimeout-result">not executed</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <button id="fetch-button" type="button" name="fetch" onClick="fetchTrigger()">Generate Fetch Request</button>
+            </td>
+            <td>
+              <div id="fetch-result">not executed</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <button id="xhr-button" type="button" name="xhr" onClick="xhrTrigger()">Generate XHR Request</button>
+            </td>
+            <td>
+              <div id="xhr-result">not executed</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <button id="transition-button" type="button" name="transition" onClick="transitionTrigger()">Generate Transition</button> <img class="crossRotate" src="http://placehold.it/100" alt="Cross Menu button" tabindex="1" /> 
+            </td>
+            <td>
+              <div id="transition-result">not executed</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <button id="animate-button" type="button" name="animate" onClick="animateTrigger()">Generate Animation</button> <div id="animateBox" class="animateBox"></div> 
+            </td>
+            <td>
+              <div id="animate-result">not executed</div>
+            </td>
+        </tr>
+      </table>
   </body>
 </html>
