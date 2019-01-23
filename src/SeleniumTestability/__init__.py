@@ -1,8 +1,9 @@
 from SeleniumLibrary.locators import ElementFinder
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
-from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from robot.utils import timestr_to_secs, secs_to_timestr, type_name
+from robot.errors import ExecutionFailed
 from robot.api import logger    # noqa: F401
 from os.path import dirname, abspath
 from .version import get_version
@@ -116,18 +117,40 @@ class SeleniumTestability:
         """
 
         self.timeout = timeout
+        self.element_finder_installed = False
         self.error_on_timeout = error_on_timeout
         self.enable_implicit_wait = enable_implicit_wait
         self.base_path = dirname(abspath(__file__))
+        if self.enable_implicit_wait:
+            self.element_finder_installed = self._install_element_finder(self.timeout, self.error_on_timeout, self.enable_implicit_wait)
 
-        self._selib._element_finder = testabilityElementFinder(timeout, error_on_timeout, enable_implicit_wait)
+    def _install_element_finder(self, timeout, error_on_timeout, enable_implicit_wait):
+        if not self.element_finder_installed:
+            result = False
+            try:
+                self._old_element_finder = self._selib._element_finder
+                self._selib._element_finder = testabilityElementFinder(timeout, error_on_timeout, enable_implicit_wait)
+                result = True
+            except RobotNotRunningError:
+                pass
+        return result
 
     def enable_implicit_wait_for_testability(self, state=True):
         """
         TODO: Wait For Testability Ready keyword
         """
+
         if not isinstance(state, bool):
             raise TypeError("state must be boolean, got %s instead." % type_name(state))
+
+        if not self.element_finder_installed and state:
+            self.element_finder_installed = self._install_element_finder(self.timeout, self.error_on_timeout, self.enable_implicit_wait)
+
+        if not self.element_finder_installed:
+            if state:
+                raise ExecutionFailed("testabilityElementFinder is not currently installed")
+            else:
+                return
 
         self._selib._element_finder.enable_implicit_wait = state
 
@@ -141,12 +164,18 @@ class SeleniumTestability:
         """
         TODO: Wait For Testability Ready keyword
         """
+        if not self.element_finder_installed:
+            raise ExecutionFailed("testabilityElementFinder is not currently installed")
+
         return secs_to_timestr(self.timeout)
 
     def set_implicit_wait_timeout(self, seconds):
         """
         TODO: Wait For Testability Ready keyword
         """
+        if not self.element_finder_installed:
+            raise ExecutionFailed("testabilityElementFinder is not currently installed")
+
         old_timeout = self.get_implicit_wait_timeout()
         self.timeout = timestr_to_secs(seconds)
         self._selib._element_finder.timeout = self.timeout
