@@ -1,0 +1,78 @@
+parameters:
+  name: 'SeleniumTestability'
+  vmImage: ''
+  robotPrefix: ''
+
+jobs:
+- job: ${{ parameters.name }}
+  timeoutInMinutes: 60
+  cancelTimeoutInMinutes: 25
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  strategy:
+    matrix:
+      Python27:
+        os_name:  ${{ parameters.name }}
+        python_version: '2.7'
+        outputdir: testresults
+      Python37:
+        os_name:  ${{ parameters.name }}
+        python_version: '3.7'
+        outputdir: testresults
+    maxParallel: 6
+
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Python for test execution'
+    inputs:
+      versionSpec: $(python_version)
+      addToPath: true
+      architecture: 'x64'
+
+  - script: |
+      python -m pip install --upgrade pip
+      python -m pip install -r requirements-dev.txt
+    displayName: 'Install requirements'
+
+  - bash: |
+      webdrivermanager firefox
+    displayName: Install webdriver
+
+  - bash: |
+      brew update
+      brew tap caskroom/cask
+      brew cask install firefox
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+    displayName: Install Firefox on OSX
+
+  - bash: |
+      sudo apt-get update --yes
+      sudo apt-get install firefox --yes
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    displayName: Install Firefox on Linux
+
+  - bash: |
+      ${{ parameters.robotPrefix }} robot --outputdir $(outputdir) --xunit acceptance_tests.xml atest/test_acceptance.robot
+    displayName: 'Running Acceptance Tests'
+    continueOnError: false
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: JUnit
+      testResultsFiles: $(outputdir)/acceptance_tests.xml
+      testResultsTitle: Acceptance Tests for $(python_version) on $(os_name)
+      testRunTitle: seleniumtestability-$(python_version)-$(os_name)-acceptance
+
+# DOES NOT MOSTLY WORK IN WINDOWS FOR REASON OR THE OTHER WTF? 
+# running tests leaves process running and stuff in outputdir are still locked due to that ..
+  - task: PublishBuildArtifacts@1
+    condition: succeededOrFailed()
+    displayName: Publish Robot Framework logs and results
+    inputs:
+      PathtoPublish: $(outputdir)
+      Parallelcopy: true
+      Parallelcount: 8
+      ArtifactType: container
+      TargetPath: ""
+      ArtifactName: ${{ parameters.name }}-$(python_version)-$(os_name)-logs

@@ -3,5 +3,6 @@ twine
 m2r
 python-language-server[all]
 flake8
+webdrivermanager
 robotframework
 robotframework-seleniumlibrary

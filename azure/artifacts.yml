@@ -1,0 +1,52 @@
+parameters:
+  name: 'GenerateBuildArtifacts'
+
+jobs:
+- job: ${{ parameters.name }}
+  dependsOn:
+    - Linux
+    - OSX
+    - Windows
+  condition: succeeded()
+  variables:
+    python_version: 3.7
+    os_name:  Linux
+  timeoutInMinutes: 60
+  cancelTimeoutInMinutes: 25
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - task: UsePythonVersion@0
+    displayName: 'Python for test execution'
+    inputs:
+      versionSpec: $(python_version)
+      addToPath: true
+      architecture: 'x64'
+
+  - script: |
+      python -m pip install --upgrade pip
+      python -m pip install -r requirements-dev.txt
+    displayName: 'Install requirements'
+
+  - script: |
+      python setup.py sdist
+    displayName: Generate sdist archives
+
+  - task: PublishBuildArtifacts@1
+    displayName: Store sdist archives
+    inputs:
+      PathtoPublish: dist/
+      ArtifactType: container
+      TargetPath: ""
+      ArtifactName: sdist
+
+  - script: python -m robot.libdoc src/SeleniumTestability docs/keywords.html
+    displayName: 'Generate Keyword Documentation'
+
+  - task: PublishBuildArtifacts@1
+    displayName: Store Keyword Documentation
+    inputs:
+      PathtoPublish: docs/keywords.html
+      ArtifactType: container
+      TargetPath: ""
+      ArtifactName: documentation
