@@ -65,7 +65,6 @@ class testabilityElementFinder(ElementFinder):
         if self.enable_implicit_wait:
             if not self.browser_warning_shown and self._not_so_good_browser():
                 self.browser_warning_shown = True
-                logger.warn("All currently supported testability features are not implemented in your browser")
 
             explicit_wait_for_testability_ready(self.error_on_timeout, self.timeout, self._selib)
 
@@ -78,6 +77,77 @@ class testabilityElementFinder(ElementFinder):
 
 
 class SeleniumTestability:
+    """Extension library for SeleniumLibrary that provides either manual or automatic waiting asyncronous events within SUT.  This is accomplished by utilizing following 2 libraries.  [ https://github.com/alfonso-presa/testability.js |First one] provides an API and [ https://github.com/alfonso-presa/testability-browser-bindings | second one ] provides bindings.
+
+    When the SUT has been instrumented for testability, library provides a keyword that user can call in the testcode that prevents execution of seleniun keyword until the state of the SUT allows it.  Alternatively, if implicit wait is enabled - either by initializing the library enable_implicit_wait set to True or called `Enable Implicit Wait For Testability`keyword, this waiting will happen automatically so that there is no extra keyword calls required from tests.
+
+    == Usage ==
+
+    == Instrumentation ==
+    Your webpage needs to load 2 javascript files and then instrument the running application. Loading can happen by either including api and bindings javascript files into your js bundle and then calling "window.instrumentBrowser()" or by injecting those from the tests directly. First one is preferred as it quarantees that asyncronous events triggered at the startup are also caught.
+
+    Example:
+    | ***** Settings *****
+    | Library   SeleniumLibrary
+    | Library   SeleniumTestability     enable_implicit_wait=True
+    |
+    | Suite Setup       Open Browser    https://127.0.0.1:5000/   browser=Firefox
+    | Suite Teardown    Close Browser
+    |
+    | ***** Test Cases *****
+    | Instrument Browser Example
+    |   `Instrument Browser`
+    |   ${x}=   `Is Testability Installed`
+    |   Should Be True    ${x}
+
+    Here we are instrumenting the browser with `Instrument Browser` keyword and then checking if that was succesful with `Is Testability Installed`.
+
+    ==  Waiting ==
+    There are two modes of waiting, implicit and explicit. When Implicit waiting is enabled, when ever you use SeleniumLibrary keywords that uses a locator, this library waits until all currently running and supported asyncronous events are done before commencing to use the locator.
+    === Implicit ===
+    | ***** Settings *****
+    | Library   SeleniumLibrary
+    | Library   SeleniumTestability     enable_implicit_wait=True
+    |
+    | Suite Setup       Open Browser    https://127.0.0.1:5000/   browser=Firefox
+    | Suite Teardown    Close Browser
+    |
+    | ***** Test Cases *****
+    | Basic Example
+    |   `Instrument Browser`
+    |   Click Element     id:fetch-button
+    |   Click Element     id:xhr-button
+    |   `Wait For Testability Ready`
+
+    In this scenario, test is clicking first element, waits for the fetch call to finish before clicking on the next. Also, do note that in this example, we are calling `Wait For Testability Ready` to also wait for xhr request to finish as there is no other SeleniumLibrary calls after the second click. 
+
+    === Explicit ===
+    | ***** Settings *****
+    | Library   SeleniumLibrary
+    | Library   SeleniumTestability     enable_implicit_wait=False
+    |
+    | Suite Setup       Open Browser    https://127.0.0.1:5000/   browser=Firefox
+    | Suite Teardown    Close Browser
+    |
+    | ***** Test Cases *****
+    | Basic Example
+    |   `Instrument Browser`
+    |   Click Element     id:fetch-button
+    |   `Wait For Testability Ready`
+    |   Click Element     id:xhr-button
+    |   `Wait For Testability Ready`
+
+
+    = Current Features =
+    - Can detect setTimeout & setImmediate calls and wait for them.
+    - Can detect fetch() call and wait for it to finish
+    - Can detect XHR requests and wait for them to finish
+    - Can detect CSS Animations and wait form them to finish
+    - Can detect CSS Transitions and wait form them to finish
+
+    *Do note* that CSS animations and transitions do not work properly in *Chrome* as it's not implementing required features yet.
+
+    """
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = get_version()
@@ -87,32 +157,10 @@ class SeleniumTestability:
                  error_on_timeout=False,
                  enable_implicit_wait=True):
         """
-        = SeleniumTestability Library =
-        SeleniumTestability is extension library for SeleniumLibrary that provides
-        either manual or automatic waiting asyncronous events within SUT.
-
-        This is accomplished by utilizing following 2 libraries. First one provides
-        API and second one provides bindings.
-
-        - https://github.com/alfonso-presa/testability.js
-        - https://github.com/alfonso-presa/testability-browser-bindings
-
-        When the SUT has been instrumented for testability, library provides a
-        keyword that user can call in the testcode that prevents execution of
-        seleniun keyword until the state of the SUT allows it. Alternatively,
-        depending on how the the library has initialized, this waiting can happen
-        automatically so that there is no extra code required from test code
-        itself.
-
-        == Usage ==
-
-        == Instrumentation ==
-        TODO
-        ==  Waiting ==
-        === Explicit ===
-        TODO
-        === Implicit Waiting ===
-        TODO
+        Parameters:
+        - ``timeout`` Amount of time to wait until giving up for testability to be ready
+        - ``error_on_timeout`` if timeout occurs, should we throw an error
+        - ``enable_implicit_wait`` should implicit waiting occur by default. Can be toggled later on with `Enable Implicing Waiting For Testability` and `Disable Implicit Waiting For Testability` keywords.
 
         """
 
@@ -135,11 +183,7 @@ class SeleniumTestability:
                 pass
         return result
 
-    def enable_implicit_wait_for_testability(self, state=True):
-        """
-        TODO: Wait For Testability Ready keyword
-        """
-
+    def _toggle_implicit_wait_for_testability(self, state=True):
         if not isinstance(state, bool):
             raise TypeError("state must be boolean, got %s instead." % type_name(state))
 
@@ -154,15 +198,21 @@ class SeleniumTestability:
 
         self._selib._element_finder.enable_implicit_wait = state
 
+    def enable_implicit_wait_for_testability(self):
+        """
+        Enables implicit waiting
+        """
+        self._toggle_implicit_wait_for_testability(True)
+
     def disable_implicit_wait_for_testability(self):
         """
-        TODO: Wait For Testability Ready keyword
+        Disables implicit waiting
         """
-        self.enable_implicit_wait_for_testability(False)
+        self._toggle_implicit_wait_for_testability(False)
 
     def get_implicit_wait_timeout(self):
         """
-        TODO: Wait For Testability Ready keyword
+        Returns the currently set value of timeout.
         """
         if not self.element_finder_installed:
             raise ExecutionFailed("testabilityElementFinder is not currently installed")
@@ -171,7 +221,10 @@ class SeleniumTestability:
 
     def set_implicit_wait_timeout(self, seconds):
         """
-        TODO: Wait For Testability Ready keyword
+        Sets the value to timeout.
+        Parameters:
+        - ``seconds`` - in seconds
+
         """
         if not self.element_finder_installed:
             raise ExecutionFailed("testabilityElementFinder is not currently installed")
@@ -181,9 +234,12 @@ class SeleniumTestability:
         self._selib._element_finder.timeout = self.timeout
         return old_timeout
 
-    def wait_for_testability_ready(self, timeout=None, message=None):
+    def wait_for_testability_ready(self, timeout=None, error_on_timeout=False):
         """
-        TODO: Wait For Testability Ready keyword
+        Explicitly waits until testability is ready or timeout happens.
+        Parameters:
+        - ``timeout`` Amount of time to wait until giving up for testability to be ready
+        - ``error_on_timeout`` if timeout occurs, should we throw an error
         """
 
         if timeout:
@@ -195,14 +251,11 @@ class SeleniumTestability:
 
     def wait_for_document_ready(self):
         """
-        TODO: Wait For Document Ready keyword
+        Explicit waits until document.readyState is complete.
         """
         self._selib.execute_async_javascript(js_wait_for_document_ready)
 
     def _inject_testability(self):
-        """
-        TODO: Inject Testability docs
-        """
         with open("{}/testability/api_inject.js".format(self.base_path), 'r') as f:
             buf = f.read()
             self._selib.execute_javascript("{}; window.testability = testability;".format(buf))
@@ -213,7 +266,7 @@ class SeleniumTestability:
 
     def instrument_browser(self):
         """
-        TODO: Instrument Browser docs
+        Instruments the current webpage for testability. If dependant javascript files are not part of the webpage, they are injected. And then, javascript call instrumentBrowser() is called in order catch all asyncronous and supported events.
         """
         if not self.is_testability_installed():
             self._inject_testability()
@@ -222,7 +275,7 @@ class SeleniumTestability:
 
     def is_testability_installed(self):
         """
-        TODO: Is Testability Installed
+        Returns True if testability api's are loaded, False if not.
         """
         return self._selib.execute_javascript(js_is_installed)
 
