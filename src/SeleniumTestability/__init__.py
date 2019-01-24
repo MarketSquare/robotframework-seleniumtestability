@@ -119,7 +119,7 @@ class SeleniumTestability:
     |   Click Element     id:xhr-button
     |   `Wait For Testability Ready`
 
-    In this scenario, test is clicking first element, waits for the fetch call to finish before clicking on the next. Also, do note that in this example, we are calling `Wait For Testability Ready` to also wait for xhr request to finish as there is no other SeleniumLibrary calls after the second click. 
+    In this scenario, test is clicking first element, waits for the fetch call to finish before clicking on the next. Also, do note that in this example, we are calling `Wait For Testability Ready` to also wait for xhr request to finish as there is no other SeleniumLibrary calls after the second click.
 
     === Explicit ===
     | ***** Settings *****
