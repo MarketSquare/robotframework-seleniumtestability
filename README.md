@@ -91,7 +91,7 @@ Do note that CSS animations and transitions do not work properly in Chrome.
 
 # Documentation
 
-  * Keyword Documentation http://omenia.github.io/robotframework-seleniumtestability/keywords.html
+  * Keyword Documentation http://omenia.github.io/robotframework-seleniumtestability
 
 # TODO:
 
