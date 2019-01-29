@@ -49,21 +49,21 @@ class testabilityElementFinder(ElementFinder):
         self.error_on_timeout = error_on_timeout
         self.enable_implicit_wait = enable_implicit_wait
         self.browser_warning_shown = False
-        self.offending_browsers = ['chrome']
+        self.noncompiliant_browsers = ['chrome']
 
-    def _not_so_good_browser(self):
+    def is_noncompiliant_browser(self):
         try:
             browser = self._selib._current_browser()
             if 'browserName' in browser.capabilities:
                 browserName = browser.capabilities['browserName']
-                return browserName in self.offending_browsers
+                return browserName in self.noncompiliant_browsers
         except Exception as e:
             logger.debug(e)
             return True
 
     def find(self, locator, tag=None, first_only=True, required=True, parent=None):
         if self.enable_implicit_wait:
-            if not self.browser_warning_shown and self._not_so_good_browser():
+            if not self.browser_warning_shown and self.is_noncompiliant_browser():
                 self.browser_warning_shown = True
 
             explicit_wait_for_testability_ready(self.error_on_timeout, self.timeout, self._selib)
