@@ -40,7 +40,9 @@ jobs:
       TargetPath: ""
       ArtifactName: sdist
 
-  - script: python -m robot.libdoc src/SeleniumTestability docs/keywords.html
+  - bash: |
+      python -m robot.libdoc src/SeleniumTestability docs/keywords.html
+      cp docs/keywords.html docs/index.html
     displayName: 'Generate Keyword Documentation'
 
   - task: PublishBuildArtifacts@1

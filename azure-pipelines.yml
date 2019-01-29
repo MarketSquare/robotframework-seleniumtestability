@@ -1,8 +1,12 @@
 trigger:
   batch: true
+  branches:
+    include:
+    - master
+    - feature/*
   paths:
     exclude:
-    - docs/
+    - docs/*
 jobs:
 - template: azure/job_template.yml
   parameters:
