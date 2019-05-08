@@ -7,11 +7,18 @@ SeleniumTestability
 from os.path import abspath, dirname, join
 from setuptools import setup, find_packages
 import sys
-from src.SeleniumTestability import get_version
 
+def read_file(filename):
+    buff = None
+    with open(filename,'r') as f:
+        buff = f.read()
+    return buff
+
+LIBRARY_NAME="SeleniumTestability"
 CWD = abspath(dirname(__file__))
 IS_PYTHON3 = sys.version_info[0] >= 3
-
+VERSION_PATH = join(CWD, 'src', LIBRARY_NAME, 'version.py')
+exec(compile(open(VERSION_PATH).read(), VERSION_PATH, 'exec'))
 
 def read_file(filename):
     buff = None
@@ -45,7 +52,7 @@ Framework :: Robot Framework :: Library
 
 setup(
     name='robotframework-%s' % LIBRARY_NAME.lower(),
-    version=get_version(),
+    version=VERSION,
     description='SeleniunTestability library that helps speed up tests with'
                 'asyncronous evens',
     long_description=LONG_DESCRIPTION,

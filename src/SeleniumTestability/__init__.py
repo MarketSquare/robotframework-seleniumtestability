@@ -6,7 +6,7 @@ from robot.utils import timestr_to_secs, secs_to_timestr, type_name
 from robot.errors import ExecutionFailed
 from robot.api import logger    # noqa: F401
 from os.path import dirname, abspath
-from .version import get_version
+from .version import VERSION
 
 js_wait_for_testability = """
     var readyCallback = arguments[arguments.length - 1];
@@ -150,7 +150,7 @@ class SeleniumTestability:
     """
 
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
-    ROBOT_LIBRARY_VERSION = get_version()
+    ROBOT_LIBRARY_VERSION = VERSION
 
     def __init__(self,
                  timeout=30.0,

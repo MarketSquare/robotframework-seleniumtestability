@@ -35,7 +35,7 @@ jobs:
     displayName: 'Install requirements'
 
   - bash: |
-      webdrivermanager firefox
+      webdrivermanager firefox --linkpath AUTO
     displayName: Install webdriver
 
   - bash: |
