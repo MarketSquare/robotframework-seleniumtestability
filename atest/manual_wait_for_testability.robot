@@ -1,26 +1,28 @@
+Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
+Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 *** Settings ***
-Library         SeleniumLibrary
-Library         ${CURDIR}/../src/SeleniumTestability     enable_implicit_wait=False
+Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;False;30 seconds;True
 Library         DateTime
 Library         Process
 Test Template   Manual Wait For Testability Ready
 
 *** Variables ***
 ${URL}                  http://localhost:5000
-${INJECT_FROM_RF}       0
+${FF}                   Headless Firefox
+${GC}                   Headless Chrome
 
 *** Test Cases ***
-Verify Fetch In Firefox             Firefox   4.0   fetch-button
-Verify Timeout In Firefox           Firefox   4.0   shorttimeout-button
-Verify XHR In Firefox               Firefox   4.0   xhr-button
-Verify CSS Transition In Firefox    Firefox   4.0   transition-button
-Verify CSS Animation In Firefox     Firefox   4.0   animate-button
+Verify Fetch In Firefox             ${FF}   4.0   fetch-button
+Verify Timeout In Firefox           ${FF}   4.0   shorttimeout-button
+Verify XHR In Firefox               ${FF}   4.0   xhr-button
+Verify CSS Transition In Firefox    ${FF}   4.0   transition-button
+Verify CSS Animation In Firefox     ${FF}   4.0   animate-button
 
-Verify Fetch In Chrome              Chrome    4.0   fetch-button
-Verify Timeout In Chrome            Chrome    4.0   shorttimeout-button
-Verify XHR In Chrome                Chrome    4.0   xhr-button
-Verify CSS Transition In Chrome     Chrome    4.0   transition-button
-Verify CSS Animation In Chrome      Chrome    4.0   animate-button
+Verify Fetch In Chrome              ${GC}   4.0   fetch-button
+Verify Timeout In Chrome            ${GC}   4.0   shorttimeout-button
+Verify XHR In Chrome                ${GC}   4.0   xhr-button
+Verify CSS Transition In Chrome     ${GC}   4.0   transition-button
+Verify CSS Animation In Chrome      ${GC}   4.0   animate-button
 
 
 *** Keywords ***
@@ -42,10 +44,9 @@ Stop Flask App
 Setup Test Environment
   [Arguments]   ${BROWSER}
   Start Flask App
-  ${URL}=   Set Variable    ${URL}?inject=${INJECT_FROM_RF}
+  ${URL}=   Set Variable    ${URL}
   Set Selenium Timeout        120 seconds
   Open Browser                ${URL}    browser=${BROWSER}
-  Instrument Browser
   Wait For Document Ready
 
 Teardown Test Environment
