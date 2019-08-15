@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from time import sleep
 app = Flask(__name__)
 
@@ -19,16 +19,6 @@ def add_header(r):
     return r
 
 
-@app.route("/api.js")
-def api():
-    return rf('../src/SeleniumTestability/testability/api.js')
-
-
-@app.route("/bindings.js")
-def bindings():
-    return rf('../src/SeleniumTestability/testability/bindings.js')
-
-
 @app.route("/code.js")
 def code():
     return render_template('code.js')
@@ -42,10 +32,4 @@ def fetch():
 
 @app.route('/')
 def index():
-    inj_bindings = '<script type="text/javascript" src="bindings.js"></script>'
-    inj_api = '<script type="text/javascript" src="api.js"></script>'
-    inject = request.args.get('inject', default=1, type=int) == 1
-    if inject:
-        inj_api = ''
-        inj_bindings = ''
-    return render_template('index.html', apitag=inj_api, bindingstag=inj_bindings)
+    return render_template('index.html')

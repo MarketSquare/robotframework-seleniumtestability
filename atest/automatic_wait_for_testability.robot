@@ -1,13 +1,11 @@
 *** Settings ***
-Library         SeleniumLibrary
-Library         ${CURDIR}/../src/SeleniumTestability     enable_implicit_wait=True
+Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 Library         DateTime
 Library         Process
 Test Template   Automatically Call Testability Ready
 
 *** Variables ***
 ${URL}                  http://localhost:5000
-${INJECT_FROM_RF}       0
 
 *** Test Cases ***
 Testability in Firefox  Firefox   20.0   30.0
@@ -18,7 +16,6 @@ Testability in Chrome   Chrome    20.0   30.0
 Automatically Call Testability Ready
   [Arguments]   ${BROWSER}    ${HIGHER_THAN}  ${LOWER_THAN}
   [Teardown]    Teardown Test Environment
-
   Setup Test Environment    ${BROWSER}
   Click All And Verify    ${HIGHER_THAN}  ${LOWER_THAN}
 
@@ -43,8 +40,8 @@ Click All And Verify
 
 
 Start Flask App
-  ${FLASK_HANDLE}=            Start Process   flask   run   shell=True    cwd=${EXEC_DIR}/assets
-  Set Suite Variable        ${FH}   ${FLASK_HANDLE}
+  ${FLASK_HANDLE}=            Start Process   flask   run   shell=True    cwd=${CURDIR}/../assets
+  Set Suite Variable          ${FH}   ${FLASK_HANDLE}
 
 Stop Flask App
   Terminate Process           ${FH}   kill=True
@@ -52,10 +49,9 @@ Stop Flask App
 Setup Test Environment
   [Arguments]   ${BROWSER}
   Start Flask App
-  ${URL}=   Set Variable    ${URL}?inject=${INJECT_FROM_RF}
+  ${URL}=   Set Variable      ${URL}
   Set Selenium Timeout        120 seconds
   Open Browser                ${URL}    browser=${BROWSER}
-  Instrument Browser
   Wait For Document Ready
 
 Teardown Test Environment

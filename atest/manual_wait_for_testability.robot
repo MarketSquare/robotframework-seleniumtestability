@@ -1,5 +1,5 @@
 *** Settings ***
-Library         SeleniumLibrary
+Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;false;30 seconds;true
 Library         ${CURDIR}/../src/SeleniumTestability     enable_implicit_wait=False
 Library         DateTime
 Library         Process
@@ -7,7 +7,6 @@ Test Template   Manual Wait For Testability Ready
 
 *** Variables ***
 ${URL}                  http://localhost:5000
-${INJECT_FROM_RF}       0
 
 *** Test Cases ***
 Verify Fetch In Firefox             Firefox   4.0   fetch-button
@@ -42,10 +41,9 @@ Stop Flask App
 Setup Test Environment
   [Arguments]   ${BROWSER}
   Start Flask App
-  ${URL}=   Set Variable    ${URL}?inject=${INJECT_FROM_RF}
+  ${URL}=   Set Variable    ${URL}
   Set Selenium Timeout        120 seconds
   Open Browser                ${URL}    browser=${BROWSER}
-  Instrument Browser
   Wait For Document Ready
 
 Teardown Test Environment

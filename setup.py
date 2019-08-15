@@ -6,37 +6,18 @@ SeleniumTestability
 
 from os.path import abspath, dirname, join
 from setuptools import setup, find_packages
-import sys
 
-def read_file(filename):
-    buff = None
-    with open(filename,'r') as f:
-        buff = f.read()
-    return buff
-
-LIBRARY_NAME="SeleniumTestability"
+LIBRARY_NAME = "SeleniumTestability"
 CWD = abspath(dirname(__file__))
-IS_PYTHON3 = sys.version_info[0] >= 3
 VERSION_PATH = join(CWD, 'src', LIBRARY_NAME, 'version.py')
 exec(compile(open(VERSION_PATH).read(), VERSION_PATH, 'exec'))
 
-def read_file(filename):
-    buff = None
-    with open(filename, 'r') as f:
-        buff = f.read()
+with open(join(CWD, 'requirements.txt'), encoding="utf-8") as f:
+    REQUIREMENTS = f.read().splitlines()
 
-    if IS_PYTHON3:
-        try:
-            return buff.decode('utf-8')
-        except Exception:
-            return buff
-    else:
-        return buff
-
-
-LIBRARY_NAME = 'SeleniumTestability'
-LONG_DESCRIPTION = read_file(join(CWD, 'README.md'))
-REQUIREMENTS = read_file(join(CWD, 'requirements.txt'))
+# Get the long description from the README file
+with open(join(CWD, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 CLASSIFIERS = '''
 Development Status :: 3 - Alpha
@@ -52,12 +33,12 @@ Framework :: Robot Framework :: Library
 
 setup(
     name='robotframework-%s' % LIBRARY_NAME.lower(),
-    version=VERSION,
+    version=VERSION,  # noqa: F821
     description='SeleniunTestability library that helps speed up tests with'
                 'asyncronous evens',
-    long_description=LONG_DESCRIPTION,
+    long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/omenia/robotframework-%s' % LIBRARY_NAME.lower(),
+    url='https://github.com/salabs/robotframework-%s' % LIBRARY_NAME.lower(),
     author='Jani Mikkonen',
     author_email='jani.mikkonen@siili.com',
     license='Apache License 2.0',
@@ -68,4 +49,5 @@ setup(
     platforms='any',
     packages=find_packages('src'),
     package_dir={'': 'src'},
+    package_data={'': ['js/*.*']}
 )
