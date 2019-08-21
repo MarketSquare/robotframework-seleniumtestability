@@ -6,11 +6,14 @@ from .javascript import JS_LOOKUP
 from robot.utils import is_truthy, timestr_to_secs, secs_to_timestr
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from furl import furl
 
 
 class SeleniumTestability(LibraryComponent):
     """
     SeleniumTestability is plugin for SeleniumLibrary that provides either manual or automatic waiting asyncronous events within SUT. This works by injecting small javascript snippets that can monitor the web application's state and when any supported events are happening within the sut, execution of SeleniumLibrary's keywords are blocked until timeout or those events are processed.
+
+    On top of this, there are some more or less useful utilities for web application testing.
 
     TODO: Document constructor variables and Listener
 
@@ -67,7 +70,9 @@ class SeleniumTestability(LibraryComponent):
     - Can detect XHR requests and wait for them to finish
     - Can detect CSS Animations and wait form them to finish
     - Can detect CSS Transitions and wait form them to finish
-    *Do note* that CSS animations and transitions do not work properly in *Chrome* as it's not implementing required features at this time.
+
+    *Do note* that CSS animations and transitions might not work properly in *Chrome*.
+
     """
 
     @property
@@ -234,3 +239,28 @@ class SeleniumTestability(LibraryComponent):
         """Returns error_on_timeout value set via plugin parameters or via `Set Testability Error On Timeout`keyword.
         """
         return self.error_on_timeout
+
+    @staticmethod
+    @keyword("Add Basic Authentication To Url")
+    def add_authentication(url, user, password):
+        """
+        For websites that require basic auth authentication, add user and password into the given url. 
+        Parameters:
+        - ``url``  - url where user and password should be added to.
+        - ``user``  - username
+        - ``password``  - password
+        """
+        data = furl(url)
+        data.username = user
+        data.password = password
+        return data.tostr()
+
+    @staticmethod
+    @keyword
+    def split_url_to_host_and_path(url):
+        """
+        Returs given url as dict with property "base" set to a protocol and hostname and "path" as the trailing path.
+        This is useful when constructing requests sessions from urls used within SeleniumLibrary.
+        """
+        data = furl(url)
+        return {'base': str(data.copy().remove(path=True)), 'path': str(data.path)}
