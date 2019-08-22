@@ -10,6 +10,10 @@ class TestabilityListener(AbstractEventListener):
     def automatic_wait(self):
         return self.testability.testability_settings['automatic_wait']
 
+    @property
+    def automatic_injection(self):
+        return self.testability.testability_settings['automatic_injection']
+
     def __init__(self):
         self.testability = self._get_sl()
 
@@ -25,7 +29,8 @@ class TestabilityListener(AbstractEventListener):
 
     def after_navigate_to(self, url, driver):
         logger.debug("TestabilityListener: after_navigate_to(%s, %s)" % (url, driver))
-        self.testability.instrument_browser()
+        if self.automatic_injection:
+            self.testability.instrument_browser()
 
     def before_click(self, element, driver):
         logger.debug("TestabilityListener: before_click(%s, %s)" % (element, driver))
@@ -54,11 +59,13 @@ class TestabilityListener(AbstractEventListener):
 
     def after_navigate_back(self, driver):
         logger.debug("TestabilityListener: after_navigate_back(%s)" % driver)
-        self.testability.instrument_browser()
+        if self.automatic_injection:
+            self.testability.instrument_browser()
 
     def after_navigate_forward(self, driver):
         logger.debug("TestabilityListener: after_navigate_forward(%s)" % driver)
-        self.testability.instrument_browser()
+        if self.automatic_injection:
+            self.testability.instrument_browser()
 
     def after_quit(self, driver):
         logger.debug("TestabilityListener: after_quit(%s)" % driver)
@@ -71,9 +78,10 @@ class TestabilityListener(AbstractEventListener):
 
     def before_find(self, by, value, driver):
         logger.debug("TestabilityListener: before_find(%s, %s, %s)" % (by, value, driver))
+        if self.automatic_injection:
+            self.testability.instrument_browser()
         if self.automatic_wait:
             self.testability.wait_for_testability_ready()
-        self.testability.instrument_browser()
 
     def before_navigate_back(self, driver):
         logger.debug("TestabilityListener: before_navigate_back(%s)" % driver)

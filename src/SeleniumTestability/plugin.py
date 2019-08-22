@@ -99,14 +99,22 @@ class SeleniumTestability(LibraryComponent):
     def timeout(self, value):
         self.ctx.testability_settings["timeout"] = timestr_to_secs(value)
 
-    def __init__(self, ctx, automatic_wait=True, timeout="30 seconds", error_on_timeout=True):
+    @property
+    def automatic_injection(self):
+        return self.ctx.testability_settings["automatic_injection"]
+
+    @automatic_injection.setter
+    def automatic_injection(self, value):
+        self.ctx.testability_settings["automatic_injection"] = is_truthy(value)
+
+    def __init__(self, ctx, automatic_wait=True, timeout="30 seconds", error_on_timeout=True, automatic_injection=True):
         LibraryComponent.__init__(self, ctx)
         try:
             self.ctx.__doc__ = "{}\n\n= SeleniumTestability =\n{}".format(self.ctx.__doc__, self.__doc__)
         except AttributeError:
             # plugin will get initialized on every import and at some point __doc__ becomes read-only
             pass
-        self.debug("SeleniumTestability: __init_({},{},{},{})".format(ctx, automatic_wait, timeout, error_on_timeout))  # This does not work
+        self.debug("SeleniumTestability: __init_({},{},{},{},{})".format(ctx, automatic_wait, timeout, error_on_timeout, automatic_injection))  # This does not work
         self.js = JavaScriptKeywords(ctx)
         self.CWD = abspath(dirname(__file__))
         self.api_file = "{}/js/api_inject.js".format(self.CWD)
@@ -114,6 +122,7 @@ class SeleniumTestability(LibraryComponent):
         self.ctx.event_firing_webdriver = TestabilityListener
         self.ctx.testability_settings = {"testability": self}
         self.automatic_wait = automatic_wait
+        self.automatic_injection = automatic_injection
         self.error_on_timeout = error_on_timeout
         self.timeout = timeout
 
@@ -244,7 +253,7 @@ class SeleniumTestability(LibraryComponent):
     @keyword("Add Basic Authentication To Url")
     def add_authentication(url, user, password):
         """
-        For websites that require basic auth authentication, add user and password into the given url. 
+        For websites that require basic auth authentication, add user and password into the given url.
         Parameters:
         - ``url``  - url where user and password should be added to.
         - ``user``  - username
@@ -264,3 +273,29 @@ class SeleniumTestability(LibraryComponent):
         """
         data = furl(url)
         return {'base': str(data.copy().remove(path=True)), 'path': str(data.path)}
+
+    @keyword
+    def set_testability_automatic_injection(self, enabled):
+        """
+        Sets the state to TestabilityListener if it should automically inject testability.
+        Parameters:
+         - ``enabled`` state of automatic injection
+        """
+        self.debug("SeleniumTestability: set_testability_automatic_injection({})".format(enabled))
+        self.automatic_injection = enabled
+
+    @keyword
+    def enable_testability_automatic_injection(self):
+        """
+        Enables TestabilityListener to automatically inject testability.
+        """
+        self.debug("SeleniumTestability:  enable_testability_automatic_injection()")
+        self.set_testability_automatic_injection(True)
+
+    @keyword
+    def disable_testability_automatic_injection(self):
+        """
+        Disables TestabilityListener to automatically inject testability
+        """
+        self.debug("SeleniumTestability:  disable_testability_automatic_injection()")
+        self.set_testability_automatic_injection(False)
