@@ -1,2 +1,2 @@
-robotframework-seleniumlibrary>=4.0.0
+robotframework-seleniumlibrary>=4.0.0b1
 furl

@@ -4,5 +4,4 @@ m2r
 python-language-server[all]
 flake8
 webdrivermanager
-git+https://github.com/robotframework/seleniumlibrary.git
 -r requirements.txt
