@@ -1,8 +1,9 @@
 *** Settings ***
 Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
-Library         DateTime
+Library         Timer
 Library         Process
 Test Template   Automatically Call Testability Ready
+Suite Teardown  Final Report
 
 *** Variables ***
 ${URL}                  http://localhost:5000
@@ -10,35 +11,31 @@ ${FF}                   Headless Firefox
 ${GC}                   Headless Chrome
 
 *** Test Cases ***
-Testability in Firefox  ${FF}   20.0   30.0
-Testability in Chrome   ${GC}   20.0   30.0
+Testability in Firefox  ${FF}   20 seconds   30 seconds
+Testability in Chrome   ${GC}   20 seconds   30 seconds
 
 
 *** Keywords ***
+Final Report
+  Verify All Timers   fail_on_errors=False
+
 Automatically Call Testability Ready
   [Arguments]   ${BROWSER}    ${HIGHER_THAN}  ${LOWER_THAN}
   [Teardown]    Teardown Test Environment
-  Setup Test Environment    ${BROWSER}
-  Click All And Verify    ${HIGHER_THAN}  ${LOWER_THAN}
+  Setup Test Environment      ${BROWSER}
+  Click All And Verify        ${HIGHER_THAN}  ${LOWER_THAN}
 
 Click All And Verify
   [Arguments]   ${HIGHER_THAN}  ${LOWER_THAN}
-  ${start}=   Get Time        epoch
+  Start Timer                 ${TEST NAME}
   Click Element               id:fetch-button
-  Log To Console              click!
   Click Element               id:shorttimeout-button
-  Log To Console              click!
   Click Element               id:xhr-button
-  Log To Console              click!
   Click Element               id:transition-button
-  Log To Console              click!
   Click Element               id:animate-button
-  Log To Console              Wait
   Wait For Testability Ready
-  ${end}=   Get Time        epoch
-  ${diff}=  Subtract Date From Date   ${end}  ${start}
-  Should Be True              ${diff} >= ${HIGHER_THAN}
-  Should Be True              ${diff} <= ${LOWER_THAN}
+  Stop Timer                   ${TEST NAME}
+  Verify Single Timer         ${LOWER_THAN}   ${HIGHER_THAN}  ${TEST NAME}
 
 
 Start Flask App

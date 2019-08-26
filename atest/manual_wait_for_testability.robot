@@ -1,10 +1,9 @@
-Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
-Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 *** Settings ***
 Library         SeleniumLibrary   plugins=${CURDIR}/../src/SeleniumTestability;False;30 seconds;True
-Library         DateTime
+Library         Timer
 Library         Process
 Test Template   Manual Wait For Testability Ready
+Suite Teardown  Add Final Benchmark Table
 
 *** Variables ***
 ${URL}                  http://localhost:5000
@@ -12,26 +11,31 @@ ${FF}                   Headless Firefox
 ${GC}                   Headless Chrome
 
 *** Test Cases ***
-Verify Fetch In Firefox             ${FF}   4.0   fetch-button
-Verify Timeout In Firefox           ${FF}   4.0   shorttimeout-button
-Verify XHR In Firefox               ${FF}   4.0   xhr-button
-Verify CSS Transition In Firefox    ${FF}   4.0   transition-button
-Verify CSS Animation In Firefox     ${FF}   4.0   animate-button
+Verify Fetch In Firefox             ${FF}   fetch-button
+Verify Timeout In Firefox           ${FF}   shorttimeout-button
+Verify XHR In Firefox               ${FF}   xhr-button
+Verify CSS Transition In Firefox    ${FF}   transition-button
+Verify CSS Animation In Firefox     ${FF}   animate-button
 
-Verify Fetch In Chrome              ${GC}   4.0   fetch-button
-Verify Timeout In Chrome            ${GC}   4.0   shorttimeout-button
-Verify XHR In Chrome                ${GC}   4.0   xhr-button
-Verify CSS Transition In Chrome     ${GC}   4.0   transition-button
-Verify CSS Animation In Chrome      ${GC}   4.0   animate-button
+Verify Fetch In Chrome              ${GC}   fetch-button
+Verify Timeout In Chrome            ${GC}   shorttimeout-button
+Verify XHR In Chrome                ${GC}   xhr-button
+Verify CSS Transition In Chrome     ${GC}   transition-button
+Verify CSS Animation In Chrome      ${GC}   animate-button
 
 
 *** Keywords ***
-Manual Wait For Testability Ready
-  [Arguments]   ${BROWSER}    ${TIMEOUT}  ${ID}
-  [Teardown]    Teardown Test Environment
+Add Final Benchmark Table
+  Verify All Timers   fail_on_errors=False
 
+Manual Wait For Testability Ready
+  [Arguments]   ${BROWSER}    ${ID}
+  [Teardown]    Teardown Test Environment
   Setup Test Environment    ${BROWSER}
-  Click And Verify    ${ID}   ${TIMEOUT}
+  Start Timer               ${TEST NAME}
+  Click And Wait            ${ID}
+  Stop Timer                ${TEST NAME}
+  Verify Single Timer       5 seconds   3.5 seconds   ${TEST NAME}
 
 
 Start Flask App
@@ -53,11 +57,7 @@ Teardown Test Environment
   Close Browser
   Stop Flask App
 
-Click And Verify
-  [Arguments]   ${id}    ${duration}
-  ${start}=   Get Time        epoch
+Click And Wait
+  [Arguments]   ${id}
   Click Element               id:${id}
   Wait For Testability Ready
-  ${end}=   Get Time        epoch
-  ${diff}=  Subtract Date From Date   ${end}  ${start}
-  Should Be True              not ${diff} < ${duration}
