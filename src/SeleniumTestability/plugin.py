@@ -1,5 +1,6 @@
 from SeleniumLibrary.base import LibraryComponent, keyword
 from SeleniumLibrary.keywords.javascript import JavaScriptKeywords
+from SeleniumLibrary.keywords.element import ElementKeywords
 from os.path import abspath, dirname
 from .listener import TestabilityListener
 from .javascript import JS_LOOKUP
@@ -117,9 +118,11 @@ class SeleniumTestability(LibraryComponent):
             pass
         self.debug("SeleniumTestability: __init_({},{},{},{},{})".format(ctx, automatic_wait, timeout, error_on_timeout, automatic_injection))  # This does not work
         self.js = JavaScriptKeywords(ctx)
+        self.el = ElementKeywords(ctx)
         self.CWD = abspath(dirname(__file__))
         self.api_file = "{}/js/api_inject.js".format(self.CWD)
         self.bindings_file = "{}/js/bindings.js".format(self.CWD)
+        self.draganddrop_file = "{}/js/simulateDragandDrop.js".format(self.CWD)
         self.ctx.event_firing_webdriver = TestabilityListener
         self.ctx.testability_settings = {"testability": self}
         self.automatic_wait = automatic_wait
@@ -140,6 +143,10 @@ class SeleniumTestability(LibraryComponent):
         with open(self.bindings_file, 'r') as f:
             buf = f.read()
             self.js.execute_javascript("{}; window.instrumentBrowser = instrumentBrowser;".format(buf))
+
+        with open(self.draganddrop_file, 'r') as f:
+            buf = f.read()
+            self.js.execute_javascript("{}; window.simulateDragDrop = simulateDragDrop;".format(buf))
 
     @keyword
     def instrument_browser(self):
@@ -321,3 +328,14 @@ class SeleniumTestability(LibraryComponent):
         """
         self.debug("SeleniumTestability:  get_current_useragent()")
         return self.js.execute_javascript(JS_LOOKUP["useragent"])
+
+    @keyword
+    def drag_and_drop(self, locator, target, html5=False):
+        html5 = is_truthy(html5)
+        self.debug("SeleniumTestability:  drag_and_drop({},{},{})".format(locator, target, html5))
+        if not html5:
+            self.el.drag_and_drop(locator, target)
+        else:
+            from_element = self.el.find_element(locator)
+            to_element = self.el.find_element(target)
+            self.ctx.driver.execute_script(JS_LOOKUP["dragdrop"], from_element, to_element)
