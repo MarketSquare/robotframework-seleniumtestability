@@ -67,3 +67,18 @@ var animateCallback= function () {
   $('.animateBox').toggleClass('active');
   window.testability.wait.oneLess()
 }
+
+
+var allowDrop = function(ev) {
+  ev.preventDefault();
+}
+
+var drag = function(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+var drop = function(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}

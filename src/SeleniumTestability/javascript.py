@@ -25,5 +25,11 @@ JS_LOOKUP = {
 
     "useragent": """
         return navigator.userAgent;
-    """
+    """,
+
+    "dragdrop": """
+        window.simulateDragDrop(arguments[0], arguments[1]);
+    """,
+
+
 }
