@@ -6,6 +6,7 @@ from .javascript import JS_LOOKUP
 from robot.utils import is_truthy, timestr_to_secs, secs_to_timestr
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from http.cookies import SimpleCookie
 from furl import furl
 
 
@@ -299,3 +300,24 @@ class SeleniumTestability(LibraryComponent):
         """
         self.debug("SeleniumTestability:  disable_testability_automatic_injection()")
         self.set_testability_automatic_injection(False)
+
+    @staticmethod
+    @keyword
+    def cookies_to_dict(cookies):
+        """
+        Converts a cookie string into python dict.
+        """
+        ret = {}
+        cookie = SimpleCookie()
+        cookie.load(cookies)
+        for key, morsel in cookie.keys():
+            ret[key] = morsel.value
+        return ret
+
+    @keyword
+    def get_current_useragent(self):
+        """
+        Returns useragent string of current browser.
+        """
+        self.debug("SeleniumTestability:  get_current_useragent()")
+        return self.js.execute_javascript(JS_LOOKUP["useragent"])

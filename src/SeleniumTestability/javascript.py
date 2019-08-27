@@ -21,5 +21,9 @@ JS_LOOKUP = {
 
     "is_installed": """
         return window.testability !== undefined && window.instrumentBrowser !== undefined
+    """,
+
+    "useragent": """
+        return navigator.userAgent;
     """
 }
