@@ -6,7 +6,7 @@ help with dealing asyncronous events by providing either automatic or manual
 waits for the duration of real actions happening within SUT, not arbituary
 length sleeps. There are also some helper functions which are out of scope
 of upstream SeleniumLibrary but useful for testing web applications with
-SeleniunLibrary.
+SeleniumLibrary.
 
 SeleniumTestability relies on core Selenium's feature Event Firing Webdriver
 and provides it's own listener interface that takes care of waiting in right
@@ -38,7 +38,7 @@ Library         SeleniumLibrary     plugins=SeleniumTestability;True;30 Seconds;
 the plugin to load and rest of the string with semicolon separators are
 parameters passed to the said plugin.
 
-SeleniunTestabiluty has following parameters and in following order:
+SeleniumTestabiluty has following parameters and in following order:
 
 ### automatic_wait
 
