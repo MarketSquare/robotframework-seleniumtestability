@@ -352,3 +352,19 @@ class SeleniumTestability(LibraryComponent):
             from_element = self.el.find_element(locator)
             to_element = self.el.find_element(target)
             self.ctx.driver.execute_script(JS_LOOKUP["dragdrop"], from_element, to_element)
+
+    @keyword
+    def scroll_to_bottom(self):
+        """
+        Scrolls current window to the bottom of the page
+        """
+        self.debug("SeleniumTestability:  scroll_to_bottom()")
+        self.js.execute_javascript(JS_LOOKUP["scroll_to_bottom"])
+
+    @keyword
+    def scroll_to_top(self):
+        """
+        Scrolls current window to the bottom of the page
+        """
+        self.debug("SeleniumTestability:  scroll_to_top()")
+        self.js.execute_javascript(JS_LOOKUP["scroll_to_top"])

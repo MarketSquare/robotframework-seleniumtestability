@@ -31,5 +31,11 @@ JS_LOOKUP = {
         window.simulateDragDrop(arguments[0], arguments[1]);
     """,
 
+    "scroll_to_bottom": """
+        window.scrollTo(0, document.body.scrollHeight);
+    """,
 
+    "scroll_to_top": """
+        window.scrollTo(0, 0);
+    """,
 }
