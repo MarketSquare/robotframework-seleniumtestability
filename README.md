@@ -1,11 +1,18 @@
 robotframework-seleniumtestability
 ==================================
 
-Extension library for SeleniumLibrary that provides either manual or automatic
-waiting asyncronous events within SUT.
+Extension plugin for Robot Framework's SeleniumLibrary >= 4.0.0 that provides
+help with dealing asyncronous events by providing either automatic or manual
+waits for the duration of real actions happening within SUT, not arbituary
+length sleeps. There are also some helper functions which are out of scope
+of upstream SeleniumLibrary but useful for testing web applications with
+SeleniunLibrary.
 
-This is accomplished by utilizing following 2 libraries. First one provides an
-API and second one provides bindings.
+SeleniumTestability relies on core Selenium's feature Event Firing Webdriver
+and provides it's own listener interface that takes care of waiting in right
+places and instrumenting the SUT whenever it is needed.
+
+# Project Dependencies
 
  * https://github.com/alfonso-presa/testability.js
  * https://github.com/alfonso-presa/testability-browser-bindings
@@ -22,63 +29,78 @@ pip install robotframework-seleniumtestability
 ## Initialize library
 
 ```
-Library         SeleniumLibrary
-Library         SeleniumTestability     enable_implicit_wait=True
+Library         SeleniumLibrary     plugins=SeleniumTestability;True;30 Seconds;True
 ```
 
-If `enable_implicit_wait` is set to true, just before a selenium library keyword 
-is executed, SeleniumTestability library will wait until testability.js api call
-returns.  Example:
+## Parameters
+
+`plugins=` part is standard SeleniumLibrary parameter where first part is
+the plugin to load and rest of the string with semicolon separators are
+parameters passed to the said plugin.
+
+SeleniunTestabiluty has following parameters and in following order:
+
+### automatic_wait
+
+a truthy value, if SeleniumTestabily should automatically wait for sut to be in
+state that it can accept more actions.
+
+Can be enabled/disable at runtime.
+
+Defaults to True
+
+### timeout
+
+Robot timestring, amount of time to wait for SUT to be in state that it can be
+safely interacted with.
+
+Can be set at runtime.
+
+Defaults to 30 seconds.
+
+### error_on_timeout
+
+A truthy value, if timeout does occur either in manual or automatic mode, this
+determines if error should be thrown that marks marks the exection as failure.
+
+Can be enabled/disabled at runtime.
+
+Defaults to True
+
+### automatic_injection
+
+A truthy value. User can choose if he wants to instrument the SUT manually with
+appropriate keywords (or even, if the SUT is instrumented at build time?) or
+should SeleniumTestability determinine if SUT has testability features and if not
+then inject & instrument it automatically. 
+
+Can be enabled/disabled at runtime.
+
+Defaults to True
+
+## Example
+
+```robotframework
+  Click Element             id:button_that_triggers_ajax_request
+  Click Element             id:some_other_element
+  Log To Console            This will happen right after clicking
+```
+
+In here, if automatic_wait has been enabled, second `Click Element` keyword wont
+be executed before action triggered by the first button is finished.
+
+If automatic_wait is not enabled, test case can request the wait itself and previous
+example would look something like this.
 
 ```
-  Click Element   id:button_that_triggers_ajax_request
-  Click Element   id:some_other_element
-```
-
-In above example, second `Click Element` keyword wont be executed before action 
-triggered by the button is finished.
-
-If the `enable_implicit_wait` is set to false, user needs to call `Wait For
-Testability Ready` keyword manually. Example:
-
-```
-  Click Element   id:button_that_triggers_ajax_request
+  Click Element               id:button_that_triggers_ajax_request
   Wait For Testability Ready
-  Click Element   id:some_other_element
+  Click Element               id:some_other_element
+  Wait For Testability Ready
+  Log To Console              This would show after events triggered by second click are done.
 ```
 
-## Instrumenting the SUT
-
-Because functionality provided by SeleniumTestability relies on predefined 
-javascript api's to be present in the SUT (eg, your web application) before it 
-actually works, SUT itself must be instrumented. There are few options to do 
-that:
-
-### `Instrument Browser`-keyword
-
-After your tests have loaded the webpage you are testing, call `Instrument Browser`
-keyword to inject all required javascript code into the sut. 
-
-Do note: if page is reloaded or your tests scripts navigate out from the page, you 
-need re-instrument the browser again.  This should not be the case with single 
-page applications as typically the javascript context remains the same.
-
-### Direct integration.
-
-Inject api.js & bindings.js from testability folder into your application's js 
-bundle and call instrumentBrowser() javascript at the startup. This procedure 
-varies a lot from due to various tooling. Talk to your developers about the 
-possibility. 
-
-This could also be archived by MITM Proxy.
-
-Benefit of integration testability api into the application directly is about
-timing. If the application initialization triggers any asyncronous actions, 
-these are already being detected and there's no need for waiting in the begining 
-for a good state when your testing script can start.
-
-
-# Current Features
+# Currently Supported Asyncronous features
 
 * Can detect setTimeout & setImmediate calls and wait for them.
 * Can detect fetch() call and wait for it to finish
@@ -86,21 +108,19 @@ for a good state when your testing script can start.
 * Can detect CSS Animations and wait form them to finish
 * Can detect CSS Transitions and wait form them to finish
 
-Do note that CSS animations and transitions do not work properly in Chrome.
+Do note that CSS animations and transitions might not work in all browsers.
+In the past, Chrome has been a bit lacking but at the moment, our acceptance
+tests do show they work.
 
 
-# Documentation
+# Keyword Documentation
 
-  * Keyword Documentation http://omenia.github.io/robotframework-seleniumtestability
+At the moment, no online keyword documentation is avaialble but you can create one after
+installation:
 
-# TODO:
+```
+python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability
+```
 
-* Support ES6 Promises
-* Support fetching browser logs from Firefox.
-* Investigate on possibility of polyfilling css animations and transitions in
-  Chrome.
-* Addon possibility for bindings. For example, one might want to extend the
-  functionality to support asyncronous actions of any web framework (like
-  Angular, React and what not)
-* Implement other Keywords that might be useful for testing purposes:
-  * Remove Element From DOM
+This is mainly due to SeleniumLibrary being *plugin* of SeleniumLibrary and it is intended
+to be used with it

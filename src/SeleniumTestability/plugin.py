@@ -331,6 +331,19 @@ class SeleniumTestability(LibraryComponent):
 
     @keyword
     def drag_and_drop(self, locator, target, html5=False):
+        """Drags element identified by ``locator`` into ``target`` element.
+
+        The ``locator`` argument is the locator of the dragged element
+        and the ``target`` is the locator of the target. See the
+        `Locating elements` section for details about the locator syntax.
+
+        ``html5`` parameter is optional and if provided, `drag_and_drop`will utilize
+        javascript to trigger the suitable events ensuring that html5 applications
+        receive the right events
+
+        Example:
+        | `Drag And Drop` | css:div#element | css:div.target |  True |
+        """
         html5 = is_truthy(html5)
         self.debug("SeleniumTestability:  drag_and_drop({},{},{})".format(locator, target, html5))
         if not html5:
