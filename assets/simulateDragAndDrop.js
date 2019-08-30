@@ -1,4 +1,4 @@
-var simulateDragDrop = function(sourceNode, destinationNode) {
+exports.simulateDragDrop = function(sourceNode, destinationNode) {
     var EVENT_TYPES = {
         DRAG_END: 'dragend',
         DRAG_START: 'dragstart',

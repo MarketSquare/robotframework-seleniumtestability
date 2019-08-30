@@ -15,12 +15,8 @@ JS_LOOKUP = {
         checkReadyState();
     """,
 
-    "instrument_browser": """
-        window.instrumentBrowser(window)
-    """,
-
     "is_installed": """
-        return window.testability !== undefined && window.instrumentBrowser !== undefined
+        return window.seleniumtestabilityready !== undefined && window.seleniumtestabilityready == true
     """,
 
     "useragent": """

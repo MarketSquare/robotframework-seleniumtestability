@@ -120,8 +120,7 @@ class SeleniumTestability(LibraryComponent):
         self.js = JavaScriptKeywords(ctx)
         self.el = ElementKeywords(ctx)
         self.CWD = abspath(dirname(__file__))
-        self.api_file = "{}/js/api_inject.js".format(self.CWD)
-        self.bindings_file = "{}/js/bindings.js".format(self.CWD)
+        self.js_bundle = "{}/js/testability.js".format(self.CWD)
         self.draganddrop_file = "{}/js/simulateDragandDrop.js".format(self.CWD)
         self.ctx.event_firing_webdriver = TestabilityListener
         self.ctx.testability_settings = {"testability": self}
@@ -130,23 +129,15 @@ class SeleniumTestability(LibraryComponent):
         self.error_on_timeout = error_on_timeout
         self.timeout = timeout
 
-    @keyword
-    def inject_testability(self):
+
+    def _inject_testability(self):
         """
         Injects SeleniumTestability javascript bindings into a current browser's current window. This should happen automatically vie SeleniumTestability's internal `Event Firing Webdriver` support but keyword is provided also.
         """
-        self.debug("SeleniumTestability: inject_testability()")
-        with open(self.api_file, 'r') as f:
+        self.debug("SeleniumTestability: _inject_testability()")
+        with open(self.js_bundle, 'r') as f:
             buf = f.read()
-            self.js.execute_javascript("{}; window.testability = testability;".format(buf))
-
-        with open(self.bindings_file, 'r') as f:
-            buf = f.read()
-            self.js.execute_javascript("{}; window.instrumentBrowser = instrumentBrowser;".format(buf))
-
-        with open(self.draganddrop_file, 'r') as f:
-            buf = f.read()
-            self.js.execute_javascript("{}; window.simulateDragDrop = simulateDragDrop;".format(buf))
+            self.js.execute_javascript("{};".format(buf))
 
     @keyword
     def instrument_browser(self):
@@ -155,8 +146,7 @@ class SeleniumTestability(LibraryComponent):
         """
         self.debug("SeleniumTestability: instrument_browser()")
         if not self.is_testability_installed():
-            self.inject_testability()
-            self.js.execute_javascript(JS_LOOKUP["instrument_browser"])
+            self._inject_testability()
 
     @keyword
     def is_testability_installed(self):
