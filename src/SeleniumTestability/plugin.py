@@ -132,7 +132,6 @@ class SeleniumTestability(LibraryComponent):
         self.el = ElementKeywords(ctx)
         self.CWD = abspath(dirname(__file__))
         self.js_bundle = "{}/js/testability.js".format(self.CWD)
-        self.draganddrop_file = "{}/js/simulateDragandDrop.js".format(self.CWD)
         self.ctx.event_firing_webdriver = TestabilityListener
         self.ctx.testability_settings = {"testability": self}
         self.automatic_wait = automatic_wait
