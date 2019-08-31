@@ -15,7 +15,7 @@
     "webpack-cli": "^3.3.7"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --silent --config webpack.config.js"
   },
   "author": "Jani Mikkonen <jani.mikkonen@gmail.com>",
   "license": "ISC",

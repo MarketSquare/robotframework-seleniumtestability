@@ -3,6 +3,8 @@ twine
 m2r
 python-language-server[all]
 flake8
+invoke
+rellu
 robotframework-timer
 webdrivermanager
 -r requirements.txt
