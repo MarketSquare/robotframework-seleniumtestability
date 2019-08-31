@@ -28,6 +28,12 @@ def print_version(ctx):
 
 
 @task
+def webdrivers(ctx):
+    """Downloads required webdrivers"""
+    ctx.run("webdrivermanager firefox chrome")
+
+
+@task
 def generate_js(ctx):
     """Generates testability.js which is required to be done before sdist"""
     npm_run('install', '--silent')
