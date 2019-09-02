@@ -1,5 +1,4 @@
 from SeleniumLibrary.base import LibraryComponent, keyword
-from SeleniumLibrary.keywords.javascript import JavaScriptKeywords
 from SeleniumLibrary.keywords.element import ElementKeywords
 from os.path import abspath, dirname
 from .listener import TestabilityListener
@@ -128,7 +127,6 @@ class SeleniumTestability(LibraryComponent):
             # plugin will get initialized on every import and at some point __doc__ becomes read-only
             pass
         self.debug("SeleniumTestability: __init_({},{},{},{},{})".format(ctx, automatic_wait, timeout, error_on_timeout, automatic_injection))  # This does not work
-        self.js = JavaScriptKeywords(ctx)
         self.el = ElementKeywords(ctx)
         self.CWD = abspath(dirname(__file__))
         self.js_bundle = "{}/js/testability.js".format(self.CWD)
@@ -148,7 +146,7 @@ class SeleniumTestability(LibraryComponent):
         self.debug("SeleniumTestability: _inject_testability()")
         with open(self.js_bundle, 'r') as f:
             buf = f.read()
-            self.js.execute_javascript("{};".format(buf))
+            self.ctx.driver.execute_script("{};".format(buf))
 
     @keyword
     def instrument_browser(self):
@@ -165,7 +163,7 @@ class SeleniumTestability(LibraryComponent):
         Returns True if testability api's are loaded and current browser/window is instrumented, False if not.
         """
         self.debug("SeleniumTestability:  is_testability_installed()")
-        return self.js.execute_javascript(JS_LOOKUP["is_installed"])
+        return self.ctx.driver.execute_script(JS_LOOKUP["is_installed"])
 
     @keyword
     def wait_for_document_ready(self):
@@ -173,7 +171,7 @@ class SeleniumTestability(LibraryComponent):
         Explicit waits until document.readyState is complete.
         """
         self.debug("SeleniumTestability:  wait_for_document_ready()")
-        self.js.execute_async_javascript(JS_LOOKUP["wait_for_document_ready"])
+        self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_document_ready"])
 
     @keyword
     def set_testability_automatic_wait(self, enabled):
@@ -219,7 +217,7 @@ class SeleniumTestability(LibraryComponent):
             local_error_on_timeout = is_truthy(error_on_timeout)
 
         try:
-            WebDriverWait(self.ctx.driver, local_timeout, 0.15).until(lambda x: self.js.execute_async_javascript(JS_LOOKUP["wait_for_testability"]))
+            WebDriverWait(self.ctx.driver, local_timeout, 0.15).until(lambda x: self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_testability"]))
         except TimeoutException:
             if local_error_on_timeout:
                 raise TimeoutException('Timed out waiting for testability ready callback to trigger.')
@@ -328,7 +326,7 @@ class SeleniumTestability(LibraryComponent):
         Returns useragent string of current browser.
         """
         self.debug("SeleniumTestability:  get_current_useragent()")
-        return self.js.execute_javascript(JS_LOOKUP["useragent"])
+        return self.ctx.driver.execute_script(JS_LOOKUP["useragent"])
 
     @keyword
     def drag_and_drop(self, locator, target, html5=False):
@@ -360,7 +358,7 @@ class SeleniumTestability(LibraryComponent):
         Scrolls current window to the bottom of the page
         """
         self.debug("SeleniumTestability:  scroll_to_bottom()")
-        self.js.execute_javascript(JS_LOOKUP["scroll_to_bottom"])
+        self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_bottom"])
 
     @keyword
     def scroll_to_top(self):
@@ -368,7 +366,7 @@ class SeleniumTestability(LibraryComponent):
         Scrolls current window to the bottom of the page
         """
         self.debug("SeleniumTestability:  scroll_to_top()")
-        self.js.execute_javascript(JS_LOOKUP["scroll_to_top"])
+        self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_top"])
 
     @keyword
     def toggle_element_visibility(self, locator):
