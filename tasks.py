@@ -44,7 +44,7 @@ def generate_js(ctx):
 def test(ctx):
     """Runs robot acceptance tests"""
     ctx.run("flake8")
-    ctx.run("robot --loglevel TRACE:TRACE atest/")
+    ctx.run("robot --outputdir output/ --loglevel TRACE:TRACE atest/")
 
 
 @task
