@@ -415,6 +415,28 @@ class SeleniumTestability(LibraryComponent):
             return from_element != elem
 
     @keyword
+    def get_webelement_at(self, x, y):
+        """Returns a topmost WebElement at given coordinates"""
+        element = self.ctx.driver.execute_script(JS_LOOKUP["get_element_at"], x, y)
+        # NOTE: Maybe we should always return just straight element  and not
+        # really care if its event firing or not?
+        try:
+            return element.wrapped_element
+        except AttributeError:
+            return element
+
+    @keyword
+    def is_element_blocked(self, locator):
+        """
+        Returns `True` is ``locator`` is blocked, `False` if it is not.
+        Example:
+        | ${blocked}=       | Is Element Blocked    | id:some_id    |                  |
+        | Run Keyword If    | ${blocked} == True    | Hide  Element | id:some_other_id |
+        This will hide the element with id:some_other_id if  element id:some_id is being blocked
+        """
+        return self._element_blocked(locator)
+
+    @keyword
     def element_should_be_blocked(self, locator):
         """
         Throws exception if element found with ``locator`` is not blocked by any overlays.
