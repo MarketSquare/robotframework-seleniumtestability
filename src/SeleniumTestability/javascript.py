@@ -34,4 +34,20 @@ JS_LOOKUP = {
     "scroll_to_top": """
         window.scrollTo(0, 0);
     """,
+
+    "get_style_display": """
+        return arguments[0].style.display
+    """,
+
+    "set_style_display": """
+        arguments[0].style.display = arguments[1]
+    """,
+
+    "get_rect": """
+        return arguments[0].getBoundingClientRect()
+    """,
+
+    "get_element_at": """
+        return document.elementFromPoint(arguments[0], arguments[1])
+    """,
 }

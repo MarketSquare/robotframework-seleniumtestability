@@ -5,6 +5,23 @@
       testability test
     </title>
     <style type="text/css">
+#container {
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+#navi,
+#infoi {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#infoi {
+  z-index: 10;
+}
+
 img {
   display: block;
   margin: 20px;
@@ -100,5 +117,11 @@ img {
 
         </tr>
       </table>
+      <div id="container">
+        <div id="navi"><button id="hiddenbutton">Should be overlayed</button></div>
+        <div id="infoi">
+          <img src="http://placehold.it/100x100" height="100" width="100" />
+        </div>
+    </div>
   </body>
 </html>

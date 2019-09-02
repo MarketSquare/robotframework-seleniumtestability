@@ -138,6 +138,7 @@ class SeleniumTestability(LibraryComponent):
         self.automatic_injection = automatic_injection
         self.error_on_timeout = error_on_timeout
         self.timeout = timeout
+        self.hidden_elements = {}
         wrapt.wrap_function_wrapper(ElementFinder, 'find', bugfix)
 
     def _inject_testability(self):
@@ -368,3 +369,73 @@ class SeleniumTestability(LibraryComponent):
         """
         self.debug("SeleniumTestability:  scroll_to_top()")
         self.js.execute_javascript(JS_LOOKUP["scroll_to_top"])
+
+    @keyword
+    def toggle_element_visibility(self, locator):
+        """
+        Toggles visiblity state of element via ``locator``
+        """
+        self.debug("SeleniumTestability:  toggle_element_visibility({})".format(locator))
+        if locator in self.hidden_elements:
+            self.hide_element(locator)
+        else:
+            self.show_element(locator)
+
+    @keyword
+    def hide_element(self, locator):
+        """
+        Hides element via ``locator``. Typically one would use this to avoid getting
+        Toggles visiblity state of element via ``locator``
+        past overlays that are on top of element that is to be interacted with.
+        """
+        self.debug("SeleniumTestability: hide_element({})".format(locator))
+        from_element = self.el.find_element(locator)
+        current_display = self.ctx.driver.execute_script(JS_LOOKUP["get_style_display"], from_element)
+        self.hidden_elements[locator] = current_display
+        self.ctx.driver.execute_script(JS_LOOKUP["set_style_display"], from_element, "none")
+
+    @keyword
+    def show_element(self, locator):
+        """
+        Shows element via ``locator`` that has been previously been hidden with `Hide Element` keyword.
+        """
+        self.debug("SeleniumTestability: show_element({})".format(locator))
+        from_element = self.el.find_element(locator)
+        state = self.hidden_elements.get(locator, "")
+        self.ctx.driver.execute_script(JS_LOOKUP["set_style_display"], from_element, state)
+        del self.hidden_elements[locator]
+
+    def _element_blocked(self, locator):
+        from_element = self.el.find_element(locator)
+        rect = self.ctx.driver.execute_script(JS_LOOKUP["get_rect"], from_element)
+        y = rect['y'] + (rect['height'] / 2)
+        x = rect['x'] + (rect['width'] / 2)
+        elem = self.ctx.driver.execute_script(JS_LOOKUP["get_element_at"], x, y)
+        try:
+            return from_element != elem.wrapped_element
+        except AttributeError:
+            return from_element != elem
+
+    @keyword
+    def element_should_be_blocked(self, locator):
+        """
+        Throws exception if element found with ``locator`` is not blocked by any overlays.
+        #TODO: Add examples
+        """
+        self.debug("SeleniumTestability: element_should_be_blocked({})".format(locator))
+        is_blocked = self._element_blocked(locator)
+        self.debug("SeleniumTestability: element_should_be_blocked({}): {}".format(locator, is_blocked))
+        if not is_blocked:
+            raise AssertionError("Element with locator {} is not blocked".format(locator))
+
+    @keyword
+    def element_should_not_be_blocked(self, locator):
+        """
+        Throws exception if element found with ``locator`` is being blocked by overlays.
+        #TODO: Add examples
+        """
+        self.debug("SeleniumTestability: element_should_not_be_blocked({})".format(locator))
+        is_blocked = self._element_blocked(locator)
+        self.debug("SeleniumTestability: element_should_be_blocked({}): {}".format(locator, is_blocked))
+        if is_blocked:
+            raise AssertionError("Element with locator {} is blocked".format(locator))
