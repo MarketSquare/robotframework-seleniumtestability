@@ -53,8 +53,12 @@ def docs(ctx):
     ctx.run("PYTHONPATH=src python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability docs/keywords.html")
     ctx.run("cp docs/keywords.html docs/index.html")
 
+@task
+def black(ctx):
+    """Reformat code with black"""
+    ctx.run("black -l130 -tpy36 src/")
 
-@task(pre=[generate_js, docs])
+@task(pre=[generate_js, black, docs])
 def build(ctx):
     """Generates dist tar ball"""
     ctx.run("python setup.py sdist")
