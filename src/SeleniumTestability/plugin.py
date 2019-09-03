@@ -316,7 +316,7 @@ class SeleniumTestability(LibraryComponent):
         ret = {}
         cookie = SimpleCookie()
         cookie.load(cookies)
-        for key, morsel in cookie.keys():
+        for key, morsel in cookie.items():
             ret[key] = morsel.value
         return ret
 
