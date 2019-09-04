@@ -4,6 +4,9 @@ m2r
 python-language-server[all]
 black
 flake8
+flake8-annotations
+flake8-deprecated
+mypy
 invoke
 rellu
 robotframework-timer

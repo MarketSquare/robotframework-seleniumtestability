@@ -60,4 +60,4 @@ Teardown Test Environment
 Click And Wait
   [Arguments]   ${id}
   Click Element               id:${id}
-  Wait For Testability Ready
+  Wait For Testability Ready    error_on_timeout=YES

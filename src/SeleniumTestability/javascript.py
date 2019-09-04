@@ -1,4 +1,3 @@
-
 JS_LOOKUP = {
     "wait_for_testability": """
         var readyCallback = arguments[arguments.length - 1];
@@ -6,7 +5,6 @@ JS_LOOKUP = {
             readyCallback(true)
         });
     """,
-
     "wait_for_document_ready": """
         var readyCallback = arguments[arguments.length - 1];
         var checkReadyState=function() {
@@ -14,39 +12,30 @@ JS_LOOKUP = {
         };
         checkReadyState();
     """,
-
     "is_installed": """
         return window.seleniumtestabilityready !== undefined && window.seleniumtestabilityready == true
     """,
-
     "useragent": """
         return navigator.userAgent;
     """,
-
     "dragdrop": """
         window.simulateDragDrop(arguments[0], arguments[1]);
     """,
-
     "scroll_to_bottom": """
         window.scrollTo(0, document.body.scrollHeight);
     """,
-
     "scroll_to_top": """
         window.scrollTo(0, 0);
     """,
-
     "get_style_display": """
         return arguments[0].style.display
     """,
-
     "set_style_display": """
         arguments[0].style.display = arguments[1]
     """,
-
     "get_rect": """
         return arguments[0].getBoundingClientRect()
     """,
-
     "get_element_at": """
         return document.elementFromPoint(arguments[0], arguments[1])
     """,

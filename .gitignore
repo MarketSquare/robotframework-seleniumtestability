@@ -12,3 +12,4 @@ legacy/
 geckodriver*.log
 package-lock.json
 node_modules/
+.mypy_cache/

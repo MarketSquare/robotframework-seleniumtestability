@@ -1,3 +1,4 @@
+# flake8: noqa
 from flask import Flask, render_template
 from time import sleep
 app = Flask(__name__)
