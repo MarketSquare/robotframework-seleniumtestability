@@ -4,16 +4,17 @@ from SeleniumLibrary import SeleniumLibrary
 from os.path import abspath, dirname
 from .listener import TestabilityListener
 from .javascript import JS_LOOKUP
-from .types import WebElementType, LocatorType, OptionalBoolType, OptionalStrType
+from .types import WebElementType, LocatorType, OptionalBoolType, OptionalStrType, BrowserLogsType, OptionalDictType
 from robot.utils import is_truthy, timestr_to_secs, secs_to_timestr
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from http.cookies import SimpleCookie
 from furl import furl
 from SeleniumLibrary.locators import ElementFinder
 import wrapt
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebElement
 from typing import Any, Callable, Dict
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 def bugfix(wrapped: Callable, instance: ElementFinder, args: Any, kwargs: Any) -> WebElementType:
@@ -89,6 +90,26 @@ class SeleniumTestability(LibraryComponent):
 
     """
 
+    BROWSERS = {
+        "googlechrome": DesiredCapabilities.CHROME,
+        "gc": DesiredCapabilities.CHROME,
+        "chrome": DesiredCapabilities.CHROME,
+        "headlesschrome": DesiredCapabilities.CHROME,
+        "ff": DesiredCapabilities.FIREFOX,
+        "firefox": DesiredCapabilities.FIREFOX,
+        "headlessfirefox": DesiredCapabilities.FIREFOX,
+        "ie": DesiredCapabilities.INTERNETEXPLORER,
+        "internetexplorer": DesiredCapabilities.INTERNETEXPLORER,
+        "edge": DesiredCapabilities.EDGE,
+        "opera": DesiredCapabilities.OPERA,
+        "safari": DesiredCapabilities.SAFARI,
+        "phantomjs": DesiredCapabilities.PHANTOMJS,
+        "htmlunit": DesiredCapabilities.HTMLUNIT,
+        "htmlunitwithjs": DesiredCapabilities.HTMLUNITWITHJS,
+        "android": DesiredCapabilities.ANDROID,
+        "iphone": DesiredCapabilities.IPHONE,
+    }
+
     @property
     def automatic_wait(self: "SeleniumTestability") -> bool:
         return self.ctx.testability_settings["automatic_wait"]
@@ -150,6 +171,8 @@ class SeleniumTestability(LibraryComponent):
         self.error_on_timeout = error_on_timeout
         self.timeout = timeout  # type: ignore
         self.hidden_elements = {}  # type: Dict[str, str]
+        self.browser_warn_shown = False
+        self.empty_log_warn_shown = False
         wrapt.wrap_function_wrapper(ElementFinder, "find", bugfix)
 
     def _inject_testability(self: "SeleniumTestability") -> None:
@@ -477,3 +500,34 @@ class SeleniumTestability(LibraryComponent):
         self.debug("SeleniumTestability: element_should_be_blocked({}): {}".format(locator, is_blocked))
         if is_blocked:
             raise AssertionError("Element with locator {} is blocked".format(locator))
+
+    @keyword
+    def get_log(self: "SeleniumTestability", log_type: str = "browser") -> BrowserLogsType:
+        """
+        Returns logs determined by ``log_type`` from the current browser.
+        """
+        self.debug("SeleniumTestability: get_log({})".format(log_type))
+        ret = []  # type: BrowserLogsType
+        try:
+            ret = self.ctx.driver.get_log(log_type)
+        except WebDriverException:
+            if not self.browser_warn_shown:
+                self.browser_warn_shown = True
+                self.warn("Current browser does not support fetching logs from the browser")
+                return []
+        if not ret and not self.empty_log_warn_shown:
+            self.empty_log_warn_shown = True
+            self.warn("No logs available - you might need to enable loggingPrefs in desired_capabilities")
+        return ret
+
+    @keyword
+    def get_default_capabilities(self: "SeleniumTestability", browser_name: str) -> OptionalDictType:
+        """
+        Returns a set of default capabilities for given ``browser``.
+        """
+        try:
+            browser = browser_name.lower().replace(" ", "")
+            return self.BROWSERS[browser].copy()
+        except Exception as e:
+            self.debug(e)
+            return None
