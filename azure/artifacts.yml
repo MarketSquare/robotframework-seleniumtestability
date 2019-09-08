@@ -11,7 +11,7 @@ jobs:
   variables:
     python_version: 3.7
     os_name:  Linux
-  timeoutInMinutes: 60
+  timeoutInMinutes: 10
   cancelTimeoutInMinutes: 25
   pool:
     vmImage: 'ubuntu-16.04'
@@ -26,10 +26,11 @@ jobs:
   - script: |
       python -m pip install --upgrade pip
       python -m pip install -r requirements-dev.txt
+      python -m pip install .
     displayName: 'Install requirements'
 
   - script: |
-      python setup.py sdist
+      inv build
     displayName: Generate sdist archives
 
   - task: PublishBuildArtifacts@1
@@ -41,8 +42,7 @@ jobs:
       ArtifactName: sdist
 
   - bash: |
-      python -m robot.libdoc src/SeleniumTestability docs/keywords.html
-      cp docs/keywords.html docs/index.html
+      inv docs
     displayName: 'Generate Keyword Documentation'
 
   - task: PublishBuildArtifacts@1
