@@ -1,0 +1,3 @@
+--configure LineTooLong:120
+--ignore TooFewKeywordSteps
+atest/*

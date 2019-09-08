@@ -39,11 +39,20 @@ def generate_js(ctx):
     npm_run("install", "--silent")
     npm_run("run", "build", "--silent")
 
+@task
+def flake(ctx):
+    """Runs flake8 against whole project"""
+    ctx.run("flake8")
 
 @task
+def rflint(ctx):
+    """Runs rflint agains atests"""
+    ctx.run("rflint --argumentfile .rflintrc")
+
+
+@task(pre=[flake, rflint])
 def test(ctx):
     """Runs robot acceptance tests"""
-    ctx.run("flake8")
     ctx.run("coverage erase")
     ctx.run("coverage run -m robot --outputdir output/ --loglevel TRACE:TRACE atest/")
     ctx.run("coverage html")

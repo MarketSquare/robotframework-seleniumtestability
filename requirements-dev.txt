@@ -12,4 +12,5 @@ rellu
 robotframework-timer
 webdrivermanager
 coverage
+robotframework-lint
 -r requirements.txt
