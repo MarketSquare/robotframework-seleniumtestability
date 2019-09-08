@@ -11,4 +11,5 @@ invoke
 rellu
 robotframework-timer
 webdrivermanager
+coverage
 -r requirements.txt

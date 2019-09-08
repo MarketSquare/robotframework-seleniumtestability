@@ -15,3 +15,5 @@ node_modules/
 .mypy_cache/
 src/SeleniumTestability/js/
 monkeytype.sqlite3
+.coveragedb
+coverage_report/
