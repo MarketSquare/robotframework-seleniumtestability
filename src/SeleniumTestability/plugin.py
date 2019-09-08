@@ -10,18 +10,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from http.cookies import SimpleCookie
 from furl import furl
-from SeleniumLibrary.locators import ElementFinder
-import wrapt
-from selenium.webdriver.support.event_firing_webdriver import EventFiringWebElement
-from typing import Any, Callable, Dict
+from typing import Dict
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-
-def bugfix(wrapped: Callable, instance: ElementFinder, args: Any, kwargs: Any) -> WebElementType:
-    ret = wrapped(*args, **kwargs)
-    if isinstance(ret, EventFiringWebElement):
-        return ret.wrapped_element
-    return ret
 
 
 class SeleniumTestability(LibraryComponent):
@@ -173,7 +163,6 @@ class SeleniumTestability(LibraryComponent):
         self.hidden_elements = {}  # type: Dict[str, str]
         self.browser_warn_shown = False
         self.empty_log_warn_shown = False
-        wrapt.wrap_function_wrapper(ElementFinder, "find", bugfix)
 
     def _inject_testability(self: "SeleniumTestability") -> None:
         """
