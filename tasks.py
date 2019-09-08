@@ -2,12 +2,11 @@
 from pathlib import Path
 from npm.bindings import npm_run
 from invoke import task
-
 from rellu import Version
-
 
 assert Path.cwd() == Path(__file__).parent
 
+VERSION_PATTERN = "__version__ = \"(.*)\""
 VERSION_PATH = Path("src/SeleniumTestability/version.py")
 
 
@@ -17,7 +16,7 @@ def set_version(ctx, version):
     Args:
         version: Project version to set or ``dev`` to set development version.
     """
-    version = Version(version, VERSION_PATH)
+    version = Version(version, VERSION_PATH, pattern=VERSION_PATTERN)
     version.write()
     print(version)
 
@@ -25,7 +24,7 @@ def set_version(ctx, version):
 @task
 def print_version(ctx):
     """Print the current project version."""
-    print(Version(path=VERSION_PATH))
+    print(Version(path=VERSION_PATH, pattern=VERSION_PATTERN))
 
 
 @task
