@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from SeleniumLibrary.base import LibraryComponent, keyword
 from SeleniumLibrary.keywords.element import ElementKeywords
 from SeleniumLibrary import SeleniumLibrary

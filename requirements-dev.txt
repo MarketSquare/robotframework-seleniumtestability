@@ -6,6 +6,7 @@ black
 flake8
 flake8-annotations
 flake8-deprecated
+flake8-coding
 mypy
 invoke
 rellu

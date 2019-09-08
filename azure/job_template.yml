@@ -5,23 +5,28 @@ parameters:
 
 jobs:
 - job: ${{ parameters.name }}
-  timeoutInMinutes: 60
+  timeoutInMinutes: ${{ parameters.timeout }}
   cancelTimeoutInMinutes: 25
   pool:
     vmImage: ${{ parameters.vmImage }}
   strategy:
     matrix:
-      Python27:
+      Python36:
         os_name:  ${{ parameters.name }}
-        python_version: '2.7'
+        coverage:  ${{ parameters.coverage}}
+        python_version: '3.6'
         outputdir: testresults
       Python37:
         os_name:  ${{ parameters.name }}
+        coverage:  ${{ parameters.coverage}}
         python_version: '3.7'
         outputdir: testresults
     maxParallel: 6
 
   steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '11.2.0'
   - task: UsePythonVersion@0
     displayName: 'Python for test execution'
     inputs:
@@ -32,11 +37,10 @@ jobs:
   - script: |
       python -m pip install --upgrade pip
       python -m pip install -r requirements-dev.txt
-      python -m pip install .
     displayName: 'Install requirements'
 
   - bash: |
-      webdrivermanager firefox --linkpath AUTO
+      inv webdrivers
     displayName: Install webdriver
 
   - bash: |
@@ -47,28 +51,51 @@ jobs:
     displayName: Install Firefox on OSX
 
   - bash: |
+      brew update
+      brew tap caskroom/cask
+      brew cask install google-chrome
+    condition: eq( variables['Agent.OS'], 'Darwin' )
+    displayName: Install Chrome on OSX
+
+  - bash: |
       sudo apt-get update --yes
       sudo apt-get install firefox --yes
     condition: eq( variables['Agent.OS'], 'Linux' )
     displayName: Install Firefox on Linux
 
   - bash: |
-      ${{ parameters.robotPrefix }} robot --outputdir $(outputdir) --xunit acceptance_tests.xml atest/test_acceptance.robot
-    displayName: 'Running Acceptance Tests'
+      inv generatejs
+      ${{ parameters.robotPrefix }} inv test --outputdir $(outputdir) --xunit acceptance_tests.xml
+    displayName: 'Running Acceptance Test'
+    condition: not(and(eq(variables['python_version'], '3.6'), eq(variables['os_name'], 'Windows')))
+    continueOnError: false
+
+  - bash: |
+      ${{ parameters.robotPrefix }} inv test --coverage --outputdir devnull
+      inv cobertura --outputfile $(outputdir)/$(python_version)-$(os_name)-coverage.xml
+    displayName: 'Running Coverage'
+    condition: eq(variables['coverage'], 'true')
     continueOnError: false
 
   - task: PublishTestResults@2
-    condition: succeededOrFailed()
+    condition: and(succeededOrFailed(), not(and(eq(variables['python_version'], '3.6'), eq(variables['os_name'], 'Windows'))))
     inputs:
       testRunner: JUnit
       testResultsFiles: $(outputdir)/acceptance_tests.xml
       testResultsTitle: Acceptance Tests for $(python_version) on $(os_name)
       testRunTitle: seleniumtestability-$(python_version)-$(os_name)-acceptance
 
-# DOES NOT MOSTLY WORK IN WINDOWS FOR REASON OR THE OTHER WTF? 
+  - task: PublishCodeCoverageResults@1
+    condition: and(succeededOrFailed(), eq(variables['coverage'], 'true'))
+    inputs:
+      codeCoverageTool: 'cobertura'
+      summaryFileLocation: $(outputdir)/$(python_version)-$(os_name)-coverage.xml
+      failIfCoverageEmpty: false
+
+# DOES NOT MOSTLY WORK IN WINDOWS FOR REASON OR THE OTHER WTF?
 # running tests leaves process running and stuff in outputdir are still locked due to that ..
   - task: PublishBuildArtifacts@1
-    condition: succeededOrFailed()
+    condition: and(succeededOrFailed(), not(and(eq(variables['python_version'], '3.6'), eq(variables['os_name'], 'Windows'))))
     displayName: Publish Robot Framework logs and results
     inputs:
       PathtoPublish: $(outputdir)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 JS_LOOKUP = {
     "wait_for_testability": """
         var readyCallback = arguments[arguments.length - 1];

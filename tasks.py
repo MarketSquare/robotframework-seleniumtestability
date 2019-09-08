@@ -1,6 +1,5 @@
 # flake8: noqa
 from pathlib import Path
-from npm.bindings import npm_run
 from invoke import task
 from rellu import Version
 
@@ -30,14 +29,14 @@ def print_version(ctx):
 @task
 def webdrivers(ctx):
     """Downloads required webdrivers"""
-    ctx.run("webdrivermanager firefox chrome")
+    ctx.run("webdrivermanager firefox chrome --linkpath AUTO")
 
 
 @task
-def generate_js(ctx):
+def generatejs(ctx):
     """Generates testability.js which is required to be done before sdist"""
-    npm_run("install", "--silent")
-    npm_run("run", "build", "--silent")
+    ctx.run("npm install")
+    ctx.run("npm run build")
 
 @task
 def flake(ctx):
@@ -48,15 +47,6 @@ def flake(ctx):
 def rflint(ctx):
     """Runs rflint agains atests"""
     ctx.run("rflint --argumentfile .rflintrc")
-
-
-@task(pre=[flake, rflint])
-def test(ctx):
-    """Runs robot acceptance tests"""
-    ctx.run("coverage erase")
-    ctx.run("coverage run -m robot --outputdir output/ --loglevel TRACE:TRACE atest/")
-    ctx.run("coverage html")
-    ctx.run("coverage report --fail-under=85")
 
 
 @task
@@ -78,7 +68,28 @@ def black(ctx):
     ctx.run("black -l130 -tpy36 src/")
 
 
-@task(pre=[generate_js, black, docs])
+@task(pre=[generatejs, black, docs])
 def build(ctx):
     """Generates dist tar ball"""
     ctx.run("python setup.py sdist")
+
+
+@task
+def cobertura(ctx, outputfile=""):
+    if len(outputfile)==0:
+        outputfile="coverage.xml"
+    ctx.run("coverage html")
+    ctx.run("coverage xml -o {}".format(outputfile))
+
+@task(pre=[flake, rflint])
+def test(ctx, coverage=False, xunit='', outputdir='output/'):
+    """Runs robot acceptance tests"""
+    if coverage:
+        ctx.run("coverage erase")
+    cmd = "python"
+    extra = ""
+    if len(xunit)>0:
+        extra = "--xunit {}".format(xunit)
+    if coverage:
+        cmd = "coverage run"
+    ctx.run("{} -m robot --outputdir {} --loglevel TRACE:TRACE {} atest".format(cmd, outputdir, extra))

@@ -1,3 +1,4 @@
---configure LineTooLong:120
+--configure LineTooLong:130
 --ignore TooFewKeywordSteps
+--verbose
 atest/*

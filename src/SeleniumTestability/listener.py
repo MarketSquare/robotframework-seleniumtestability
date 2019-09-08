@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from SeleniumLibrary import SeleniumLibrary
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver

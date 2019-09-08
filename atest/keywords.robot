@@ -14,7 +14,7 @@ Teardown Web Environment
 
 Setup Web Environment
   [Arguments]  ${BROWSER}  ${URL}
-  [Documentation]  Opens a browser witth given url
+  [Documentation]  Opens a browser with given url
   ${URL}=  Set Variable  ${URL}
   Set Selenium Timeout  120 seconds
   Open Browser  ${URL}  browser=${BROWSER}
@@ -22,12 +22,14 @@ Setup Web Environment
 
 Start Flask App
   [Documentation]  Starts flask
-  ${FLASK_HANDLE}=  Start Process  flask  run  shell=True  cwd=${CURDIR}/../assets
-  Set Suite Variable  ${FH}  ${FLASK_HANDLE}
+  ${FH}=  Start Process  flask  run  shell=True  cwd=${CURDIR}/../assets  stdout=stdout.txt  stderr=stderr.txt
+  Set Suite Variable  ${FLASK_HANDLE}  ${FH}
+  Log To Console    Flask Running: ${FLASK_HANDLE}
 
 Stop Flask App
   [Documentation]  Stops flask
-  Terminate Process  ${FH}  kill=True
+  Log To Console    Stopping Flask: ${FLASK_HANDLE}
+  Terminate Process  ${FLASK_HANDLE}  kill=True
 
 Setup Test Environment
   [Arguments]  ${BROWSER}  ${URL}

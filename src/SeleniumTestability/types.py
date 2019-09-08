@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from typing import Union, Optional, List
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebElement
 from selenium.webdriver.remote.webelement import WebElement

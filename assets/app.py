@@ -1,8 +1,9 @@
 # flake8: noqa
 from flask import Flask, render_template
 from time import sleep
+import logging
+import os
 app = Flask(__name__)
-
 
 def rf(name):
     content = ""
@@ -34,3 +35,10 @@ def fetch():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+if __name__ == "__main__":
+    log = logging.getLogger('werkzeug')
+    log.disabled = True
+    app.logger.disabled = True
+    os.environ['WERKZEUG_RUN_MAIN'] = 'true'
+    app.run()
