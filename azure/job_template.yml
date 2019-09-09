@@ -65,6 +65,10 @@ jobs:
 
   - bash: |
       inv generatejs
+    displayName: 'Generate javascript'
+    continueOnError: false
+
+  - bash: |
       ${{ parameters.robotPrefix }} inv test --outputdir $(outputdir) --xunit acceptance_tests.xml
     displayName: 'Running Acceptance Test'
     condition: not(and(eq(variables['python_version'], '3.6'), eq(variables['os_name'], 'Windows')))
