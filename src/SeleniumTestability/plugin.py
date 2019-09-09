@@ -2,7 +2,7 @@
 from SeleniumLibrary.base import LibraryComponent, keyword
 from SeleniumLibrary.keywords.element import ElementKeywords
 from SeleniumLibrary import SeleniumLibrary
-from os.path import abspath, dirname
+from os.path import abspath, dirname, join
 from .listener import TestabilityListener
 from .javascript import JS_LOOKUP
 from .types import WebElementType, LocatorType, OptionalBoolType, OptionalStrType, BrowserLogsType, OptionalDictType
@@ -154,7 +154,7 @@ class SeleniumTestability(LibraryComponent):
         )  # This does not work
         self.el = ElementKeywords(ctx)
         self.CWD = abspath(dirname(__file__))
-        self.js_bundle = "{}/js/testability.js".format(self.CWD)
+        self.js_bundle = join(self.CWD, "js", "testability.js")
         self.ctx.event_firing_webdriver = TestabilityListener
         self.ctx.testability_settings = {"testability": self}
         self.automatic_wait = automatic_wait
