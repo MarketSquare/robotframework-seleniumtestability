@@ -5,7 +5,7 @@ SeleniumTestability
 """
 
 from os.path import abspath, dirname, join
-from setuptools import setup, find_packages
+from setuptools import setup
 
 LIBRARY_NAME = "SeleniumTestability"
 CWD = abspath(dirname(__file__))
@@ -45,7 +45,7 @@ setup(
     keywords="robot framework testing automation selenium seleniumlibrary"
     "testability async javascript softwaretesting",
     platforms="any",
-    packages=find_packages("src"),
+    packages=[LIBRARY_NAME],
     package_dir={"": "src"},
     package_data={"": ["js/*.*"]},
 )

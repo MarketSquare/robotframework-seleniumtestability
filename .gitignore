@@ -17,3 +17,4 @@ src/SeleniumTestability/js/
 monkeytype.sqlite3
 .coveragedb
 coverage_report/
+assets/std*.txt

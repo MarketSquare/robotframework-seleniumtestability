@@ -52,7 +52,7 @@ def rflint(ctx):
 @task
 def docs(ctx):
     """Generates keyword docs"""
-    ctx.run("PYTHONPATH=src python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability docs/keywords.html")
+    ctx.run("python -m robot.libdoc --pythonpath src SeleniumLibrary::plugins=SeleniumTestability docs/keywords.html")
     ctx.run("cp docs/keywords.html docs/index.html")
 
 
@@ -81,7 +81,7 @@ def cobertura(ctx, outputfile=""):
     ctx.run("coverage html")
     ctx.run("coverage xml -o {}".format(outputfile))
 
-@task(pre=[flake, rflint])
+@task
 def test(ctx, coverage=False, xunit='', outputdir='output/'):
     """Runs robot acceptance tests"""
     if coverage:
@@ -92,4 +92,4 @@ def test(ctx, coverage=False, xunit='', outputdir='output/'):
         extra = "--xunit {}".format(xunit)
     if coverage:
         cmd = "coverage run"
-    ctx.run("{} -m robot --outputdir {} --loglevel TRACE:TRACE {} atest".format(cmd, outputdir, extra))
+    ctx.run("{} -m robot --pythonpath src --outputdir {} --loglevel TRACE:TRACE {} atest".format(cmd, outputdir, extra))

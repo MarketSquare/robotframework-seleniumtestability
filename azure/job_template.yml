@@ -6,7 +6,6 @@ parameters:
 jobs:
 - job: ${{ parameters.name }}
   timeoutInMinutes: ${{ parameters.timeout }}
-  cancelTimeoutInMinutes: 25
   pool:
     vmImage: ${{ parameters.vmImage }}
   strategy:
@@ -64,14 +63,14 @@ jobs:
     displayName: Install Firefox on Linux
 
   - bash: |
-      inv generatejs
+      npm install
+      npm run build
     displayName: 'Generate javascript'
     continueOnError: false
 
   - bash: |
       ${{ parameters.robotPrefix }} inv test --outputdir $(outputdir) --xunit acceptance_tests.xml
     displayName: 'Running Acceptance Test'
-    condition: not(and(eq(variables['python_version'], '3.6'), eq(variables['os_name'], 'Windows')))
     continueOnError: false
 
   - bash: |
@@ -82,7 +81,7 @@ jobs:
     continueOnError: false
 
   - task: PublishTestResults@2
-    condition: and(succeededOrFailed(), not(and(eq(variables['python_version'], '3.6'), eq(variables['os_name'], 'Windows'))))
+    condition: succeededOrFailed()
     inputs:
       testRunner: JUnit
       testResultsFiles: $(outputdir)/acceptance_tests.xml
@@ -99,7 +98,7 @@ jobs:
 # DOES NOT MOSTLY WORK IN WINDOWS FOR REASON OR THE OTHER WTF?
 # running tests leaves process running and stuff in outputdir are still locked due to that ..
   - task: PublishBuildArtifacts@1
-    condition: and(succeededOrFailed(), not(and(eq(variables['python_version'], '3.6'), eq(variables['os_name'], 'Windows'))))
+    condition: always()
     displayName: Publish Robot Framework logs and results
     inputs:
       PathtoPublish: $(outputdir)

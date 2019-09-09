@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation   Helper keywords and variables
 Library         Process
+Library         Helpers
 
 *** Variables ***
 ${URL}          http://localhost:5000
@@ -22,14 +23,13 @@ Setup Web Environment
 
 Start Flask App
   [Documentation]  Starts flask
-  ${FH}=  Start Process  flask  run  shell=True  cwd=${CURDIR}/../assets  stdout=stdout.txt  stderr=stderr.txt
+  ${FH}=  Start Process  python  -mflask  run  shell=True  cwd=${CURDIR}/../assets  stdout=stdout.txt  stderr=stderr.txt
   Set Suite Variable  ${FLASK_HANDLE}  ${FH}
-  Log To Console    Flask Running: ${FLASK_HANDLE}
 
 Stop Flask App
   [Documentation]  Stops flask
-  Log To Console    Stopping Flask: ${FLASK_HANDLE}
-  Terminate Process  ${FLASK_HANDLE}  kill=True
+  ${pid}=   Get Process Id    ${FLASK_HANDLE}
+  Die Die Die   ${pid}
 
 Setup Test Environment
   [Arguments]  ${BROWSER}  ${URL}
