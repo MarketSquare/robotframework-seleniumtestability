@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from psutil import Process, wait_procs
-from typing import Union
 from robotlibcore import DynamicCore, keyword
-
-ProcessType = Union[Process, int]
+from SeleniumTestability.types import ProcessType
 
 
 class Helpers(DynamicCore):
