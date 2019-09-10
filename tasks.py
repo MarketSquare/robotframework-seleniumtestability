@@ -2,10 +2,14 @@
 from pathlib import Path
 from invoke import task
 from rellu import Version
+import os
+import os.path
+import shutil
+import glob
 
 assert Path.cwd() == Path(__file__).parent
 
-VERSION_PATTERN = "__version__ = \"(.*)\""
+VERSION_PATTERN = '__version__ = "(.*)"'
 VERSION_PATH = Path("src/SeleniumTestability/version.py")
 
 
@@ -38,10 +42,12 @@ def generatejs(ctx):
     ctx.run("npm install")
     ctx.run("npm run build")
 
+
 @task
 def flake(ctx):
     """Runs flake8 against whole project"""
     ctx.run("flake8")
+
 
 @task
 def rflint(ctx):
@@ -76,20 +82,49 @@ def build(ctx):
 
 @task
 def cobertura(ctx, outputfile=""):
-    if len(outputfile)==0:
-        outputfile="coverage.xml"
+    if len(outputfile) == 0:
+        outputfile = "coverage.xml"
     ctx.run("coverage html")
     ctx.run("coverage xml -o {}".format(outputfile))
 
+
 @task
-def test(ctx, coverage=False, xunit='', outputdir='output/'):
+def test(ctx, coverage=False, xunit="", outputdir="output/"):
     """Runs robot acceptance tests"""
     if coverage:
         ctx.run("coverage erase")
     cmd = "python"
     extra = ""
-    if len(xunit)>0:
+    if len(xunit) > 0:
         extra = "--xunit {}".format(xunit)
     if coverage:
         cmd = "coverage run"
     ctx.run("{} -m robot --pythonpath src --outputdir {} --loglevel TRACE:TRACE {} atest".format(cmd, outputdir, extra))
+
+
+@task
+def clean(ctx):
+    to_be_removed = [
+        ".mypy_cache/",
+        "coverage_report/",
+        "dist/",
+        "monkeytype.sqlite3",
+        "node_modules/",
+        "output/",
+        "src/robotframework_seleniumtestability.egg-info/",
+        "output.xml",
+        ".coveragedb",
+        "*.html",
+        "selenium-screenshot-*.png",
+        "geckodriver-*.log",
+        "assets/std*.txt",
+    ]
+
+    for item in to_be_removed:
+        if os.path.isdir(item):
+            shutil.rmtree(item)
+        elif os.path.isfile(item):
+            os.remove(item)
+        else:
+            for filename in glob.glob(item):
+                os.remove(filename)
