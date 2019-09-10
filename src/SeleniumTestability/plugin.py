@@ -5,14 +5,24 @@ from SeleniumLibrary import SeleniumLibrary
 from os.path import abspath, dirname, join
 from .listener import TestabilityListener
 from .javascript import JS_LOOKUP
+from .logger import get_logger, argstr, kwargstr
 from .types import WebElementType, LocatorType, OptionalBoolType, OptionalStrType, BrowserLogsType, OptionalDictType
 from robot.utils import is_truthy, timestr_to_secs, secs_to_timestr
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from http.cookies import SimpleCookie
 from furl import furl
-from typing import Dict
+from typing import Dict, Callable, Any
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import wrapt
+
+
+@wrapt.decorator
+def log_wrapper(wrapped: Callable, instance: "SeleniumTestability", args: Any, kwargs: Any) -> Any:
+    instance.logger.debug("{}({}) [ENTERING]".format(wrapped.__name__, ", ".join([argstr(args), kwargstr(kwargs)])))
+    ret = wrapped(*args, **kwargs)
+    instance.logger.debug("{}() [LEAVING]".format(wrapped.__name__))
+    return ret
 
 
 class SeleniumTestability(LibraryComponent):
@@ -147,11 +157,8 @@ class SeleniumTestability(LibraryComponent):
         except AttributeError:
             # plugin will get initialized on every import and at some point __doc__ becomes read-only
             pass
-        self.debug(
-            "SeleniumTestability: __init_({},{},{},{},{})".format(
-                ctx, automatic_wait, timeout, error_on_timeout, automatic_injection
-            )
-        )  # This does not work
+        self.logger = get_logger("SeleniumTestability")
+        self.logger.debug("__init__({},{},{},{},{})".format(ctx, automatic_wait, timeout, error_on_timeout, automatic_injection))
         self.el = ElementKeywords(ctx)
         self.CWD = abspath(dirname(__file__))
         self.js_bundle = join(self.CWD, "js", "testability.js")
@@ -165,40 +172,41 @@ class SeleniumTestability(LibraryComponent):
         self.browser_warn_shown = False
         self.empty_log_warn_shown = False
 
+    @log_wrapper
     def _inject_testability(self: "SeleniumTestability") -> None:
         """
         Injects SeleniumTestability javascript bindings into a current browser's current window. This should happen automatically vie SeleniumTestability's internal `Event Firing Webdriver` support but keyword is provided also.
         """
-        self.debug("SeleniumTestability: _inject_testability()")
         with open(self.js_bundle, "r") as f:
             buf = f.read()
             self.ctx.driver.execute_script("{};".format(buf))
 
+    @log_wrapper
     @keyword
     def instrument_browser(self: "SeleniumTestability") -> None:
         """
         Instruments the current webpage for testability. This should happen automatically vie SeleniumTestability's internal `Event Firing Webdriver` support but keyword is provided also. Calls `Inject Testability` keyword automatically.
         """
-        self.debug("SeleniumTestability: instrument_browser()")
         if not self.is_testability_installed():
             self._inject_testability()
 
+    @log_wrapper
     @keyword
     def is_testability_installed(self: "SeleniumTestability") -> bool:
         """
         Returns True if testability api's are loaded and current browser/window is instrumented, False if not.
         """
-        self.debug("SeleniumTestability:  is_testability_installed()")
         return self.ctx.driver.execute_script(JS_LOOKUP["is_installed"])
 
+    @log_wrapper
     @keyword
     def wait_for_document_ready(self: "SeleniumTestability") -> None:
         """
         Explicit waits until document.readyState is complete.
         """
-        self.debug("SeleniumTestability:  wait_for_document_ready()")
         self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_document_ready"])
 
+    @log_wrapper
     @keyword
     def set_testability_automatic_wait(self: "SeleniumTestability", enabled: bool) -> None:
         """
@@ -206,25 +214,25 @@ class SeleniumTestability(LibraryComponent):
         Parameters:
          - ``enabled`` state of automatic waits.
         """
-        self.debug("SeleniumTestability: set_testability_automatic_wait({})".format(enabled))
         self.automatic_wait = enabled
 
+    @log_wrapper
     @keyword
     def enable_testability_automatic_wait(self: "SeleniumTestability") -> None:
         """
         Enables TestabilityListener to call `Wait For Testability Ready` onn all interactions that are done.
         """
-        self.debug("SeleniumTestability:  enable_testability_automatic_wait()")
         self.set_testability_automatic_wait(True)
 
+    @log_wrapper
     @keyword
     def disable_testability_automatic_wait(self: "SeleniumTestability") -> None:
         """
         Disables TestabilityListener to call `Wait For Testability Ready` onn all interactions that are done.
         """
-        self.debug("SeleniumTestability:  disable_testability_automatic_wait()")
         self.set_testability_automatic_wait(False)
 
+    @log_wrapper
     @keyword
     def wait_for_testability_ready(
         self: "SeleniumTestability", timeout: OptionalStrType = None, error_on_timeout: OptionalBoolType = None
@@ -237,7 +245,6 @@ class SeleniumTestability(LibraryComponent):
 
         Both parameters are optional, if not provided, default values from plugin initialization time are used.
         """
-        self.debug("SeleniumTestability:  wait_for_testability_ready({},{})".format(timeout, error_on_timeout))
         local_timeout = self.timeout
         if timeout is not None:
             local_timeout = timestr_to_secs(timeout)
@@ -255,6 +262,7 @@ class SeleniumTestability(LibraryComponent):
         except Exception as e:
             self.warn(e)
 
+    @log_wrapper
     @keyword
     def set_testability_timeout(self: "SeleniumTestability", timeout: str) -> str:
         """
@@ -266,6 +274,7 @@ class SeleniumTestability(LibraryComponent):
         self.timeout = timeout  # type: ignore
         return secs_to_timestr(current)
 
+    @log_wrapper
     @keyword
     def get_testability_timeout(self: "SeleniumTestability") -> str:
         """
@@ -273,6 +282,7 @@ class SeleniumTestability(LibraryComponent):
         """
         return secs_to_timestr(self.timeout)
 
+    @log_wrapper
     @keyword
     def set_testability_error_on_timeout(self: "SeleniumTestability", error_on_timeout: bool) -> None:
         """Sets the global error_on_timeout value. eg, should SeleniumTestability throw exception when timeout occurs and there are still events in the testability queue.
@@ -282,6 +292,7 @@ class SeleniumTestability(LibraryComponent):
         self.error_on_timeout = error_on_timeout
 
     @keyword
+    @log_wrapper
     def get_testability_error_on_timeout(self: "SeleniumTestability") -> bool:
         """Returns error_on_timeout value set via plugin parameters or via `Set Testability Error On Timeout`keyword.
         """
@@ -312,6 +323,7 @@ class SeleniumTestability(LibraryComponent):
         data = furl(url)
         return {"base": str(data.copy().remove(path=True)), "path": str(data.path)}
 
+    @log_wrapper
     @keyword
     def set_testability_automatic_injection(self: "SeleniumTestability", enabled: bool) -> None:
         """
@@ -319,23 +331,22 @@ class SeleniumTestability(LibraryComponent):
         Parameters:
          - ``enabled`` state of automatic injection
         """
-        self.debug("SeleniumTestability: set_testability_automatic_injection({})".format(enabled))
         self.automatic_injection = enabled
 
+    @log_wrapper
     @keyword
     def enable_testability_automatic_injection(self: "SeleniumTestability") -> None:
         """
         Enables TestabilityListener to automatically inject testability.
         """
-        self.debug("SeleniumTestability:  enable_testability_automatic_injection()")
         self.set_testability_automatic_injection(True)
 
+    @log_wrapper
     @keyword
     def disable_testability_automatic_injection(self: "SeleniumTestability") -> None:
         """
         Disables TestabilityListener to automatically inject testability
         """
-        self.debug("SeleniumTestability:  disable_testability_automatic_injection()")
         self.set_testability_automatic_injection(False)
 
     @staticmethod
@@ -351,14 +362,15 @@ class SeleniumTestability(LibraryComponent):
             ret[key] = morsel.value
         return ret
 
+    @log_wrapper
     @keyword
     def get_current_useragent(self: "SeleniumTestability") -> str:
         """
         Returns useragent string of current browser.
         """
-        self.debug("SeleniumTestability:  get_current_useragent()")
         return self.ctx.driver.execute_script(JS_LOOKUP["useragent"])
 
+    @log_wrapper
     @keyword
     def drag_and_drop(self: "SeleniumTestability", locator: LocatorType, target: LocatorType, html5: bool = False) -> None:
         """Drags element identified by ``locator`` into ``target`` element.
@@ -375,7 +387,6 @@ class SeleniumTestability(LibraryComponent):
         | `Drag And Drop` | css:div#element | css:div.target |  True |
         """
         html5 = is_truthy(html5)
-        self.debug("SeleniumTestability:  drag_and_drop({},{},{})".format(locator, target, html5))
         if not html5:
             self.el.drag_and_drop(locator, target)
         else:
@@ -383,33 +394,34 @@ class SeleniumTestability(LibraryComponent):
             to_element = self.el.find_element(target)
             self.ctx.driver.execute_script(JS_LOOKUP["dragdrop"], from_element, to_element)
 
+    @log_wrapper
     @keyword
     def scroll_to_bottom(self: "SeleniumTestability") -> None:
         """
         Scrolls current window to the bottom of the page
         """
-        self.debug("SeleniumTestability:  scroll_to_bottom()")
         self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_bottom"])
 
+    @log_wrapper
     @keyword
     def scroll_to_top(self: "SeleniumTestability") -> None:
         """
         Scrolls current window to the bottom of the page
         """
-        self.debug("SeleniumTestability:  scroll_to_top()")
         self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_top"])
 
+    @log_wrapper
     @keyword
     def toggle_element_visibility(self: "SeleniumTestability", locator: LocatorType) -> None:
         """
         Toggles visiblity state of element via ``locator``
         """
-        self.debug("SeleniumTestability:  toggle_element_visibility({})".format(locator))
         if locator in self.hidden_elements:
             self.hide_element(locator)
         else:
             self.show_element(locator)
 
+    @log_wrapper
     @keyword
     def hide_element(self: "SeleniumTestability", locator: LocatorType) -> None:
         """
@@ -417,18 +429,17 @@ class SeleniumTestability(LibraryComponent):
         Toggles visiblity state of element via ``locator``
         past overlays that are on top of element that is to be interacted with.
         """
-        self.debug("SeleniumTestability: hide_element({})".format(locator))
         from_element = self.el.find_element(locator)
         current_display = self.ctx.driver.execute_script(JS_LOOKUP["get_style_display"], from_element)
         self.hidden_elements[locator] = current_display
         self.ctx.driver.execute_script(JS_LOOKUP["set_style_display"], from_element, "none")
 
+    @log_wrapper
     @keyword
     def show_element(self: "SeleniumTestability", locator: LocatorType) -> None:
         """
         Shows element via ``locator`` that has been previously been hidden with `Hide Element` keyword.
         """
-        self.debug("SeleniumTestability: show_element({})".format(locator))
         from_element = self.el.find_element(locator)
         state = self.hidden_elements.get(locator, "")
         self.ctx.driver.execute_script(JS_LOOKUP["set_style_display"], from_element, state)
@@ -445,6 +456,7 @@ class SeleniumTestability(LibraryComponent):
         except AttributeError:
             return from_element != elem
 
+    @log_wrapper
     @keyword
     def get_webelement_at(self: "SeleniumTestability", x: int, y: int) -> WebElementType:
         """Returns a topmost WebElement at given coordinates"""
@@ -456,6 +468,7 @@ class SeleniumTestability(LibraryComponent):
         except AttributeError:
             return element
 
+    @log_wrapper
     @keyword
     def is_element_blocked(self: "SeleniumTestability", locator: LocatorType) -> bool:
         """
@@ -467,36 +480,34 @@ class SeleniumTestability(LibraryComponent):
         """
         return self._element_blocked(locator)
 
+    @log_wrapper
     @keyword
     def element_should_be_blocked(self: "SeleniumTestability", locator: LocatorType) -> None:
         """
         Throws exception if element found with ``locator`` is not blocked by any overlays.
         #TODO: Add examples
         """
-        self.debug("SeleniumTestability: element_should_be_blocked({})".format(locator))
         is_blocked = self._element_blocked(locator)
-        self.debug("SeleniumTestability: element_should_be_blocked({}): {}".format(locator, is_blocked))
         if not is_blocked:
             raise AssertionError("Element with locator {} is not blocked".format(locator))
 
+    @log_wrapper
     @keyword
     def element_should_not_be_blocked(self: "SeleniumTestability", locator: LocatorType) -> None:
         """
         Throws exception if element found with ``locator`` is being blocked by overlays.
         #TODO: Add examples
         """
-        self.debug("SeleniumTestability: element_should_not_be_blocked({})".format(locator))
         is_blocked = self._element_blocked(locator)
-        self.debug("SeleniumTestability: element_should_be_blocked({}): {}".format(locator, is_blocked))
         if is_blocked:
             raise AssertionError("Element with locator {} is blocked".format(locator))
 
+    @log_wrapper
     @keyword
     def get_log(self: "SeleniumTestability", log_type: str = "browser") -> BrowserLogsType:
         """
         Returns logs determined by ``log_type`` from the current browser.
         """
-        self.debug("SeleniumTestability: get_log({})".format(log_type))
         ret = []  # type: BrowserLogsType
         try:
             ret = self.ctx.driver.get_log(log_type)
@@ -510,6 +521,7 @@ class SeleniumTestability(LibraryComponent):
             self.warn("No logs available - you might need to enable loggingPrefs in desired_capabilities")
         return ret
 
+    @log_wrapper
     @keyword
     def get_default_capabilities(self: "SeleniumTestability", browser_name: str) -> OptionalDictType:
         """
@@ -519,5 +531,5 @@ class SeleniumTestability(LibraryComponent):
             browser = browser_name.lower().replace(" ", "")
             return self.BROWSERS[browser].copy()
         except Exception as e:
-            self.debug(e)
+            self.logger.debug(e)
             return None

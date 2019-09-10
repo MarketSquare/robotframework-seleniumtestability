@@ -11,9 +11,6 @@ Resource        keywords.robot
 Show And Hide In Firefox
   ${FF}  ${URL}
 
-Show And Hide In Chrome
-  ${GC}  ${URL}
-
 *** Keywords ***
 Show And Hide Test
   [Arguments]  ${BROWSER}  ${URL}

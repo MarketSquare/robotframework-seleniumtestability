@@ -2,9 +2,18 @@
 from SeleniumLibrary import SeleniumLibrary
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
-from robot.api import logger
 from selenium.webdriver.support.events import AbstractEventListener
 from robot.libraries.BuiltIn import BuiltIn
+from .logger import get_logger, kwargstr, argstr
+import wrapt
+from typing import Callable, Any
+
+
+@wrapt.decorator
+def log_wrapper(wrapped: Callable, instance: "TestabilityListener", args: Any, kwargs: Any) -> None:
+    instance.logger.debug("{}({}) [ENTERING]".format(wrapped.__name__, ", ".join([argstr(args), kwargstr(kwargs)])))
+    wrapped(*args, **kwargs)
+    instance.logger.debug("{}() [LEAVING]".format(wrapped.__name__))
 
 
 class TestabilityListener(AbstractEventListener):
@@ -17,7 +26,10 @@ class TestabilityListener(AbstractEventListener):
         return self.testability.testability_settings["automatic_injection"]
 
     def __init__(self: "TestabilityListener") -> None:
+        AbstractEventListener.__init__(self)
         self.testability = self._get_sl()
+        self.logger = get_logger("TestabilityListener")
+        self.logger.debug("__init__()")
 
     def _get_sl(self: "TestabilityListener") -> SeleniumLibrary:
         libraries = BuiltIn().get_library_instance(all=True)
@@ -26,73 +38,87 @@ class TestabilityListener(AbstractEventListener):
                 return libraries[library]
         return None
 
+    @log_wrapper
     def before_navigate_to(self: "TestabilityListener", url: str, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_navigate_to(%s, %s)" % (url, driver))
+        pass
 
+    @log_wrapper
     def after_navigate_to(self: "TestabilityListener", url: str, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_navigate_to(%s, %s)" % (url, driver))
         if self.automatic_injection:
             self.testability.instrument_browser()
 
+    @log_wrapper
     def before_click(self: "TestabilityListener", element: WebElement, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_click(%s, %s)" % (element, driver))
         if self.automatic_wait:
             self.testability.wait_for_testability_ready()
 
+    @log_wrapper
     def after_click(self: "TestabilityListener", element: WebElement, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_click(%s, %s)" % (element, driver))
+        pass
 
+    @log_wrapper
     def before_change_value_of(self: "TestabilityListener", element: WebElement, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_change_value_of(%s, %s)" % (element, driver))
         if self.automatic_wait:
             self.testability.wait_for_testability_ready()
 
+    @log_wrapper
     def after_change_value_of(self: "TestabilityListener", element: WebElement, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_change_value_of(%s, %s)" % (element, driver))
+        pass
 
+    @log_wrapper
     def after_close(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_close(%s)" % driver)
+        pass
 
+    @log_wrapper
     def after_execute_script(self: "TestabilityListener", script: str, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_execute_script(%s, %s)" % (script, driver))
+        pass
 
+    @log_wrapper
     def after_find(self: "TestabilityListener", by: str, value: str, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_find(%s, %s, %s)" % (by, value, driver))
+        pass
 
+    @log_wrapper
     def after_navigate_back(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_navigate_back(%s)" % driver)
         if self.automatic_injection:
             self.testability.instrument_browser()
 
+    @log_wrapper
     def after_navigate_forward(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_navigate_forward(%s)" % driver)
         if self.automatic_injection:
             self.testability.instrument_browser()
 
+    @log_wrapper
     def after_quit(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: after_quit(%s)" % driver)
+        pass
 
+    @log_wrapper
     def before_close(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_close(%s)" % driver)
+        pass
 
+    @log_wrapper
     def before_execute_script(self: "TestabilityListener", script: str, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_execute_script(%s,%s) " % (script, driver))
+        pass
 
+    @log_wrapper
     def before_find(self: "TestabilityListener", by: str, value: str, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_find(%s, %s, %s)" % (by, value, driver))
+        pass
         if self.automatic_injection:
             self.testability.instrument_browser()
         if self.automatic_wait:
             self.testability.wait_for_testability_ready()
 
+    @log_wrapper
     def before_navigate_back(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_navigate_back(%s)" % driver)
+        pass
 
+    @log_wrapper
     def before_navigate_forward(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_navigate_forward(%s)" % driver)
+        pass
 
+    @log_wrapper
     def before_quit(self: "TestabilityListener", driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: before_quit(%s)" % driver)
+        pass
 
+    @log_wrapper
     def on_exception(self: "TestabilityListener", exception: Exception, driver: WebDriver) -> None:
-        logger.debug("TestabilityListener: on_exception(%s, %s)" % (exception, driver))
+        pass
