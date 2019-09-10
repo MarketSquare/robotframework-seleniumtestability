@@ -7,7 +7,6 @@ ProcessType = Union[Process, int]
 
 
 class Helpers(DynamicCore):
-
     def __init__(self: "Helpers") -> None:
         DynamicCore.__init__(self, [])
 

@@ -82,3 +82,10 @@ var drop = function(ev) {
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
 }
+
+var redirectTrigger = function() {
+  console.log("redirect: trigger");
+  var cur = encodeURIComponent(window.location + "/sub")
+  var redirurl = "https://httpbin.org/redirect-to?url=" + cur + "&status_code=302"
+  window.location = redirurl
+}

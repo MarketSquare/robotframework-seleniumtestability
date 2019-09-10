@@ -46,7 +46,7 @@ def flake(ctx):
 @task
 def rflint(ctx):
     """Runs rflint agains atests"""
-    ctx.run("rflint --argumentfile .rflintrc")
+    ctx.run("rflint --argumentfile .rflintrc atest/")
 
 
 @task

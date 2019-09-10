@@ -4,8 +4,9 @@ Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;Tr
 
 *** Variables ***
 ${URL}          http://host/path/name.txt
-${USER}         foo
-${PASS}         bar
+${AUTHURL}      http://127.0.0.1:5000/secret
+${USER}         demo
+${PASS}         mode
 
 *** Test Cases ***
 URL Splitting
@@ -16,5 +17,5 @@ URL Splitting
 
 Auth Mangling
   [Documentation]  Verifies basic auth injection
-  ${result}=  Add Basic Authentication To Url  ${URL}  ${USER}  ${PASS}
-  Should Be Equal  ${result}  http://foo:bar@host/path/name.txt
+  ${result}=  Add Basic Authentication To Url  ${AUTHURL}  ${USER}  ${PASS}
+  Should Be Equal  ${result}  http://${USER}:${PASS}@127.0.0.1:5000/secret

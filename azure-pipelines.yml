@@ -13,21 +13,21 @@ jobs:
     name: 'OSX'
     vmImage: 'macOS-10.13'
     coverage: 'false'
-    timeout: 10
+    timeout: 20
 - template: azure/job_template.yml
   parameters:
     name: 'Windows'
     vmImage: 'VS2017-Win2016'
     robotPrefix: 'PATH=~/bin:${PATH}'
     coverage: 'false'
-    timeout: 15
+    timeout: 30
 - template: azure/job_template.yml
   parameters:
     name: 'Linux'
     vmImage: 'ubuntu-16.04'
     robotPrefix: 'PATH=~/bin:${PATH} xvfb-run --auto-servernum --server-args="-screen 1, 1600x900x24"'
     coverage: 'true'
-    timeout: 10
+    timeout: 20
 - template: azure/artifacts.yml
   parameters:
     name: 'GenerateBuildArtifacts'
