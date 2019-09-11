@@ -89,17 +89,21 @@ def cobertura(ctx, outputfile=""):
 
 
 @task
-def test(ctx, coverage=False, xunit="", outputdir="output/"):
+def test(ctx, coverage=False, xunit=None, outputdir="output/", tests=None):
     """Runs robot acceptance tests"""
     if coverage:
         ctx.run("coverage erase")
     cmd = "python"
     extra = ""
-    if len(xunit) > 0:
-        extra = "--xunit {}".format(xunit)
+    if xunit:
+        xunit = "--xunit {}".format(xunit)
+    else:
+        xunit = ""
     if coverage:
         cmd = "coverage run"
-    ctx.run("{} -m robot --pythonpath src --outputdir {} --loglevel TRACE:TRACE {} atest".format(cmd, outputdir, extra))
+    if tests is None:
+        tests = "atest/"
+    ctx.run("{} -m robot --pythonpath src --outputdir {} --loglevel TRACE:TRACE {} {}".format(cmd, outputdir, xunit, tests))
 
 
 @task
