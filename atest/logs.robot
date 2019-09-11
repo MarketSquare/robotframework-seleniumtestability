@@ -1,6 +1,8 @@
 *** Settings ***
 Documentation   Verifies log fetching
-Test Teardown   Teardown Test Environment
+Suite Setup     Start Flask App
+Suite Teardown  Stop Flask App
+Test Teardown   Teardown Web Environment
 Test Template   Test Get Log
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 Resource        keywords.robot
@@ -17,11 +19,7 @@ Logs With Chrome
 Local Setup Test Environment
   [Arguments]  ${BROWSER}  ${PREFS}  ${ROWS}
   [Documentation]  normal test setup but with desired_capabilities added
-  Start Flask App
-  ${defaults}=  Get Default Capabilities  ${BROWSER}
-  ${browser_all}=  Create Dictionary  browser=ALL
-  ${logging}=  Create Dictionary  ${PREFS}  ${browser_all}
-  ${cap}=  Create Dictionary  &{defaults}  &{logging}
+  ${cap}=  Generate Capabilities with Logging Prefs  ${BROWSER}  ${PREFS}
   Open Browser  ${URL}  browser=${BROWSER}  desired_capabilities=${cap}
   Wait For Document Ready
   FOR  ${idx}  IN RANGE  ${ROWS}

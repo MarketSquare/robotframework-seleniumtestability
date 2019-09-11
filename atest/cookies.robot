@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation   Verifies cookie keywords
-Test Teardown   Teardown WEb Environment
+Test Teardown   Teardown Web Environment
 Test Template   Test Cookies
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 Resource        keywords.robot

@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation   Verifies manual injection & waiting features
-Suite Teardown  Add Final Benchmark Table
+Suite Setup     Start Flask App
+Suite Teardown  Internal Suite Teardown
 Test Template   Manual Wait For Testability Ready
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;False;30 seconds;True
 Library         Timer
@@ -45,15 +46,19 @@ Add Final Benchmark Table
 Manual Wait For Testability Ready
   [Arguments]  ${BROWSER}  ${ID}
   [Documentation]  test template for manual waiting & injection tests
-  Setup Test Environment  ${BROWSER}  ${URL}
+  Setup Web Environment   ${BROWSER}    ${URL}
   Start Timer  ${TEST NAME}
   Click And Wait  ${ID}
   Stop Timer  ${TEST NAME}
   Verify Single Timer  5 seconds  3.5 seconds  ${TEST NAME}
-  [Teardown]  Teardown Test Environment
+  [Teardown]  Teardown Web Environment
 
 Click And Wait
   [Arguments]  ${id}
   [Documentation]  Clicks element and manually waits for testability.
   Click Element  id:${id}
   Wait For Testability Ready  error_on_timeout=YES
+
+Internal Suite Teardown
+  Add Final Benchmark Table
+  Teardown Test Environment

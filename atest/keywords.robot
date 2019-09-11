@@ -17,7 +17,8 @@ Setup Web Environment
   [Arguments]  ${BROWSER}  ${URL}
   [Documentation]  Opens a browser with given url
   ${URL}=  Set Variable  ${URL}
-  Set Selenium Timeout  120 seconds
+  Set Selenium Timeout  10 seconds
+  Set Selenium Speed  0 seconds
   Open Browser  ${URL}  browser=${BROWSER}
   Wait For Document Ready
 
@@ -41,3 +42,13 @@ Teardown Test Environment
   [Documentation]  Stops flask and closes all browsers
   Teardown Web Environment
   Stop Flask App
+
+
+Generate Capabilities with Logging Prefs
+  [Documentation]  Generates default_capabilities with browser all to given loging prefs
+  [Arguments]   ${BROWSER}  ${PREFNAME}
+  ${defaults}=  Get Default Capabilities  ${BROWSER}
+  ${browser_all}=  Create Dictionary  browser=ALL
+  ${logging}=  Create Dictionary  ${PREFNAME}  ${browser_all}
+  ${cap}=  Create Dictionary  &{defaults}  &{logging}
+  [return]  ${cap}

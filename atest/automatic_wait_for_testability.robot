@@ -1,5 +1,6 @@
 *** Settings ***
 Documentation   Verifies automatic injection & waiting features
+Suite Setup     Start Flask App
 Suite Teardown  Final Report
 Test Template   Automatically Call Testability Ready
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
@@ -16,14 +17,15 @@ Testability in Chrome
 *** Keywords ***
 Final Report
   [Documentation]  Verifies that all timers done during the suite are passing
+  Stop Flask App
   Verify All Timers  fail_on_errors=False
 
 Automatically Call Testability Ready
   [Arguments]  ${BROWSER}  ${HIGHER_THAN}  ${LOWER_THAN}
   [Documentation]  test template for automatic waiting and injection
-  Setup Test Environment  ${BROWSER}  ${URL}
+  Setup Web Environment  ${BROWSER}  ${URL}
   Click All And Verify  ${HIGHER_THAN}  ${LOWER_THAN}
-  [Teardown]  Teardown Test Environment
+  [Teardown]  Teardown Web Environment
 
 Click All And Verify
   [Arguments]  ${HIGHER_THAN}  ${LOWER_THAN}
