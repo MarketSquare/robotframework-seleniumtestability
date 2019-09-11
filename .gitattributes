@@ -1,0 +1,2 @@
+src/SeleniumTestability/version.py export-subst
+src/SeleniumTestability/_version.py export-subst

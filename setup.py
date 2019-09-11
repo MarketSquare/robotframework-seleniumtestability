@@ -3,14 +3,12 @@
 """
 SeleniumTestability
 """
-
+import versioneer
 from os.path import abspath, dirname, join
 from setuptools import setup
 
 LIBRARY_NAME = "SeleniumTestability"
 CWD = abspath(dirname(__file__))
-VERSION_PATH = join(CWD, "src", LIBRARY_NAME, "version.py")
-exec(compile(open(VERSION_PATH).read(), VERSION_PATH, "exec"))
 with open(join(CWD, "requirements.txt"), encoding="utf-8") as f:
     REQUIREMENTS = f.read().splitlines()
 
@@ -32,7 +30,8 @@ Framework :: Robot Framework :: Library
 
 setup(
     name="robotframework-%s" % LIBRARY_NAME.lower(),
-    version=__version__,  # noqa: F821
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description="SeleniunTestability library that helps speed up tests with" "asyncronous evens",
     long_description=long_description,
     long_description_content_type="text/markdown",

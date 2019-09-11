@@ -1,34 +1,12 @@
 # flake8: noqa
 from pathlib import Path
 from invoke import task
-from rellu import Version
 import os
 import os.path
 import shutil
 import glob
 
 assert Path.cwd() == Path(__file__).parent
-
-VERSION_PATTERN = '__version__ = "(.*)"'
-VERSION_PATH = Path("src/SeleniumTestability/version.py")
-
-
-@task
-def set_version(ctx, version):
-    """Set project version in ``src/SeleniumTestability/version.py`` file.
-    Args:
-        version: Project version to set or ``dev`` to set development version.
-    """
-    version = Version(version, VERSION_PATH, pattern=VERSION_PATTERN)
-    version.write()
-    print(version)
-
-
-@task
-def print_version(ctx):
-    """Print the current project version."""
-    print(Version(path=VERSION_PATH, pattern=VERSION_PATTERN))
-
 
 @task
 def webdrivers(ctx, geckodriver=None, chromedriver=None):

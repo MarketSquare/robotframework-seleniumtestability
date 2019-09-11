@@ -10,7 +10,6 @@ flake8-deprecated
 flake8-coding
 mypy
 invoke
-rellu
 robotframework-timer
 webdrivermanager
 coverage

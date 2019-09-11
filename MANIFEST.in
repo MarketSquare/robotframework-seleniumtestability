@@ -2,3 +2,5 @@ include *.md LICENSE requirements.txt
 recursive-include docs *.html
 recursive-include src *.py
 recursive-include src *.js
+include versioneer.py
+include src/SeleniumTestability/_version.py
