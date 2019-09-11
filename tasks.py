@@ -7,7 +7,8 @@ import shutil
 import glob
 
 CHANGELOG = "CHANGELOG"
-filters = ['poc', 'new release', 'wip','cleanup']
+filters = ["poc", "new release", "wip", "cleanup", "!nocl"]
+
 
 def filter_entries(filename):
     buffer = []
@@ -22,16 +23,17 @@ def filter_entries(filename):
 
 assert Path.cwd() == Path(__file__).parent
 
+
 @task
 def webdrivers(ctx, geckodriver=None, chromedriver=None):
     """Downloads required webdrivers"""
-    browsers = {'firefox': 'latest', 'chrome': 'latest'}
+    browsers = {"firefox": "latest", "chrome": "latest"}
     if geckodriver:
-        browsers['firefox'] = geckodriver
+        browsers["firefox"] = geckodriver
     if chromedriver:
-        browsers['chrome'] = chromedriver
+        browsers["chrome"] = chromedriver
 
-    ctx.run("webdrivermanager firefox:{} chrome:{} --linkpath AUTO".format(browsers['firefox'], browsers['chrome']))
+    ctx.run("webdrivermanager firefox:{} chrome:{} --linkpath AUTO".format(browsers["firefox"], browsers["chrome"]))
 
 
 @task
@@ -131,6 +133,7 @@ def clean(ctx):
             for filename in glob.glob(item):
                 os.remove(filename)
 
+
 @task
 def changelog(ctx, version=None):
     if version is not None:
@@ -139,6 +142,7 @@ def changelog(ctx, version=None):
         version = ""
     ctx.run("gcg  -x -o {} -O rpm  {}".format(CHANGELOG, version))
     filter_entries(CHANGELOG)
+
 
 @task
 def release(ctx, version=None):
@@ -149,5 +153,3 @@ def release(ctx, version=None):
     ctx.run("git commit -m 'New Release {}'".format(version))
     ctx.run("git tag {}".format(version))
     build(ctx)
-
-
