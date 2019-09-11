@@ -4,7 +4,7 @@ cover_pylib = False
 data_file = .coveragedb
 omit =
   venv/
-  src/SeleniumTestability/version.py
+  src/SeleniumTestability/_version.py
 source = src/SeleniumTestability/
 
 [report]
