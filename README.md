@@ -161,7 +161,7 @@ tests do show they work.
 
 # Keyword Documentation
 
-Keyword documentation here and if you need to create one for offline usage:
+Keyword documentation [here](https://salabs.github.io/robotframework-seleniumtestability/index.html) and if you need to create one for offline usage:
 
 ```
 python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability
