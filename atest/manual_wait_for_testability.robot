@@ -60,5 +60,6 @@ Click And Wait
   Wait For Testability Ready  error_on_timeout=YES
 
 Internal Suite Teardown
+  [Documentation]  Final teardown
   Add Final Benchmark Table
   Teardown Test Environment
