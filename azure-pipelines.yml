@@ -14,6 +14,8 @@ jobs:
     vmImage: 'macOS-10.13'
     coverage: 'false'
     timeout: 20
+    chromedriver: 'latest'
+    geckodriver: 'latest'
 - template: azure/job_template.yml
   parameters:
     name: 'Windows'
@@ -21,6 +23,8 @@ jobs:
     robotPrefix: 'PATH=~/bin:${PATH}'
     coverage: 'false'
     timeout: 30
+    chromedriver: '75.0.3770.140'
+    geckodriver: 'latest'
 - template: azure/job_template.yml
   parameters:
     name: 'Linux'
@@ -28,6 +32,8 @@ jobs:
     robotPrefix: 'PATH=~/bin:${PATH} xvfb-run --auto-servernum --server-args="-screen 1, 1600x900x24"'
     coverage: 'true'
     timeout: 20
+    chromedriver: 'latest'
+    geckodriver: 'latest'
 - template: azure/artifacts.yml
   parameters:
     name: 'GenerateBuildArtifacts'

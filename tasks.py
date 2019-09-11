@@ -31,9 +31,15 @@ def print_version(ctx):
 
 
 @task
-def webdrivers(ctx):
+def webdrivers(ctx, geckodriver=None, chromedriver=None):
     """Downloads required webdrivers"""
-    ctx.run("webdrivermanager firefox chrome --linkpath AUTO")
+    browsers = {'firefox': 'latest', 'chrome': 'latest'}
+    if geckodriver:
+        browsers['firefox'] = geckodriver
+    if chromedriver:
+        browsers['chrome'] = chromedriver
+
+    ctx.run("webdrivermanager firefox:{} chrome:{} --linkpath AUTO".format(browsers['firefox'], browsers['chrome']))
 
 
 @task

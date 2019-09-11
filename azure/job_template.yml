@@ -15,11 +15,15 @@ jobs:
         coverage:  ${{ parameters.coverage}}
         python_version: '3.6'
         outputdir: testresults
+        geckodriver: ${{ parameters.geckodriver }}
+        chromedriver: ${{ parameters.chromedriver}}
       Python37:
         os_name:  ${{ parameters.name }}
         coverage:  ${{ parameters.coverage}}
         python_version: '3.7'
         outputdir: testresults
+        geckodriver: ${{ parameters.geckodriver }}
+        chromedriver: ${{ parameters.chromedriver}}
     maxParallel: 6
 
   steps:
@@ -39,28 +43,21 @@ jobs:
     displayName: 'Install requirements'
 
   - bash: |
-      inv webdrivers
-    displayName: Install webdriver
+      inv webdrivers --chromedriver=$(chromedriver) --geckodriver=$(geckodriver)
+    displayName: Webdrivers
 
   - bash: |
       brew update
       brew tap caskroom/cask
-      brew cask install firefox
+      brew cask install firefox google-chrome
     condition: eq( variables['Agent.OS'], 'Darwin' )
-    displayName: Install Firefox on OSX
-
-  - bash: |
-      brew update
-      brew tap caskroom/cask
-      brew cask install google-chrome
-    condition: eq( variables['Agent.OS'], 'Darwin' )
-    displayName: Install Chrome on OSX
+    displayName: Install Latest Browsers on OSX
 
   - bash: |
       sudo apt-get update --yes
-      sudo apt-get install firefox --yes
+      sudo apt-get install firefox google-chrome-stable --yes
     condition: eq( variables['Agent.OS'], 'Linux' )
-    displayName: Install Firefox on Linux
+    displayName: Install Latest Browsers on Linux
 
   - bash: |
       npm install
