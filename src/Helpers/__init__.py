@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from psutil import Process, wait_procs
+from psutil import Process, wait_procs, NoSuchProcess
 from robotlibcore import DynamicCore, keyword
 from SeleniumTestability.types import ProcessType
 
@@ -10,9 +10,14 @@ class Helpers(DynamicCore):
 
     @keyword
     def die_die_die(self: "Helpers", parent: ProcessType) -> None:
-        par = parent
         if isinstance(parent, int):
-            par = Process(parent)
+            try:
+                par = Process(parent)
+            except NoSuchProcess:
+                self.warn("Unable to kill process id:{}".format(parent))
+                return
+        else:
+            par = parent
         for child_process in par.children():
             self.die_die_die(child_process)
             if child_process.is_running():
