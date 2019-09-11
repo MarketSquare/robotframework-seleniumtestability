@@ -6,6 +6,20 @@ import os.path
 import shutil
 import glob
 
+CHANGELOG = "CHANGELOG"
+filters = ['poc', 'new release', 'wip','cleanup']
+
+def filter_entries(filename):
+    buffer = []
+    with open(filename) as old_file:
+        buffer = old_file.read().split("\n")
+
+    with open(filename, "w") as new_file:
+        for line in buffer:
+            if not any(bad_word in line.lower() for bad_word in filters):
+                new_file.write(line + "\n")
+
+
 assert Path.cwd() == Path(__file__).parent
 
 @task
@@ -58,7 +72,7 @@ def black(ctx):
     ctx.run("black -l130 -tpy36 src/")
 
 
-@task(pre=[generatejs, black, docs])
+@task(pre=[generatejs])
 def build(ctx):
     """Generates dist tar ball"""
     ctx.run("python setup.py sdist")
@@ -116,3 +130,24 @@ def clean(ctx):
         else:
             for filename in glob.glob(item):
                 os.remove(filename)
+
+@task
+def changelog(ctx, version=None):
+    if version is not None:
+        version = "-c {}".format(version)
+    else:
+        version = ""
+    ctx.run("gcg  -x -o {} -O rpm  {}".format(CHANGELOG, version))
+    filter_entries(CHANGELOG)
+
+@task
+def release(ctx, version=None):
+    assert version != None
+    changelog(ctx, version)
+    docs(ctx)
+    ctx.run("git add docs/* {}".format(CHANGELOG))
+    ctx.run("git commit -m 'New Release {}'".format(version))
+    ctx.run("git tag {}".format(version))
+    build(ctx)
+
+

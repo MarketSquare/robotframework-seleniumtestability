@@ -18,3 +18,4 @@ monkeytype.sqlite3
 .coveragedb
 coverage_report/
 assets/std*.txt
+output/

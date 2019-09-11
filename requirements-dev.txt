@@ -16,4 +16,5 @@ coverage
 robotframework-lint
 robotlibcore-temp
 psutil
+gcg
 -r requirements.txt
