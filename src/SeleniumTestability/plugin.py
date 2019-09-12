@@ -533,3 +533,13 @@ class SeleniumTestability(LibraryComponent):
         except Exception as e:
             self.logger.debug(e)
             return None
+
+
+    @log_wrapper
+    @keyword
+    def set_element_attribute(self: "SeleniumTestability", locator: LocatorType, attribute: str, value: str) -> None:
+        """
+        Sets ``locator`` attribute ``attribute`` to ``value``
+        """
+        from_element = self.el.find_element(locator)
+        self.ctx.driver.execute_script(JS_LOOKUP["set_element_attribute"], from_element, attribute, value)

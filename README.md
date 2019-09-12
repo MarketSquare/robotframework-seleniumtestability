@@ -159,6 +159,10 @@ tests do show they work.
 
   * Returns a dict of default capabilties. Useful if you need to construct desired_capabilities and you dont need to remember all basic things you need to have. This is due to SeleniumLibrary not providing those defaults anymore if user provide their own.
 
+* Set Element Attribute   **locator**  **attribute_name** **value**
+
+  * Sets arbituary attribute of the element into provided value
+
 # Keyword Documentation
 
 Keyword documentation [here](https://salabs.github.io/robotframework-seleniumtestability/index.html) and if you need to create one for offline usage:

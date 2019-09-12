@@ -40,4 +40,7 @@ JS_LOOKUP = {
     "get_element_at": """
         return document.elementFromPoint(arguments[0], arguments[1])
     """,
+    "set_element_attribute": """
+        arguments[0].setAttribute(arguments[1], arguments[2])
+    """,
 }
