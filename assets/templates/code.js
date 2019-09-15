@@ -89,3 +89,13 @@ var redirectTrigger = function() {
   var redirurl = "https://httpbin.org/redirect-to?url=" + cur + "&status_code=302"
   window.location = redirurl
 }
+
+
+var logTrigger = function() {
+  console.log("LOGTRIGGER: log")
+  console.error("LOGTRIGGER: error")
+  console.debug("LOGTRIGGER: debug")
+  console.trace("LOGTRIGGER: trace")
+  console.info("LOGTRIGGER: info")
+  logTriggerError()
+}

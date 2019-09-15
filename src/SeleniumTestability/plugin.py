@@ -6,7 +6,7 @@ from os.path import abspath, dirname, join
 from .listener import TestabilityListener
 from .javascript import JS_LOOKUP
 from .logger import get_logger, argstr, kwargstr
-from .types import WebElementType, LocatorType, OptionalBoolType, OptionalStrType, BrowserLogsType, OptionalDictType
+from .types import WebElementType, LocatorType, OptionalBoolType, OptionalStrType, BrowserLogsType, OptionalDictType, is_firefox
 from robot.utils import is_truthy, timestr_to_secs, secs_to_timestr
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -14,7 +14,11 @@ from http.cookies import SimpleCookie
 from furl import furl
 from typing import Dict, Callable, Any
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver import FirefoxProfile
 import wrapt
+import re
+import json
+from time import time
 
 
 @wrapt.decorator
@@ -171,6 +175,7 @@ class SeleniumTestability(LibraryComponent):
         self.hidden_elements = {}  # type: Dict[str, str]
         self.browser_warn_shown = False
         self.empty_log_warn_shown = False
+        self.ff_log_pos = {}  # type: Dict[str, int]
 
     @log_wrapper
     def _inject_testability(self: "SeleniumTestability") -> None:
@@ -502,19 +507,58 @@ class SeleniumTestability(LibraryComponent):
         if is_blocked:
             raise AssertionError("Element with locator {} is blocked".format(locator))
 
+    def _get_ff_log(self: "SeleniumTestability", name: str) -> BrowserLogsType:
+        matcher = r"^(?P<source>JavaScript|console)(\s|\.)(?P<level>warn.*?|debug|trace|log|error|info):\s(?P<message>.*)$"
+        LEVEL_LOOKUP = {
+            "log": "INFO",
+            "warn": "WARN",
+            "warning": "WARN",
+            "error": "SEVERE",
+            "info": "INFO",
+            "trace": "SEVERE",
+            "debug": "DEBUG",
+        }
+        SOURCE_LOOKUP = {"JavaScript": "javascript", "console": "console-api"}
+        log = []
+        skip_lines = self.ff_log_pos.get(name, 0)
+        buff = []
+        with open(name, "r") as f:
+            buff = f.read().split("\n")
+        self.ff_log_pos[name] = skip_lines + len(buff)
+        buff = buff[skip_lines:]
+
+        for line in buff:
+            matches = re.search(matcher, line)
+            if matches:
+                row = {
+                    "level": LEVEL_LOOKUP[matches.group("level")],
+                    "message": matches.group("message"),
+                    "source": SOURCE_LOOKUP[matches.group("source")],
+                    "timestamp": int(time() * 1000),
+                }
+                log.append(json.dumps(row))
+        return log
+
     @log_wrapper
     @keyword
     def get_log(self: "SeleniumTestability", log_type: str = "browser") -> BrowserLogsType:
         """
-        Returns logs determined by ``log_type`` from the current browser.
+        Returns logs determined by ``log_type`` from the current browser. What is returned
+        depends on desired_capabilities passed to `Open Browser`.
+
+        Note: On firefox, the firefox profile has to have `devtools.console.stdout.content` property to be set.
+        This can be done automatically with `Generate Firefox Profile` and then pass that to `Open Browser`.
         """
         ret = []  # type: BrowserLogsType
         try:
-            ret = self.ctx.driver.get_log(log_type)
+            if is_firefox(self.ctx.driver) and log_type == "browser":
+                ret = self._get_ff_log(self.ctx.driver.service.log_file.name)
+            else:
+                ret = self.ctx.driver.get_log(log_type)
         except WebDriverException:
             if not self.browser_warn_shown:
                 self.browser_warn_shown = True
-                self.warn("Current browser does not support fetching logs from the browser")
+                self.warn("Current browser does not support fetching logs from the browser with log_type: {}".format(log_type))
                 return []
         if not ret and not self.empty_log_warn_shown:
             self.empty_log_warn_shown = True
@@ -534,7 +578,6 @@ class SeleniumTestability(LibraryComponent):
             self.logger.debug(e)
             return None
 
-
     @log_wrapper
     @keyword
     def set_element_attribute(self: "SeleniumTestability", locator: LocatorType, attribute: str, value: str) -> None:
@@ -543,3 +586,27 @@ class SeleniumTestability(LibraryComponent):
         """
         from_element = self.el.find_element(locator)
         self.ctx.driver.execute_script(JS_LOOKUP["set_element_attribute"], from_element, attribute, value)
+
+    @log_wrapper
+    @keyword
+    def generate_firefox_profile(
+        self: "SeleniumTestability",
+        options: OptionalDictType = None,
+        accept_untrusted_certs: bool = False,
+        proxy: OptionalStrType = None,
+    ) -> FirefoxProfile:
+        profile = FirefoxProfile()
+        if options:
+            for key, value in options.items():  # type: ignore
+                profile.set_preference(key, value)
+
+        profile.set_preference("devtools.console.stdout.content", True)
+
+        if accept_untrusted_certs:
+            profile.accept_untrusted_certs
+
+        if proxy:
+            profile.set_proxy(proxy)
+
+        profile.update_preferences()
+        return profile

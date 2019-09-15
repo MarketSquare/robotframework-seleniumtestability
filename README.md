@@ -163,6 +163,14 @@ tests do show they work.
 
   * Sets arbituary attribute of the element into provided value
 
+* Get Log   **log_type**
+
+  * Returns log_type logs from current browser. If Browser is firefox and profile generated with Generate Firefox Profile keyword is used, Get Log is also able to return browser type logs for it.
+
+* Generate Firefox Profile **options** **accept_untrusted_certs** **proxy**
+
+  * Generates firefox with given options. Also can disable ssl cert checking and setting the proxy.
+
 # Keyword Documentation
 
 Keyword documentation [here](https://salabs.github.io/robotframework-seleniumtestability/index.html) and if you need to create one for offline usage:
