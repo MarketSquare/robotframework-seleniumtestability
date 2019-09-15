@@ -1,3 +1,9 @@
+* Sun Sep 15 2019 Jani Mikkonen <jani.mikkonen@siili.com> - 0.0.13
+- Get Log for firefox and firefox profile kw (rev.b075dcef)
+- Set Element Attribute keyword added (rev.936d5ce7)
+- Logging refactored. (rev.00fca282)
+- Added keyword documentation link to README (rev.4e706377)
+
 * Wed Sep 11 2019 Jani Mikkonen <jani.mikkonen@siili.com> - 0.0.12
 - Release task (rev.be5067c0)
 - Use versioneer for version numbers (rev.07c5c690)
