@@ -156,11 +156,6 @@ class SeleniumTestability(LibraryComponent):
         automatic_injection: bool = True,
     ) -> None:
         LibraryComponent.__init__(self, ctx)
-        try:
-            self.ctx.__doc__ = "{}\n\n= SeleniumTestability =\n{}".format(self.ctx.__doc__, self.__doc__)
-        except AttributeError:
-            # plugin will get initialized on every import and at some point __doc__ becomes read-only
-            pass
         self.logger = get_logger("SeleniumTestability")
         self.logger.debug("__init__({},{},{},{},{})".format(ctx, automatic_wait, timeout, error_on_timeout, automatic_injection))
         self.el = ElementKeywords(ctx)
