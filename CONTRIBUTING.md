@@ -103,6 +103,26 @@ pass:
 inv flake mypy rflint
 ```
 
+### Pull Requests
+
+Yes please! Only thing i ask is that the code follows conventions set
+by the provided tooling.
+
+### Release
+
+After verifying that that tests do pass, following comand will make all
+necessary preparetions from generating changelog, build docs, change the
+version number and commit everything to current branch along with required
+version tag:
+
+
+```bash
+inv release --version=VERSION
+```
+
+After the release task, use `inv build` to make the release packages and
+publish to pypi with `twine`
+
 ## Coding Guideles
 
 * mypy checks via `inv mypy` have to pass
