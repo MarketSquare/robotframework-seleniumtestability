@@ -82,13 +82,20 @@ inv generatejs
 
 #### Test
 
+First, tests are being setup in a way that they do not need to be installed
+via pip. SeleniumTestability plugin is being loaded with relative paths
+from the actual tests.
+
 Before running the tests, you should have chrome & firefox and suitable
-webdrivers for both the the browsers. To install webdrivers for *latest* 
+webdrivers for both the the browsers. To install webdrivers for *latest*
 browser versions into previously  activated virtual enviroment:
 
 ```bash
 inv webdrivers
 ```
+If your browser versions are not the latest, you can also specify webdriver
+versions for inv with `--geckodriver=version` and `--chromedriver=version`
+flags.
 
 After that, run the tests:
 
@@ -102,6 +109,8 @@ pass:
 ```bash
 inv flake mypy rflint
 ```
+
+Configuration for these tools are in `setup.cfg`, `mypy.ini` and `.rflintrc`
 
 ### Pull Requests
 
@@ -119,6 +128,8 @@ version tag:
 ```bash
 inv release --version=VERSION
 ```
+
+Nothing get's pushed at this point so you are free to "experiment".
 
 After the release task, use `inv build` to make the release packages and
 publish to pypi with `twine`
