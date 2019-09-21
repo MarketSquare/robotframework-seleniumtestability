@@ -5,7 +5,7 @@ Suite Teardown  Stop Flask App
 Test Template   Test Get Log
 Test Teardown   Teardown Web Environment
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
-Resource        keywords.robot
+Resource        resources.robot
 Library         Collections
 
 *** Test Cases ***

@@ -5,7 +5,7 @@ Suite Teardown  Stop Flask App
 Test Teardown   Teardown Web Environment
 Test Template   Show And Hide Test
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
-Resource        keywords.robot
+Resource        resources.robot
 
 *** Test Cases ***
 Show And Hide In Firefox

@@ -5,7 +5,7 @@ Suite Teardown  Internal Suite Teardown
 Test Template   Manual Wait For Testability Ready
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;False;30 seconds;True
 Library         Timer
-Resource        keywords.robot
+Resource        resources.robot
 
 *** Test Cases ***
 Verify Fetch In Firefox

@@ -5,7 +5,7 @@ Suite Teardown  Final Report
 Test Template   Automatically Call Testability Ready
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 Library         Timer
-Resource        keywords.robot
+Resource        resources.robot
 
 *** Test Cases ***
 Testability in Firefox

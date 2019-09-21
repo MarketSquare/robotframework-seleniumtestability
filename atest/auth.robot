@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation   Verifies url keywords
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
-Resource        keywords.robot
+Resource        resources.robot
 Suite Setup     Start Flask App
 Suite Teardown  Stop Flask App
 Test Template   Open Browser With Auth
