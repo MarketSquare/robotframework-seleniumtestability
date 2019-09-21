@@ -516,7 +516,7 @@ class SeleniumTestability(LibraryComponent):
         SOURCE_LOOKUP = {"JavaScript": "javascript", "console": "console-api"}
         log = []
         skip_lines = self.ff_log_pos.get(name, 0)
-        buff = []
+        buff: BrowserLogsType = []
         with open(name, "r") as f:
             buff = f.read().split("\n")
         self.ff_log_pos[name] = skip_lines + len(buff)
