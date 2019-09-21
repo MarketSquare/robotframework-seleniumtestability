@@ -1,3 +1,3 @@
-robotframework-seleniumlibrary>=4.0.0rc1
+robotframework-seleniumlibrary>=4.0.0
 furl
 wrapt
