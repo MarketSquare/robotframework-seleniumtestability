@@ -47,6 +47,31 @@ pip install -r requirements-dev.txt
 This will install all development time dependencies but also runtime
 dependencies from requirements.txt file.
 
+## Architecture
+
+SeleniumTestability is build on top of new SeleniumLibrary plugin api.
+Main entry point in code is plugin.py in the source folder. When this
+plugin is initialized, it will tell SeleniumLibrary that it needs to 
+wrap provided EventFiringWebDriver listener into it. This is listener
+like api that provides before/after hooks for events that selenium 
+is creating.
+
+Thru these events, underlying system under test can be instrumented
+with provided javascript code that allows the tester to avoid making 
+costly sleeps or waits into test cases.
+
+Listener code interacts with plugin via getting a reference of running
+SeleniumLibrary (where our plugin lives), plugin exposes a reference of
+itself and its properties via shared ctx context.
+
+Provided javascript assets are build from assets/build.js with npm 
+tooling.
+
+There are few more "core" files in the repo. javascript.py is essentially
+just a lookup table of javascript calls from within SeleniumTestability. 
+logger.py for setting things up for logger and types.py to hold all custom
+types.
+
 ## Building and Testing
 
 After all development time dependencies have been installed, your
