@@ -35,8 +35,6 @@ class SeleniumTestability(LibraryComponent):
 
     On top of this, there are some more or less useful utilities for web application testing.
 
-    TODO: Document constructor variables and Listener
-
     == Usage ==
 
     Example:
@@ -51,6 +49,25 @@ class SeleniumTestability(LibraryComponent):
     |   ${x}=   `Testability Loaded`
     |   Should Be True    ${x}
 
+    == Parameters ==
+
+    Plugin can take parameters when it is initialized. All of these values can be modified at runtim too with corresponding keywords. Here's a list of the parameters:
+    ===  automatic_wait ===
+    a truthy value, if SeleniumTestabily should automatically wait for sut to be in state that it can accept more actions.
+    Can be enabled/disable at runtime.
+    Defaults to True
+    === timeout  ===
+    Robot timestring, amount of time to wait for SUT to be in state that it can be safely interacted with.
+    Can be set at runtime.
+    Defaults to 30 seconds.
+    === error_on_timeout ===
+    A truthy value, if timeout does occur either in manual or automatic mode, this determines if error should be thrown that marks marks the exection as failure.
+    Can be enabled/disabled at runtime.
+    Defaults to True
+    === automatic_injection ===
+    A truthy value. User can choose if he wants to instrument the SUT manually with appropriate keywords (or even, if the SUT is instrumented at build time?) or should SeleniumTestability determinine if SUT has testability features and if not then inject & instrument it automatically.
+    Can be enabled/disabled at runtime.
+    Defaults to True
 
     ==  Waiting ==
 
@@ -485,7 +502,9 @@ class SeleniumTestability(LibraryComponent):
     def element_should_be_blocked(self: "SeleniumTestability", locator: LocatorType) -> None:
         """
         Throws exception if element found with ``locator`` is not blocked by any overlays.
-        #TODO: Add examples
+        Example:
+        | Element Should Be Blocked  |  id:some_id |
+        If nothing is on top of of provided element, throws an exception 
         """
         is_blocked = self._element_blocked(locator)
         if not is_blocked:
@@ -496,7 +515,9 @@ class SeleniumTestability(LibraryComponent):
     def element_should_not_be_blocked(self: "SeleniumTestability", locator: LocatorType) -> None:
         """
         Throws exception if element found with ``locator`` is being blocked by overlays.
-        #TODO: Add examples
+        Example:
+        | Element Should Not Be Blocked  |  id:some_id |
+        If there's element on top of provided selector, throws an exception
         """
         is_blocked = self._element_blocked(locator)
         if is_blocked:
