@@ -16,8 +16,8 @@ JS_LOOKUP = {
     "is_installed": """
         return window.seleniumtestabilityready !== undefined && window.seleniumtestabilityready == true
     """,
-    "useragent": """
-        return navigator.userAgent;
+    "navigator": """
+        return navigator[arguments[0]]
     """,
     "dragdrop": """
         window.simulateDragDrop(arguments[0], arguments[1]);
