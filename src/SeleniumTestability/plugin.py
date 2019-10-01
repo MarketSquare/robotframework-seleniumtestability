@@ -626,3 +626,12 @@ class SeleniumTestability(LibraryComponent):
 
         profile.update_preferences()
         return profile
+
+    @log_wrapper
+    @keyword
+    def get_window_location(self: "SeleniumTestability") -> LocationObject:
+        """
+        returns the window.location object
+        """
+        location = self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"])
+        return location
