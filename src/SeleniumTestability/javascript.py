@@ -44,6 +44,6 @@ JS_LOOKUP = {
         arguments[0].setAttribute(arguments[1], arguments[2])
     """,
     "get_window_location": """
-        return window.location
+        return window.location[arguments[0]]
     """,
 }
