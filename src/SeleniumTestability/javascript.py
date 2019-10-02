@@ -43,4 +43,16 @@ JS_LOOKUP = {
     "set_element_attribute": """
         arguments[0].setAttribute(arguments[1], arguments[2])
     """,
+    "get_window_history": """
+        return window.history[arguments[0]]
+    """,
+    "history_back": """
+        window.history.back()
+    """,
+    "history_forward": """
+        window.history.forward()
+    """,
+    "history_go": """
+        window.history.go(arguments[0])
+    """,
 }

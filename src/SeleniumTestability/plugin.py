@@ -504,7 +504,7 @@ class SeleniumTestability(LibraryComponent):
         Throws exception if element found with ``locator`` is not blocked by any overlays.
         Example:
         | Element Should Be Blocked  |  id:some_id |
-        If nothing is on top of of provided element, throws an exception 
+        If nothing is on top of of provided element, throws an exception
         """
         is_blocked = self._element_blocked(locator)
         if not is_blocked:
@@ -602,6 +602,38 @@ class SeleniumTestability(LibraryComponent):
         """
         from_element = self.el.find_element(locator)
         self.ctx.driver.execute_script(JS_LOOKUP["set_element_attribute"], from_element, attribute, value)
+
+    @log_wrapper
+    @keyword
+    def get_history_length(self: "SeleniumTestability") -> int:
+        """
+        returns the representing the number of elements in the session history, including the currently loaded page
+        """
+        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_history"], "length")
+
+    @log_wrapper
+    @keyword
+    def history_back(self: "SeleniumTestability") -> None:
+        """
+        goes to the previous page in session history
+        """
+        self.ctx.driver.execute_script(JS_LOOKUP["history_back"])
+
+    @log_wrapper
+    @keyword
+    def history_forward(self: "SeleniumTestability") -> None:
+        """
+        goes to the next page in session history
+        """
+        self.ctx.driver.execute_script(JS_LOOKUP["history_forward"])
+
+    @log_wrapper
+    @keyword
+    def history_go(self: "SeleniumTestability", position: int = 0) -> None:
+        """
+        loads a specific page from the session history
+        """
+        self.ctx.driver.execute_script(JS_LOOKUP["history_go"], position)
 
     @log_wrapper
     @keyword
