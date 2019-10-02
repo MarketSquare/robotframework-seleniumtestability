@@ -504,7 +504,7 @@ class SeleniumTestability(LibraryComponent):
         Throws exception if element found with ``locator`` is not blocked by any overlays.
         Example:
         | Element Should Be Blocked  |  id:some_id |
-        If nothing is on top of of provided element, throws an exception 
+        If nothing is on top of of provided element, throws an exception
         """
         is_blocked = self._element_blocked(locator)
         if not is_blocked:
@@ -524,7 +524,7 @@ class SeleniumTestability(LibraryComponent):
             raise AssertionError("Element with locator {} is blocked".format(locator))
 
     def _get_ff_log(self: "SeleniumTestability", name: str) -> BrowserLogsType:
-        matcher = r"^(?P<source>JavaScript|console)(\s|\.)(?P<level>warn.*?|debug|trace|log|error|info):\s(?P<message>.*)$"
+        matcher = r"^(?P<source>JavaScript|console)(\s|\.)(?P<level>warn.*?|debug|trace|log|error|info):\s(?P<message>(?!resource:).*)$"
         LEVEL_LOOKUP = {
             "log": "INFO",
             "warn": "WARN",
