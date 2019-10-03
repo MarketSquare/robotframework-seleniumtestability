@@ -23,6 +23,8 @@ Operating System :: OS Independent
 License :: OSI Approved :: Apache Software License
 Programming Language :: Python
 Programming Language :: Python :: 3
+Programming Language :: Python :: 3.6
+Programming Language :: Python :: 3.7
 Topic :: Software Development :: Testing
 Framework :: Robot Framework
 Framework :: Robot Framework :: Library
@@ -35,9 +37,9 @@ setup(
     description="SeleniunTestability library that helps speed up tests with" "asyncronous evens",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/salabs/robotframework-%s" % LIBRARY_NAME.lower(),
+    url="https://github.com/rasjani/robotframework-%s" % LIBRARY_NAME.lower(),
     author="Jani Mikkonen",
-    author_email="jani.mikkonen@siili.com",
+    author_email="jani.mikkonen@gmail.com",
     license="Apache License 2.0",
     classifiers=CLASSIFIERS,
     install_requires=REQUIREMENTS,
