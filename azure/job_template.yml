@@ -47,6 +47,11 @@ jobs:
     displayName: Webdrivers
 
   - bash: |
+      choco install handle 
+    condition: eq( variables['Agent.OS'], 'Windows_NT' )
+    displayName: Install debug tools
+
+  - bash: |
       brew update
       brew tap caskroom/cask
       brew cask install firefox google-chrome
@@ -76,6 +81,16 @@ jobs:
     displayName: 'Running Coverage'
     condition: eq(variables['coverage'], 'true')
     continueOnError: false
+
+  - bash: |
+      handle -accepteula
+      tasklist /FI "IMAGENAME eq geckodriver.exe" 2>NUL | find "geckodriver.exe">NUL
+      if "%ERRORLEVEL%"=="0" taskkill /f /im geckodriver.exe
+      tasklist /FI "IMAGENAME eq firefox.exe" 2>NUL | find "firefox.exe">NUL
+      if "%ERRORLEVEL%"=="0" taskkill /f /im firefox.exe
+    condition: and(always(), eq( variables['Agent.OS'], 'Windows_NT'))
+    continueOnError: true
+    displayName: Kill Geckodriver
 
   - task: PublishTestResults@2
     condition: succeededOrFailed()

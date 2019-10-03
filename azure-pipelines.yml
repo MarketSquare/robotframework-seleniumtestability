@@ -24,7 +24,7 @@ jobs:
     coverage: 'false'
     timeout: 30
     chromedriver: '75.0.3770.140'
-    geckodriver: 'v0.24.0'
+    geckodriver: 'latest'
 - template: azure/job_template.yml
   parameters:
     name: 'Linux'
