@@ -4,7 +4,7 @@ from .listener import TestabilityListener
 
 __all__ = ["SeleniumTestability", "TestabilityListener"]
 
-from versioneer import get_version  # type: ignore
+from ._version import get_versions  # type: ignore
 
-__version__ = get_version()
-del get_version
+__version__ = get_versions()
+del get_versions

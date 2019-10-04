@@ -3,7 +3,13 @@ from typing import Union, Optional, List
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebElement, EventFiringWebDriver
 from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
-from psutil import Process
+
+try:
+    # Only required during development.
+    from psutil import Process
+    ProcessType = Union[Process, int]
+except ModuleNotFoundError:
+    pass
 
 WebElementType = Union[WebElement, EventFiringWebElement]
 LocatorType = Union[WebElementType, EventFiringWebElement, str]
@@ -11,7 +17,6 @@ OptionalBoolType = Optional[bool]
 OptionalStrType = Optional[str]
 OptionalDictType = Optional[str]
 BrowserLogsType = List[str]
-ProcessType = Union[Process, int]
 FirefoxWebDriverType = Union[Firefox, EventFiringWebDriver]
 
 
