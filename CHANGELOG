@@ -1,3 +1,12 @@
+* Fri Oct 04 2019 Jani Mikkonen <jani.mikkonen@siili.com> - 0.0.14
+- Fix versioneer import at runtime. (rev.1e464f4e)
+- Get Log extra lines from geckolog removed. (rev.9e329da0)
+- github funding configs (rev.1ca078c8)
+- Updated documentation (rev.0539766d)
+- Create CODE_OF_CONDUCT.md (rev.0ae340e6)
+- updated dependencies to SL 4.0.0 (rev.a7e1324b)
+- Added CONTRIBUTING.md (rev.197e68c0)
+
 * Sun Sep 15 2019 Jani Mikkonen <jani.mikkonen@siili.com> - 0.0.13
 - Get Log for firefox and firefox profile kw (rev.b075dcef)
 - Set Element Attribute keyword added (rev.936d5ce7)
