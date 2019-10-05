@@ -90,7 +90,25 @@ var redirectTrigger = function() {
   window.location = redirurl
 }
 
+var storageTrigger = function() {
+  var testObj = {
+    "number": 1,
+    "str": "snafu",
+    "boolean": true,
+    "array": [1,2,3,4,5]
+  }
+  window.localStorage.setItem("simple_key_str", "simple_key_str_value")
+  window.sessionStorage.setItem("simple_key_str", "simple_key_str_value")
 
+  window.localStorage.setItem("simple_key_bool", true)
+  window.sessionStorage.setItem("simple_key_bool", true)
+
+  window.localStorage.setItem("simple_key_int", 31337)
+  window.sessionStorage.setItem("simple_key_bool", 31337)
+
+  window.localStorage.setItem("json_key", JSON.stringify(testObj))
+  window.sessionStorage.setItem("json_key", JSON.stringify(testObj))
+}
 var logTrigger = function() {
   console.log("LOGTRIGGER: log")
   console.error("LOGTRIGGER: error")
@@ -99,3 +117,6 @@ var logTrigger = function() {
   console.info("LOGTRIGGER: info")
   logTriggerError()
 }
+
+
+storageTrigger()

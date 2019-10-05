@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Union, Optional, List
+from typing import Union, Optional, List, Dict
 from selenium.webdriver.support.event_firing_webdriver import EventFiringWebElement, EventFiringWebDriver
 from selenium.webdriver import Firefox
 from selenium.webdriver.remote.webelement import WebElement
@@ -17,7 +17,9 @@ OptionalBoolType = Optional[bool]
 OptionalStrType = Optional[str]
 OptionalDictType = Optional[str]
 BrowserLogsType = List[str]
+StringArray = List[str]
 FirefoxWebDriverType = Union[Firefox, EventFiringWebDriver]
+StorageType = Union[Dict, bool, str, int, float]
 
 
 def is_firefox(webdriver: FirefoxWebDriverType) -> bool:
