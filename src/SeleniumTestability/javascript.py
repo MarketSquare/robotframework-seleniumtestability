@@ -46,4 +46,22 @@ JS_LOOKUP = {
     "get_window_location": """
         return window.location[arguments[0]]
     """,
+    "storage_getitem": """
+        return window[arguments[0]].getItem(arguments[1])
+    """,
+    "storage_setitem": """
+        window[arguments[0]].setItem(arguments[1], arguments[2])
+    """,
+    "storage_length": """
+        return window[arguments[0]].length
+    """,
+    "storage_removeitem": """
+        return window[arguments[0]].removeItem(arguments[1])
+    """,
+    "storage_clear": """
+        return window[arguments[0]].clear()
+    """,
+    "storage_keys": """
+        return Object.keys(window[arguments[0]])
+    """,
 }
