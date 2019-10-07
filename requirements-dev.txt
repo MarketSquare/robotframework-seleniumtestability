@@ -17,4 +17,5 @@ robotframework-lint
 robotlibcore-temp
 psutil
 gcg
+PIL
 -r requirements.txt
