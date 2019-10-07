@@ -1,5 +1,5 @@
 # flake8: noqa
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
 from flask_basicauth import BasicAuth
 from time import sleep
 import logging
@@ -24,6 +24,13 @@ def add_header(r):
     r.headers['Cache-Control'] = 'public, max-age=0'
     return r
 
+@app.route("/100x50.png")
+def small_img():
+    return send_file("templates/100x50.png", mimetype="image/png")
+
+@app.route("/100x100.png")
+def big_img():
+    return send_file("templates/100x100.png", mimetype="image/png")
 
 @app.route("/code.js")
 def code():
