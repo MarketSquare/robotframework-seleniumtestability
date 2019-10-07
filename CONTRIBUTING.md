@@ -140,7 +140,15 @@ Configuration for these tools are in `setup.cfg`, `mypy.ini` and `.rflintrc`
 ### Pull Requests
 
 Yes please! Only thing i ask is that the code follows conventions set
-by the provided tooling.
+by the provided tooling. This means:
+
+ * Do provide acceptance tests
+ * Tests must pass.
+ * Try to avoid lowering the total code coverage.
+ * When submitting a PR, you can have multiple pull requests within 
+   the pull request, but after the review, commits should be squashed into
+   a single commit.
+ * Reference the issue you are addressing in the commit message.
 
 ### Release
 
