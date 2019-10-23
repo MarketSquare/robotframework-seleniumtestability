@@ -29,7 +29,8 @@ jobs:
   steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '11.2.0'
+      versionSpec: '12.13.0'
+
   - task: UsePythonVersion@0
     displayName: 'Python for test execution'
     inputs:
