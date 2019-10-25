@@ -23,7 +23,7 @@ jobs:
     robotPrefix: 'PATH=~/bin:${PATH}'
     coverage: 'false'
     timeout: 30
-    chromedriver: 'latest'
+    chromedriver: '77.0.3865.40'
     geckodriver: 'v0.26.0'
 - template: azure/job_template.yml
   parameters:
