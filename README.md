@@ -173,7 +173,7 @@ tests do show they work.
 
 # Keyword Documentation
 
-Keyword documentation [here](https://salabs.github.io/robotframework-seleniumtestability/index.html) and if you need to create one for offline usage:
+Keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html) and if you need to create one for offline usage:
 
 ```
 python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability
@@ -181,5 +181,5 @@ python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability
 
 # Contributing
 
-[CONTRIBUTING.md](https://github.com/salabs/robotframework-seleniumtestability/blob/master/CONTRIBUTING.md) documents how to setup the environment for further development of SeleniumTestability.
+[CONTRIBUTING.md](https://github.com/rasjani/robotframework-seleniumtestability/blob/master/CONTRIBUTING.md) documents how to setup the environment for further development of SeleniumTestability.
 
