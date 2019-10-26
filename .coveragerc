@@ -5,6 +5,7 @@ data_file = .coveragedb
 omit =
   venv/
   src/SeleniumTestability/_version.py
+  src/SeleniumTestability/types.py
 source = src/SeleniumTestability/
 
 [report]
