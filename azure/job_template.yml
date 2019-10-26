@@ -67,7 +67,7 @@ jobs:
     continueOnError: false
 
   - bash: |
-      ${{ parameters.robotPrefix }} inv test --outputdir $(outputdir) --xunit acceptance_tests.xml
+      ${{ parameters.robotPrefix }} inv test --skipci --outputdir $(outputdir) --xunit acceptance_tests.xml
     displayName: 'Running Acceptance Test'
     continueOnError: false
 
