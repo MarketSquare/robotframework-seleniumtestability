@@ -2,6 +2,8 @@
 Documentation   Verifies storage keywords
 Test Teardown   Teardown Web Environment
 Test Template   Test Storage 
+Suite Setup     Start Flask App
+Suite Teardown  Stop Flask App
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 Resource        resources.robot
 Library         Collections
@@ -20,9 +22,9 @@ Test Storage
   Setup Web Environment  ${BROWSER}  ${URL}
 
   ${local}=     Get Storage Length
-  Should Be Equal As Integers  ${local}    2
+  Should Be Equal As Integers  ${local}    4
   ${session}=   Get Storage Length    storage_type=sessionStorage
-  Should Be Equal As Integers  ${session}  2
+  Should Be Equal As Integers  ${session}  4
   Clear Storage   storage_type=sessionStorage
   ${session}=   Get Storage Length    storage_type=sessionStorage
   Should Be Equal As Integers  ${session}  0
@@ -36,7 +38,7 @@ Test Storage
   END
 
   ${session}=   Get Storage Length    storage_type=sessionStorage
-  Should Be Equal As Integers  ${session}  2
+  Should Be Equal As Integers  ${session}  4
 
   ${storage_keys}=  Get Storage Keys    storage_type=sessionStorage
   FOR   ${key}  IN  @{storage_keys}

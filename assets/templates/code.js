@@ -104,7 +104,7 @@ var storageTrigger = function() {
   window.sessionStorage.setItem("simple_key_bool", true)
 
   window.localStorage.setItem("simple_key_int", 31337)
-  window.sessionStorage.setItem("simple_key_bool", 31337)
+  window.sessionStorage.setItem("simple_key_int", 31337)
 
   window.localStorage.setItem("json_key", JSON.stringify(testObj))
   window.sessionStorage.setItem("json_key", JSON.stringify(testObj))
