@@ -183,11 +183,15 @@ class SeleniumTestability(LibraryComponent):
         self.automatic_wait = automatic_wait
         self.automatic_injection = automatic_injection
         self.error_on_timeout = error_on_timeout
-        self.timeout = timeout  # type: ignore
+        self.testability_timeout = timeout  # type: ignore
         self.hidden_elements = {}  # type: Dict[str, str]
         self.browser_warn_shown = False
         self.empty_log_warn_shown = False
         self.ff_log_pos = {}  # type: Dict[str, int]
+
+        if automatic_wait == True and  automatic_inject == False:
+            self.warn("TODO")
+
 
     @log_wrapper
     def _inject_testability(self: "SeleniumTestability") -> None:
@@ -262,7 +266,7 @@ class SeleniumTestability(LibraryComponent):
 
         Both parameters are optional, if not provided, default values from plugin initialization time are used.
         """
-        local_timeout = self.timeout
+        local_timeout = self.testability_timeout
         if timeout is not None:
             local_timeout = timestr_to_secs(timeout)
         local_error_on_timeout = self.error_on_timeout
@@ -287,8 +291,8 @@ class SeleniumTestability(LibraryComponent):
         Parameters:
         - ``timeout`` Amount of time to wait until giving up for testability to be ready. Robot framework timestring
         """
-        current = self.timeout
-        self.timeout = timeout  # type: ignore
+        current = self.testability_timeout
+        self.testability_timeout = timeout  # type: ignore
         return secs_to_timestr(current)
 
     @log_wrapper
@@ -297,7 +301,7 @@ class SeleniumTestability(LibraryComponent):
         """
         Returns the global timeout value in robot framework timestr format for waiting testability ready.
         """
-        return secs_to_timestr(self.timeout)
+        return secs_to_timestr(self.testability_timeout)
 
     @log_wrapper
     @keyword
