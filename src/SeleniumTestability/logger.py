@@ -5,14 +5,16 @@ from functools import lru_cache
 from typing import Any
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 
-try:
-    location = BuiltIn().get_variable_value("${OUTPUT DIR}")
-    robot_log_level = BuiltIn().get_variable_value("${LOG LEVEL}")
-except RobotNotRunningError:
-    location = "."
-    robot_log_level = "INFO"
+
+def get_variable_from_robot(variable_name: str, default_value: Any) -> Any:
+    try:
+        return BuiltIn().get_variable_value("${{{}}}".format(variable_name))
+    except RobotNotRunningError:
+        return default_value
 
 
+location = get_variable_from_robot("OUTPUT DIR", ".")
+robot_log_level = get_variable_from_robot("LOG LEVEL", "INFO")
 log_name = os.path.join(location, "{}.log".format("SeleniumTestability"))
 log_handler = logging.FileHandler(log_name)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -24,7 +26,7 @@ LEVELS = {"FAIL": logging.DEBUG, "WARN": logging.warn, "INFO": logging.INFO, "DE
 def get_logger(name: str) -> Any:
     lgr = logging.getLogger(name)
     lgr.addHandler(log_handler)
-    set_to = LEVELS[robot_log_level]
+    set_to = LEVELS.get(robot_log_level, logging.INFO)
     lgr.setLevel(set_to)  # type: ignore
     lgr.debug(" **** New Session Created for {}  **** ".format(name))
     return lgr
