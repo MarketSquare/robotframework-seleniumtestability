@@ -31,6 +31,12 @@ jobs:
     inputs:
       versionSpec: '12.13.0'
 
+  - bash: |
+      displayName: 'Setting build variables'
+      status=$("$(coverage)" == "true" && echo "--coverage" || echo "")
+      echo "Enabling Coverage: $status"
+      echo "##vso[task.setvariable variable=ENABLE_COVERAGE]$status"
+
   - task: UsePythonVersion@0
     displayName: 'Python for test execution'
     inputs:
@@ -67,14 +73,13 @@ jobs:
     continueOnError: false
 
   - bash: |
-      ${{ parameters.robotPrefix }} inv test --skipci --outputdir $(outputdir) --xunit acceptance_tests.xml
+      ${{ parameters.robotPrefix }} inv test $(ENABLE_COVERAGE) --skipci --outputdir $(outputdir) --xunit acceptance_tests.xml
     displayName: 'Running Acceptance Test'
     continueOnError: false
 
   - bash: |
-      ${{ parameters.robotPrefix }} inv test --coverage --outputdir devnull
       inv cobertura --outputfile $(outputdir)/$(python_version)-$(os_name)-coverage.xml
-    displayName: 'Running Coverage'
+    displayName: 'Generating Coverage data'
     condition: eq(variables['coverage'], 'true')
     continueOnError: false
 
