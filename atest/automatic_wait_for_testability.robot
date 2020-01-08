@@ -3,7 +3,7 @@ Documentation   Verifies automatic injection & waiting features
 Suite Setup     Start Flask App
 Suite Teardown  Final Report
 Test Template   Automatically Call Testability Ready
-Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
+Library         SeleniumLibrary  timeout=2 seconds  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 Library         Timer
 Resource        resources.robot
 
@@ -39,3 +39,5 @@ Click All And Verify
   Wait For Testability Ready
   Stop Timer  ${TEST NAME}
   Verify Single Timer  ${LOWER_THAN}  ${HIGHER_THAN}  ${TEST NAME}
+  ${TIMEOUT}=   Get Selenium Timeout
+  Should Be Equal   ${TIMEOUT}  2 seconds

@@ -270,7 +270,7 @@ class SeleniumTestability(LibraryComponent):
             local_error_on_timeout = is_truthy(error_on_timeout)
 
         try:
-            WebDriverWait(self.ctx.driver, local_timeout, 0.15).until(
+            WebDriverWait(self.ctx.driver, local_timeout, 0.15, ignored_exceptions=[TimeoutException]).until(
                 lambda x: self.ctx.driver.execute_async_script(JS_LOOKUP["wait_for_testability"])
             )
         except TimeoutException:

@@ -47,10 +47,13 @@ Manual Wait For Testability Ready
   [Arguments]  ${BROWSER}  ${ID}
   [Documentation]  test template for manual waiting & injection tests
   Setup Web Environment   ${BROWSER}    ${URL}
+  Set Selenium Timeout  1 second
   Start Timer  ${TEST NAME}
   Click And Wait  ${ID}
   Stop Timer  ${TEST NAME}
   Verify Single Timer  5 seconds  3.5 seconds  ${TEST NAME}
+  ${TIMEOUT}=   Get Selenium Timeout
+  Should Be Equal   ${TIMEOUT}  1 second
   [Teardown]  Teardown Web Environment
 
 Click And Wait
