@@ -32,10 +32,10 @@ jobs:
       versionSpec: '12.13.0'
 
   - bash: |
-      displayName: 'Setting build variables'
       status=$("$(coverage)" == "true" && echo "--coverage" || echo "")
       echo "Enabling Coverage: $status"
       echo "##vso[task.setvariable variable=ENABLE_COVERAGE]$status"
+    displayName: 'Setting build variables'
 
   - task: UsePythonVersion@0
     displayName: 'Python for test execution'
