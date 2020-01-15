@@ -9,6 +9,20 @@ var shortTimeoutTrigger = function () {
   setTimeout(shortTimeoutCallback, 4000)
 }
 
+
+var longFetchCallback = function() {
+  console.log("longfetch: done")
+  document.getElementById("longfetch-result").innerHTML = "executed at least once";
+}
+
+var longFetchTrigger = function () {
+  console.log("longfetch: triggered");
+  document.getElementById("longfetch-result").innerHTML = "running";
+  var result = fetch("/longfetch",{
+    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+  }).then(longFetchCallback)
+}
+
 var fetchCallback = function () {
   console.log("fetch: done")
   document.getElementById("fetch-result").innerHTML = "executed at least once";

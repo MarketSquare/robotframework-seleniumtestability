@@ -36,6 +36,10 @@ def big_img():
 def code():
     return render_template('code.js')
 
+@app.route("/longfetch")
+def longfetch():
+    sleep(40)
+    return render_template('fetch.json')
 
 @app.route("/fetch")
 def fetch():
