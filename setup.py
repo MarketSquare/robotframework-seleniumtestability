@@ -39,7 +39,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/rasjani/robotframework-%s" % LIBRARY_NAME.lower(),
     author="Jani Mikkonen",
-    author_email="jani.mikkonen@rasjani.com",
+    author_email="jani.mikkonen@gmail.com",
     license="Apache License 2.0",
     classifiers=CLASSIFIERS,
     install_requires=REQUIREMENTS,
