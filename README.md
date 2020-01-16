@@ -1,22 +1,28 @@
 robotframework-seleniumtestability
 ==================================
 
-Extension plugin for Robot Framework's SeleniumLibrary >= 4.0.0 that provides
-help with dealing asyncronous events by providing either automatic or manual
-waits for the duration of real actions happening within SUT, not arbituary
-length sleeps. There are also some helper functions which are out of scope
-of upstream SeleniumLibrary but useful for testing web applications with it.
+SeleniumTestability is a plugin to Robot Framework's SeleniumLibrary that adds
+functionality to it doesn't fit into its mission. These new features are archived 
+by SL's plugin api that then automatically instrumentents the web application via 
+javascript calls and provides  keywords to bridge those into Robot Framework.
 
-SeleniumTestability relies on core Selenium's feature Event Firing Webdriver
+Plugin provides automatic detection of asyncronous events happening within 
+the web application. For example, if a rest api is called from the application, 
+testcase can automatically wait for that call to finish before doing any 
+interaction in the UI. There's also a bunch of functionality like fetching of 
+browser logs,  keywords to interact with local and session storage.  See the 
+keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html)
+for more details.
+
+SeleniumTestability relies on core Selenium's feature EventFiringWebdriver
 and provides it's own listener interface that takes care of waiting in right
-places and instrumenting the SUT whenever it is needed.
+places and instrumenting the SUT whenever it is needed. 
 
-Plugin also includes a a set of other functionality to ease the development in web enviroment.
+In the future, its also possible to extend the javascript parts of 
+SeleniumTestability to incorporate more state inspections.
 
-# Project Dependencies
-
- * https://github.com/alfonso-presa/testability.js
- * https://github.com/alfonso-presa/testability-browser-bindings
+Monitoring of the asyncronous events is archived with help of [Testability.js](https://github.com/alfonso-presa/testability.js)
+and its [bindings](https://github.com/alfonso-presa/testability-browser-bindings)
 
 
 # Installation
@@ -33,51 +39,7 @@ pip install robotframework-seleniumtestability
 Library         SeleniumLibrary     plugins=SeleniumTestability;True;30 Seconds;True
 ```
 
-## Parameters
-
-`plugins=` part is standard SeleniumLibrary parameter where first part is
-the plugin to load and rest of the string with semicolon separators are
-parameters passed to the said plugin.
-
-SeleniumTestabiluty has following parameters and in following order:
-
-### automatic_wait
-
-a truthy value, if SeleniumTestabily should automatically wait for sut to be in
-state that it can accept more actions.
-
-Can be enabled/disable at runtime.
-
-Defaults to True
-
-### timeout
-
-Robot timestring, amount of time to wait for SUT to be in state that it can be
-safely interacted with.
-
-Can be set at runtime.
-
-Defaults to 30 seconds.
-
-### error_on_timeout
-
-A truthy value, if timeout does occur either in manual or automatic mode, this
-determines if error should be thrown that marks marks the exection as failure.
-
-Can be enabled/disabled at runtime.
-
-Defaults to True
-
-### automatic_injection
-
-A truthy value. User can choose if he wants to instrument the SUT manually with
-appropriate keywords (or even, if the SUT is instrumented at build time?) or
-should SeleniumTestability determinine if SUT has testability features and if not
-then inject & instrument it automatically.
-
-Can be enabled/disabled at runtime.
-
-Defaults to True
+For parameter descriptions, refer to keyword docmentation.
 
 ## Example
 
@@ -103,73 +65,22 @@ example would look something like this.
 
 # Currently Supported Asyncronous features
 
-* Can detect setTimeout & setImmediate calls and wait for them.
-* Can detect fetch() call and wait for it to finish
-* Can detect XHR requests and wait for them to finish
-* Can detect CSS Animations and wait form them to finish
-* Can detect CSS Transitions and wait form them to finish
+* setTimeout & setImmediate calls and wait for them.
+* fetch() call and wait for it to finish
+* XHR requests and wait for them to finish
+* CSS Animations and wait form them to finish
+* CSS Transitions and wait form them to finish
+* Viewport scrolling.
 
-Do note that CSS animations and transitions might not work in all browsers.
-In the past, Chrome has been a bit lacking but at the moment, our acceptance
-tests do show they work.
+Do note that catching css animations and transitions is browser dependant. In the past
+certain browsers did not implement these features as "the standard" would require.
 
-# Extra Keywords
+# Other functionality.
 
-* Add Basic Authentication To **URL   URL,   USER,   PASSWORD**
+SeleniumTestability also provides other conveniance keywords that do not make sense to incorporate into 
+SeleniumLibrary itself, mainly due to functionality not being present in python Selenium.  Once again, 
+see keyword documentation for up to date list of keywords. 
 
-  * Takes in url, username and password and combines them together into single url that can be used for sites that use Basic Authentication.
-
-* Split URL to Host and PATH **URL**
-
-  * Takes in url and returns a dict  with keys base and path. Useful when constructing requests sessions.
-
-* Cookies To Dict  **CookieString**
-
-  * Takes a cookie string from the browser and converts it to dict. Useful when constructing requests sessions and one needs to provide authentication from existing selenium session.
-
-* Get Current Useragent
-
-  * Returns the useragent of the currently selected browser. Useful when constructing requests sessions.
-
-* Drag And Drop   **From, To, HTML5**
-
-  * Current implementation of Drag And Drop keyword in SeleniumLibrary does not work in all web application. Mainly because HTML5 events are not generated. If you set HTML5 to truthy value, the these events are generated and applications that rely on those drag&drop events should work properly.
-
-* Scroll To Bottom / Scroll To Top
-
-  * Conveniance functions  to set the browser viewport to top or bottom of the page.
-
-* Toggle Element Visibility / Hide Element / Show Element  **Locator**
-
-  * Toggles element on or off.  This is sometimes necessary when trying to interact with elements that are blocked via other elements on higher Z index. Combine this with *Is Element Blocked* and *Get WebElement At* and you have quite powerful way to prevent test failures that you are not really intersted at.
-
-* Is Element Blocked **Locator**
-
-  * Convenience function to check if element is blocked by some other element. Returns boolean value based on the state.
-
-* Element Should Be Blocked / Element Should Not Be Blocked **Locator**
-
-  * Asserts for checking if element is/is not blocked by anything.
-
-* Get Log  **LogType**
-
-  * If underlaying webdriver supports it, returns given logtype logs.
-
-* Get Default Capabilities **BrowserName**
-
-  * Returns a dict of default capabilties. Useful if you need to construct desired_capabilities and you dont need to remember all basic things you need to have. This is due to SeleniumLibrary not providing those defaults anymore if user provide their own.
-
-* Set Element Attribute   **locator**  **attribute_name** **value**
-
-  * Sets arbituary attribute of the element into provided value
-
-* Get Log   **log_type**
-
-  * Returns log_type logs from current browser. If Browser is firefox and profile generated with Generate Firefox Profile keyword is used, Get Log is also able to return browser type logs for it.
-
-* Generate Firefox Profile **options** **accept_untrusted_certs** **proxy**
-
-  * Generates firefox with given options. Also can disable ssl cert checking and setting the proxy.
 
 # Keyword Documentation
 
