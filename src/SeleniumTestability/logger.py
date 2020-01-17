@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 import logging
-import os.path
+from pathlib import Path
 from functools import lru_cache
 from typing import Any
 from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 
 try:
-    location = BuiltIn().get_variable_value("${OUTPUT DIR}")
+    location = Path(BuiltIn().get_variable_value("${OUTPUT DIR}"))
     robot_log_level = BuiltIn().get_variable_value("${LOG LEVEL}")
 except RobotNotRunningError:
-    location = "."
+    location = Path(".")
     robot_log_level = "INFO"
 
 
-log_name = os.path.join(location, "{}.log".format("SeleniumTestability"))
+log_name = location / "SeleniumTestability.log"
 log_handler = logging.FileHandler(log_name)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 log_handler.setFormatter(formatter)

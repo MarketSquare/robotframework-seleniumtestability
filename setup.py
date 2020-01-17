@@ -4,16 +4,21 @@
 SeleniumTestability
 """
 import versioneer
-from os.path import abspath, dirname, join
+from pathlib import Path
 from setuptools import setup
 
 LIBRARY_NAME = "SeleniumTestability"
-CWD = abspath(dirname(__file__))
-with open(join(CWD, "requirements.txt"), encoding="utf-8") as f:
+CWD = Path(__file__).parent
+
+requirements_file = CWD / "requirements.txt"
+readme_file = CWD / "README.md"
+
+# Get requirements
+with requirements_file.open(encoding="utf-8") as f:
     REQUIREMENTS = f.read().splitlines()
 
 # Get the long description from the README file
-with open(join(CWD, "README.md"), encoding="utf-8") as f:
+with readme_file.open(encoding="utf-8") as f:
     long_description = f.read()
 
 CLASSIFIERS = """

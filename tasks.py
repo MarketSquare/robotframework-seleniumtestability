@@ -2,9 +2,8 @@
 from pathlib import Path
 from invoke import task
 import os
-import os.path
+from pathlib import Path
 import shutil
-import glob
 
 CHANGELOG = "CHANGELOG"
 filters = ["poc", "new release", "wip", "cleanup", "!nocl"]
@@ -129,13 +128,14 @@ def clean(ctx):
     ]
 
     for item in to_be_removed:
-        if os.path.isdir(item):
+        fs_entry = Path(item)
+        if fs_entry.is_dir():
             shutil.rmtree(item)
-        elif os.path.isfile(item):
-            os.remove(item)
+        elif fs_entry.is_file():
+            fs_entry.unlink()
         else:
-            for filename in glob.glob(item):
-                os.remove(filename)
+            for fs_entry in Path().glob(item):
+                fs_entry.unlink()
 
 
 @task
