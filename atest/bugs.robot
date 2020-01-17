@@ -23,9 +23,10 @@ Internal Suite Setup
   Set Selenium Timeout      1 second
   Setup Test Environment   ${FF}    ${URL}
   ${TIMEOUT}=   Get Selenium Timeout
+  Set Suite Variable    ${ORIG_TIMEOUT}     ${TIMEOUT}
 
 
 Internal Suite Teardown
   [Documentation]  Final teardown
-  Add Final Benchmark Table
+  Set Selenium Timeout      ${ORIG_TIMEOUT}
   Teardown Test Environment
