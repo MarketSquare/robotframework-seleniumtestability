@@ -1,4 +1,9 @@
-* Mon Sep 30 2019 Jani Mikkonen <jani.mikkonen@varjo.com> - 0.0.15
+* Fri Jan 17 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 0.9
+- Fixed email in python package. (rev.09456a8b)
+- Ignore TimeoutException when running WebDriverWait (rev.9757538c)
+- Fix to task name (rev.98102eff)
+
+* Sat Oct 26 2019 Jani Mikkonen <jani.mikkonen@gmail.com> - 0.0.15
 - New keywords to fetch navigator properties (rev.f4af7637)
 - Catch scrolling events and block execution (rev.12958986)
 - Keywords for accessing local&session storage (rev.c96a429f)
