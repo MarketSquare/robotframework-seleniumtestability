@@ -2,23 +2,23 @@ robotframework-seleniumtestability
 ==================================
 
 SeleniumTestability is a plugin to Robot Framework's SeleniumLibrary that adds
-functionality to it doesn't fit into its mission. These new features are archived 
-by SL's plugin api that then automatically instrumentents the web application via 
+functionality to it doesn't fit into its mission. These new features are archived
+by SL's plugin api that then automatically instrumentents the web application via
 javascript calls and provides  keywords to bridge those into Robot Framework.
 
-Plugin provides automatic detection of asyncronous events happening within 
-the web application. For example, if a rest api is called from the application, 
-testcase can automatically wait for that call to finish before doing any 
-interaction in the UI. There's also a bunch of functionality like fetching of 
-browser logs,  keywords to interact with local and session storage.  See the 
-keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html)
+Plugin provides automatic detection of asyncronous events happening within
+the web application. For example, if a rest api is called from the application,
+testcase can automatically wait for that call to finish before doing any
+interaction in the UI. There's also a bunch of functionality like fetching of
+browser logs,  keywords to interact with local and session storage.  See the
+keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html?tag=plugin)
 for more details.
 
 SeleniumTestability relies on core Selenium's feature EventFiringWebdriver
 and provides it's own listener interface that takes care of waiting in right
-places and instrumenting the SUT whenever it is needed. 
+places and instrumenting the SUT whenever it is needed.
 
-In the future, its also possible to extend the javascript parts of 
+In the future, its also possible to extend the javascript parts of
 SeleniumTestability to incorporate more state inspections.
 
 Monitoring of the asyncronous events is archived with help of [Testability.js](https://github.com/alfonso-presa/testability.js)
@@ -77,14 +77,14 @@ certain browsers did not implement these features as "the standard" would requir
 
 # Other functionality.
 
-SeleniumTestability also provides other conveniance keywords that do not make sense to incorporate into 
-SeleniumLibrary itself, mainly due to functionality not being present in python Selenium.  Once again, 
-see keyword documentation for up to date list of keywords. 
+SeleniumTestability also provides other conveniance keywords that do not make sense to incorporate into
+SeleniumLibrary itself, mainly due to functionality not being in scope of SeleniumLibrary and Selenium
+python bindings. Do check the keyword documentation for up to date list of keywords.
 
 
 # Keyword Documentation
 
-Keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html) and if you need to create one for offline usage:
+Keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html?tag=plugin) and if you need to create one for offline usage:
 
 ```
 python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability

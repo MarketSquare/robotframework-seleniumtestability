@@ -101,14 +101,23 @@ class SeleniumTestability(LibraryComponent):
     |   Click Element     id:xhr-button
     |   `Wait For Testability Ready`
 
-    = Current Features =
-    - Can detect setTimeout & setImmediate calls and wait for them.
-    - Can detect fetch() call and wait for it to finish
-    - Can detect XHR requests and wait for them to finish
-    - Can detect CSS Animations and wait form them to finish
-    - Can detect CSS Transitions and wait form them to finish
+    = Currently supported Asyncronouse features =
 
-    *Do note* that CSS animations and transitions might not work properly in *Chrome*.
+    - setTimeout & setImmediate calls and wait for them.
+    - fetch() call and wait for it to finish
+    - XHR requests and wait for them to finish
+    - CSS Animations and wait form them to finish
+    - CSS Transitions and wait form them to finish
+    - Viewport scrolling.
+
+    *Do note* that catching css animations and transitions is browser dependant. In the past
+    certain browsers did not implement these features as "the standard" would require.
+
+    = Other functionality. =
+
+    SeleniumTestability also provides other conveniance keywords that do not make sense to incorporate into
+    SeleniumLibrary itself, mainly due to functionality not being in scope of SeleniumLibrary and Selenium
+    python bindings. Do check the keyword documentation for up to date list of keywords.
 
     """
 

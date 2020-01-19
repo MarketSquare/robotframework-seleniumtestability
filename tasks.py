@@ -23,6 +23,14 @@ def filter_entries(filename):
 assert Path.cwd() == Path(__file__).parent
 
 
+def patch_libdoc():
+    import robot.htmldata
+
+    old_template = Path(robot.htmldata.__file__).parent / robot.htmldata.LIBDOC
+    new_template = Path(__file__).parent / "assets" / "libdoc.html"
+    shutil.copy(str(new_template), str(old_template))
+
+
 @task
 def webdrivers(ctx, geckodriver=None, chromedriver=None):
     """Downloads required webdrivers"""
@@ -32,7 +40,11 @@ def webdrivers(ctx, geckodriver=None, chromedriver=None):
     if chromedriver:
         browsers["chrome"] = chromedriver
 
-    ctx.run("webdrivermanager firefox:{} chrome:{} --linkpath AUTO".format(browsers["firefox"], browsers["chrome"]))
+    ctx.run(
+        "webdrivermanager firefox:{} chrome:{} --linkpath AUTO".format(
+            browsers["firefox"], browsers["chrome"]
+        )
+    )
 
 
 @task
@@ -57,7 +69,10 @@ def rflint(ctx):
 @task
 def docs(ctx):
     """Generates keyword docs"""
-    ctx.run("python -m robot.libdoc --pythonpath src SeleniumLibrary::plugins=SeleniumTestability docs/keywords.html")
+    patch_libdoc()
+    ctx.run(
+        "python -m robot.libdoc --name 'SeleniumLibrary with SeleniumTestability Plugin' --pythonpath src SeleniumLibrary::plugins=SeleniumTestability docs/keywords.html"
+    )
     ctx.run("cp docs/keywords.html docs/index.html")
 
 
@@ -88,7 +103,9 @@ def cobertura(ctx, outputfile=""):
 
 
 @task
-def test(ctx, coverage=False, xunit=None, skipci=False, outputdir="output/", tests=None):
+def test(
+    ctx, coverage=False, xunit=None, skipci=False, outputdir="output/", tests=None
+):
     """Runs robot acceptance tests"""
     extras = ""
     if coverage:
@@ -104,9 +121,13 @@ def test(ctx, coverage=False, xunit=None, skipci=False, outputdir="output/", tes
     if tests is None:
         tests = "atest/"
     if skipci:
-        extras=f"{extras} --noncritical skipci --xunitskipnoncritical"
+        extras = f"{extras} --noncritical skipci --xunitskipnoncritical"
 
-    ctx.run("{} -m robot --pythonpath src --outputdir {} --loglevel TRACE:TRACE {} {} {}".format(cmd, outputdir, extras, xunit, tests))
+    ctx.run(
+        "{} -m robot --pythonpath src --outputdir {} --loglevel TRACE:TRACE {} {} {}".format(
+            cmd, outputdir, extras, xunit, tests
+        )
+    )
 
 
 @task
