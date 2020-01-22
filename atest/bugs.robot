@@ -17,6 +17,13 @@ Verify Timeout in execute_script
   Verify Single Timer  42 seconds   40 seconds  ${TEST NAME}
 
 
+Verify EventFiringWebElement conversion
+  [Documentation]   WebElement != EventFiringWebElement
+  [Tags]            skipci
+  ${elem}=   Get WebElement    id:shorttimeout-result
+  Wait Until Element Contains    ${elem}    not executed
+
+
 *** Keywords ***
 
 Internal Suite Setup
