@@ -1,9 +1,12 @@
 # flake8: noqa
 from pathlib import Path
 from invoke import task
-import os
 from pathlib import Path
+import os
 import shutil
+
+
+QUOTE = "\"" if os.name == "nt" else "'"
 
 CHANGELOG = "CHANGELOG"
 filters = ["poc", "new release", "wip", "cleanup", "!nocl"]
@@ -41,9 +44,7 @@ def webdrivers(ctx, geckodriver=None, chromedriver=None):
         browsers["chrome"] = chromedriver
 
     ctx.run(
-        "webdrivermanager firefox:{} chrome:{} --linkpath AUTO".format(
-            browsers["firefox"], browsers["chrome"]
-        )
+        f"webdrivermanager firefox:{browsers['firefox']} chrome:{browsers['chrome']} --linkpath AUTO"
     )
 
 
@@ -63,7 +64,7 @@ def flake(ctx):
 @task
 def rflint(ctx):
     """Runs rflint agains atests"""
-    ctx.run("rflint --argumentfile .rflintrc atest/")
+    ctx.run(f"rflint --argumentfile .rflintrc atest{os.path.sep}")
 
 
 @task
@@ -71,9 +72,12 @@ def docs(ctx):
     """Generates keyword docs"""
     patch_libdoc()
     ctx.run(
-        "python -m robot.libdoc --name 'SeleniumLibrary with SeleniumTestability Plugin' --pythonpath src SeleniumLibrary::plugins=SeleniumTestability docs/keywords.html"
+        f"python -m robot.libdoc --name {QUOTE}SeleniumLibrary with SeleniumTestability Plugin{QUOTE} --pythonpath src SeleniumLibrary::plugins=SeleniumTestability docs{os.path.sep}keywords.html"
     )
-    ctx.run("cp docs/keywords.html docs/index.html")
+    cp = "cp"
+    if os.name == "nt":
+        cp = "copy"
+    ctx.run(f"{cp} docs{os.path.sep}keywords.html docs{os.path.sep}index.html")
 
 
 @task
@@ -85,7 +89,7 @@ def mypy(ctx):
 @task
 def black(ctx):
     """Reformat code with black"""
-    ctx.run("black -l130 -tpy36 src/")
+    ctx.run("black -l130 -tpy37 src")
 
 
 @task(pre=[generatejs])
@@ -99,12 +103,17 @@ def cobertura(ctx, outputfile=""):
     if len(outputfile) == 0:
         outputfile = "coverage.xml"
     ctx.run("coverage html")
-    ctx.run("coverage xml -o {}".format(outputfile))
+    ctx.run(f"coverage xml -o {outputfile}")
 
 
 @task
 def test(
-    ctx, coverage=False, xunit=None, skipci=False, outputdir="output/", tests=None
+    ctx,
+    coverage=False,
+    xunit=None,
+    skipci=False,
+    outputdir=f"output{os.path.sep}",
+    tests=None,
 ):
     """Runs robot acceptance tests"""
     extras = ""
@@ -113,20 +122,18 @@ def test(
     cmd = "python"
     extra = ""
     if xunit:
-        xunit = "--xunit {}".format(xunit)
+        xunit = f"--xunit {xunit}"
     else:
         xunit = ""
     if coverage:
         cmd = "coverage run"
     if tests is None:
-        tests = "atest/"
+        tests = "atest"
     if skipci:
         extras = f"{extras} --noncritical skipci --xunitskipnoncritical"
 
     ctx.run(
-        "{} -m robot --pythonpath src --outputdir {} --loglevel TRACE:TRACE {} {} {}".format(
-            cmd, outputdir, extras, xunit, tests
-        )
+        f"{cmd} -m robot --pythonpath src --outputdir {outputdir} --loglevel TRACE:TRACE {extras} {xunit} {tests}"
     )
 
 
@@ -162,10 +169,10 @@ def clean(ctx):
 @task
 def changelog(ctx, version=None):
     if version is not None:
-        version = "-c {}".format(version)
+        version = f"-c {version}"
     else:
         version = ""
-    ctx.run("gcg  -x -o {} -O rpm  {}".format(CHANGELOG, version))
+    ctx.run(f"gcg -x -o {CHANGELOG} -O rpm {version}")
     filter_entries(CHANGELOG)
 
 
@@ -174,7 +181,7 @@ def release(ctx, version=None):
     assert version != None
     changelog(ctx, version)
     docs(ctx)
-    ctx.run("git add docs/* {}".format(CHANGELOG))
-    ctx.run("git commit -m 'New Release {}'".format(version))
-    ctx.run("git tag {}".format(version))
+    ctx.run(f"git add docs{os.path.sep}* {CHANGELOG}")
+    ctx.run(f"git commit -m {QUOTE}New Release {version}{QUOTE}")
+    ctx.run(f"git tag {version}")
     build(ctx)
