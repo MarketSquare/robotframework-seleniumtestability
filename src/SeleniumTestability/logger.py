@@ -17,7 +17,8 @@ log_name = location / "SeleniumTestability.log"
 log_handler = logging.FileHandler(log_name)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 log_handler.setFormatter(formatter)
-LEVELS = {"FAIL": logging.DEBUG, "WARN": logging.warn, "INFO": logging.INFO, "DEBUG": logging.debug, "TRACE": logging.DEBUG}
+LEVELS = {"FAIL": logging.DEBUG, "WARN": logging.WARN, "INFO": logging.INFO,
+          "DEBUG": logging.DEBUG, "TRACE": logging.DEBUG}
 
 
 @lru_cache(maxsize=1)
