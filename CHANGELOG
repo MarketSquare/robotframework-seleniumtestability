@@ -1,4 +1,6 @@
-* Fri Jan 17 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 0.9
+* Thu Jan 30 2020 Jani Mikkonen <jani.mikkonen@varjo.com> - 0.9.1
+- Testcase to cover a bug in SeleniumLibrary (rev.1285af0d)
+- Documentation updates (rev.0059ea22)
 - Fixed email in python package. (rev.09456a8b)
 - Ignore TimeoutException when running WebDriverWait (rev.9757538c)
 - Fix to task name (rev.98102eff)
