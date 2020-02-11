@@ -26,7 +26,7 @@ def get_logger(name: str) -> Any:
     lgr = logging.getLogger(name)
     lgr.addHandler(log_handler)
     set_to = LEVELS[robot_log_level]
-    lgr.setLevel(set_to)  # type: ignore
+    lgr.setLevel(set_to)
     lgr.debug(" **** New Session Created for {}  **** ".format(name))
     return lgr
 
