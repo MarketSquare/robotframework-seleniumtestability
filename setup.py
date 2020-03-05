@@ -39,7 +39,7 @@ setup(
     name="robotframework-%s" % LIBRARY_NAME.lower(),
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description="SeleniunTestability library that helps speed up tests with" "asyncronous evens",
+    description="SeleniumTestability library that helps speed up tests with" "asyncronous evens",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/rasjani/robotframework-%s" % LIBRARY_NAME.lower(),
