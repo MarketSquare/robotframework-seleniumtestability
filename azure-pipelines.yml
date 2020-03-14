@@ -11,7 +11,7 @@ jobs:
 - template: azure/job_template.yml
   parameters:
     name: 'OSX'
-    vmImage: 'macOS-10.13'
+    vmImage: 'macOS-10.14'
     coverage: 'false'
     timeout: 20
     chromedriver: 'latest'
@@ -23,7 +23,7 @@ jobs:
     robotPrefix: 'PATH=~/bin:${PATH}'
     coverage: 'false'
     timeout: 30
-    chromedriver: '77.0.3865.40'
+    chromedriver: '80.0.3987.106'
     geckodriver: 'v0.26.0'
 - template: azure/job_template.yml
   parameters:
