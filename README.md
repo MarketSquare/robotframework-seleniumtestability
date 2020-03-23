@@ -24,6 +24,9 @@ SeleniumTestability to incorporate more state inspections.
 Monitoring of the asyncronous events is archived with help of [Testability.js](https://github.com/alfonso-presa/testability.js)
 and its [bindings](https://github.com/alfonso-presa/testability-browser-bindings)
 
+# Support
+
+"Official" support channel available in [Gitter.im](https://gitter.im/robotframework-seleniumtestability/community)
 
 # Installation
 
