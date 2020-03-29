@@ -46,6 +46,9 @@ def fetch():
     sleep(4)
     return render_template('fetch.json')
 
+@app.route('/scroll')
+def bigpage():
+    return render_template('bigpage.html')
 
 @app.route('/')
 def index():

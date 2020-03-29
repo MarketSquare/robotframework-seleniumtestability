@@ -23,10 +23,10 @@ JS_LOOKUP = {
         window.simulateDragDrop(arguments[0], arguments[1]);
     """,
     "scroll_to_bottom": """
-        window.scrollTo(0, document.body.scrollHeight);
+        window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: arguments[0]})
     """,
     "scroll_to_top": """
-        window.scrollTo(0, 0);
+        window.scrollTo({ left: 0, top: 0, behavior: arguments[0]})
     """,
     "get_style_display": """
         return arguments[0].style.display

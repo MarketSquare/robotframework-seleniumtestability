@@ -6,7 +6,17 @@ from os.path import abspath, dirname, join
 from .listener import TestabilityListener
 from .javascript import JS_LOOKUP
 from .logger import get_logger, argstr, kwargstr
-from .types import WebElementType, LocatorType, OptionalBoolType, OptionalStrType, BrowserLogsType, OptionalDictType, is_firefox, StringArray, StorageType
+from .types import (
+    WebElementType,
+    LocatorType,
+    OptionalBoolType,
+    OptionalStrType,
+    BrowserLogsType,
+    OptionalDictType,
+    is_firefox,
+    StringArray,
+    StorageType,
+)
 from robot.utils import is_truthy, timestr_to_secs, secs_to_timestr
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, WebDriverException
@@ -382,7 +392,7 @@ class SeleniumTestability(LibraryComponent):
         Converts a cookie string into python dict.
         """
         ret = {}
-        cookie = SimpleCookie()
+        cookie = SimpleCookie()  # type: SimpleCookie
         cookie.load(cookies)
         for key, morsel in cookie.items():
             ret[key] = morsel.value
@@ -486,19 +496,27 @@ class SeleniumTestability(LibraryComponent):
 
     @log_wrapper
     @keyword
-    def scroll_to_bottom(self: "SeleniumTestability") -> None:
+    def scroll_to_bottom(self: "SeleniumTestability", smooth: bool = False) -> None:
         """
         Scrolls current window to the bottom of the page
+        Parameters:
+         - ``smooth`` if sets to true, enables smooth scrolling, otherwise instant.
         """
-        self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_bottom"])
+        smooth = bool(smooth)
+        behavior = "smooth" if smooth else "instant"
+        self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_bottom"], behavior)
 
     @log_wrapper
     @keyword
-    def scroll_to_top(self: "SeleniumTestability") -> None:
+    def scroll_to_top(self: "SeleniumTestability", smooth: bool = False) -> None:
         """
         Scrolls current window to the top of the page
+        Parameters:
+         - ``smooth`` if sets to true, enables smooth scrolling, otherwise instant.
         """
-        self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_top"])
+        smooth = bool(smooth)
+        behavior = "smooth" if smooth else "instant"
+        self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_top"], behavior)
 
     @log_wrapper
     @keyword
@@ -597,7 +615,9 @@ class SeleniumTestability(LibraryComponent):
             raise AssertionError("Element with locator {} is blocked".format(locator))
 
     def _get_ff_log(self: "SeleniumTestability", name: str) -> BrowserLogsType:
-        matcher = r"^(?P<source>JavaScript|console)(\s|\.)(?P<level>warn.*?|debug|trace|log|error|info):\s(?P<message>(?!resource:).*)$"
+        matcher = (
+            r"^(?P<source>JavaScript|console)(\s|\.)(?P<level>warn.*?|debug|trace|log|error|info):\s(?P<message>(?!resource:).*)$"
+        )
         LEVEL_LOOKUP = {
             "log": "INFO",
             "warn": "WARN",
