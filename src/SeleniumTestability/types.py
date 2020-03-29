@@ -7,6 +7,7 @@ from selenium.webdriver.remote.webelement import WebElement
 try:
     # Only required during development.
     from psutil import Process
+
     ProcessType = Union[Process, int]
 except ModuleNotFoundError:
     pass

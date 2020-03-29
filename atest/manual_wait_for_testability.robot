@@ -66,3 +66,4 @@ Internal Suite Teardown
   [Documentation]  Final teardown
   Add Final Benchmark Table
   Teardown Test Environment
+  Remove All Timers

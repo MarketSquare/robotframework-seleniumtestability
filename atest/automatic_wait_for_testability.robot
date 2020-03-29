@@ -19,6 +19,7 @@ Final Report
   [Documentation]  Verifies that all timers done during the suite are passing
   Stop Flask App
   Verify All Timers  fail_on_errors=False
+  Remove All Timers
 
 Automatically Call Testability Ready
   [Arguments]  ${BROWSER}  ${HIGHER_THAN}  ${LOWER_THAN}
