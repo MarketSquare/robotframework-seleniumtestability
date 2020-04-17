@@ -496,7 +496,7 @@ class SeleniumTestability(LibraryComponent):
     @keyword
     def scroll_to_top(self: "SeleniumTestability") -> None:
         """
-        Scrolls current window to the bottom of the page
+        Scrolls current window to the top of the page
         """
         self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_top"])
 
