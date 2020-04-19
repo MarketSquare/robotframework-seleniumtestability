@@ -207,15 +207,45 @@ class SeleniumTestability(LibraryComponent):
         self.browser_warn_shown = False
         self.empty_log_warn_shown = False
         self.ff_log_pos = {}  # type: Dict[str, int]
+        self.testability_config = None  # type: OptionalDictType
 
     @log_wrapper
     def _inject_testability(self: "SeleniumTestability") -> None:
         """
         Injects SeleniumTestability javascript bindings into a current browser's current window. This should happen automatically vie SeleniumTestability's internal `Event Firing Webdriver` support but keyword is provided also.
         """
+
+        if self.testability_config:
+            self.ctx.driver.execute_script(JS_LOOKUP["testability_config"], self.testability_config)
+
         with open(self.js_bundle, "r") as f:
             buf = f.read()
             self.ctx.driver.execute_script("{};".format(buf))
+
+    @log_wrapper
+    @keyword
+    def set_testability_config(self: "SeleniumTestability", config: Dict) -> None:
+        """
+        Sets configuration that is used by SUT.  `config` dictionary should can have following keys: `maxTimeout` and `blackList`.
+
+        Configuration has to be set before opening any browsers or before SUT is instrumented either automatically or manually.
+
+        `maxTimeout`
+        affects affects javascript `setTimeout()` calls and what is the maximum timeout that should be observed and waited. Value is milliseconds and defaults to 5000
+        `blacklist`
+        is array of dictionaries where each array element have 2 fields. `url` and `method`.  `url` should be a regular expression that matches the actual url or url of the Request object's url field.
+        Do note that the regular expression should match what is actually passed to the async method - not the fully qualied url.
+
+        Parameters:
+        - ``config`` dictionary of testability.js config options.
+
+        Example:
+        | &{longfetch}=          | Create Dictionary   | url=.*longfetch.* | method=GET             |
+        | @{blacklist}=          | Create List         | ${longfetch}      |                        |
+        | ${tc}=                 | Create Dictionary   | maxTimeout=5000   | blacklist=${blacklist} |
+        | Set Testability Config | ${tc}               |                   |                        |
+        """
+        self.testability_config = config
 
     @log_wrapper
     @keyword
