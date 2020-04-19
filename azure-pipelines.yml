@@ -14,7 +14,7 @@ jobs:
     vmImage: 'macOS-10.14'
     coverage: 'false'
     timeout: 20
-    chromedriver: 'latest'
+    chromedriver: '80.0.3987.106'
     geckodriver: 'latest'
 - template: azure/job_template.yml
   parameters:
