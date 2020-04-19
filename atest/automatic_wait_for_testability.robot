@@ -24,6 +24,12 @@ Final Report
 Automatically Call Testability Ready
   [Arguments]  ${BROWSER}  ${HIGHER_THAN}  ${LOWER_THAN}
   [Documentation]  test template for automatic waiting and injection
+
+  &{longfetch}=   Create Dictionary   url=.*longfetch.*    method=GET
+  @{blacklist}=   Create List         ${longfetch}
+  ${tc}=          Create Dictionary   maxTimeout=5000    blacklist=${blacklist}
+  Set Testability Config    ${tc}
+
   Setup Web Environment  ${BROWSER}  ${URL}
   Click All And Verify  ${HIGHER_THAN}  ${LOWER_THAN}
   [Teardown]  Teardown Web Environment

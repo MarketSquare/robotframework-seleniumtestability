@@ -64,4 +64,7 @@ JS_LOOKUP = {
     "storage_keys": """
         return Object.keys(window[arguments[0]])
     """,
+    "testability_config": """
+        window.testability_config = arguments[0]
+    """,
 }
