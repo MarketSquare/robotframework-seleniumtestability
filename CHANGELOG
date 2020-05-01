@@ -1,4 +1,11 @@
-* Tue Feb 11 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 0.9.2
+* Sun Apr 19 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 1.0.0rc1
+- Add blacklisting option to fetch and xhr requests. (rev.4fcccaea)
+- Allow smooth scrolling (rev.4bb47913)
+- Update Keyword documentation (rev.19c6621b)
+- Link to gitter (rev.e7eea7a2)
+- Random fixes to ci pipeline (rev.17fa4496)
+
+* Thu Mar 05 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 0.9.2
 - fix logging LEVELS (rev.85efff59)
 
 * Thu Jan 30 2020 Jani Mikkonen <jani.mikkonen@varjo.com> - 0.9.1
