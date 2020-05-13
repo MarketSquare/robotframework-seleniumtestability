@@ -5,41 +5,31 @@ from SeleniumLibrary import SeleniumLibrary
 from os.path import abspath, dirname, join
 from .listener import TestabilityListener
 from .javascript import JS_LOOKUP
-from .logger import get_logger, argstr, kwargstr
+from .logger import get_logger
 from .types import (
-    WebElementType,
     LocatorType,
     OptionalBoolType,
     OptionalStrType,
     BrowserLogsType,
     OptionalDictType,
     is_firefox,
-    StringArray,
-    StorageType,
 )
+from .utils import log_wrapper
+from .mixins import NavigatorMixin, ElementsMixin, LocationMixin, StorageMixin
 from robot.utils import is_truthy, timestr_to_secs, secs_to_timestr
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from http.cookies import SimpleCookie
 from furl import furl
-from typing import Dict, Callable, Any
+from typing import Dict
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver import FirefoxProfile
-import wrapt
 import re
 import json
 from time import time
 
 
-@wrapt.decorator
-def log_wrapper(wrapped: Callable, instance: "SeleniumTestability", args: Any, kwargs: Any) -> Any:
-    instance.logger.debug("{}({}) [ENTERING]".format(wrapped.__name__, ", ".join([argstr(args), kwargstr(kwargs)])))
-    ret = wrapped(*args, **kwargs)
-    instance.logger.debug("{}() [LEAVING]".format(wrapped.__name__))
-    return ret
-
-
-class SeleniumTestability(LibraryComponent):
+class SeleniumTestability(LibraryComponent, NavigatorMixin, ElementsMixin, LocationMixin, StorageMixin):
     """
     SeleniumTestability is plugin for SeleniumLibrary that provides either manual or automatic waiting asyncronous events within SUT. This works by injecting small javascript snippets that can monitor the web application's state and when any supported events are happening within the sut, execution of SeleniumLibrary's keywords are blocked until timeout or those events are processed.
 
@@ -364,31 +354,6 @@ class SeleniumTestability(LibraryComponent):
         """
         return self.error_on_timeout
 
-    @staticmethod
-    @keyword("Add Basic Authentication To Url")
-    def add_authentication(url: str, user: str, password: str) -> str:
-        """
-        For websites that require basic auth authentication, add user and password into the given url.
-        Parameters:
-        - ``url``  - url where user and password should be added to.
-        - ``user``  - username
-        - ``password``  - password
-        """
-        data = furl(url)
-        data.username = user
-        data.password = password
-        return data.tostr()
-
-    @staticmethod
-    @keyword
-    def split_url_to_host_and_path(url: str) -> dict:
-        """
-        Returs given url as dict with property "base" set to a protocol and hostname and "path" as the trailing path.
-        This is useful when constructing requests sessions from urls used within SeleniumLibrary.
-        """
-        data = furl(url)
-        return {"base": str(data.copy().remove(path=True)), "path": str(data.path)}
-
     @log_wrapper
     @keyword
     def set_testability_automatic_injection(self: "SeleniumTestability", enabled: bool) -> None:
@@ -416,6 +381,31 @@ class SeleniumTestability(LibraryComponent):
         self.set_testability_automatic_injection(False)
 
     @staticmethod
+    @keyword("Add Basic Authentication To Url")
+    def add_authentication(url: str, user: str, password: str) -> str:
+        """
+        For websites that require basic auth authentication, add user and password into the given url.
+        Parameters:
+        - ``url``  - url where user and password should be added to.
+        - ``user``  - username
+        - ``password``  - password
+        """
+        data = furl(url)
+        data.username = user
+        data.password = password
+        return data.tostr()
+
+    @staticmethod
+    @keyword
+    def split_url_to_host_and_path(url: str) -> dict:
+        """
+        Returs given url as dict with property "base" set to a protocol and hostname and "path" as the trailing path.
+        This is useful when constructing requests sessions from urls used within SeleniumLibrary.
+        """
+        data = furl(url)
+        return {"base": str(data.copy().remove(path=True)), "path": str(data.path)}
+
+    @staticmethod
     @keyword
     def cookies_to_dict(cookies: str) -> dict:  # FIX: cookies can be dict also
         """
@@ -427,78 +417,6 @@ class SeleniumTestability(LibraryComponent):
         for key, morsel in cookie.items():
             ret[key] = morsel.value
         return ret
-
-    @log_wrapper
-    @keyword
-    def get_navigator_useragent(self: "SeleniumTestability") -> str:
-        """
-        Returns useragent string of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "userAgent")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_appCodeName(self: "SeleniumTestability") -> str:
-        """
-        Returns appCoedName string of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "appCodeName")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_appname(self: "SeleniumTestability") -> str:
-        """
-        Returns appName string of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "appName")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_appversion(self: "SeleniumTestability") -> str:
-        """
-        Returns appVersion string of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "appVersion")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_cookieenabled(self: "SeleniumTestability") -> bool:
-        """
-        Returns cookieEnabled boolean of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "cookieEnabled")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_language(self: "SeleniumTestability") -> str:
-        """
-        Returns language string of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "language")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_online(self: "SeleniumTestability") -> bool:
-        """
-        Returns online boolean of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "onLine")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_platform(self: "SeleniumTestability") -> str:
-        """
-        Returns platform string of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "platform")
-
-    @log_wrapper
-    @keyword
-    def get_navigator_product(self: "SeleniumTestability") -> str:
-        """
-        Returns product string of current browser.
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["navigator"], "product")
 
     @log_wrapper
     @keyword
@@ -547,102 +465,6 @@ class SeleniumTestability(LibraryComponent):
         smooth = bool(smooth)
         behavior = "smooth" if smooth else "instant"
         self.ctx.driver.execute_script(JS_LOOKUP["scroll_to_top"], behavior)
-
-    @log_wrapper
-    @keyword
-    def toggle_element_visibility(self: "SeleniumTestability", locator: LocatorType) -> None:
-        """
-        Toggles visiblity state of element via ``locator``
-        """
-        if locator in self.hidden_elements:
-            self.hide_element(locator)
-        else:
-            self.show_element(locator)
-
-    @log_wrapper
-    @keyword
-    def hide_element(self: "SeleniumTestability", locator: LocatorType) -> None:
-        """
-        Hides element via ``locator``. Typically one would use this to avoid getting
-        Toggles visiblity state of element via ``locator``
-        past overlays that are on top of element that is to be interacted with.
-        """
-        from_element = self.el.find_element(locator)
-        current_display = self.ctx.driver.execute_script(JS_LOOKUP["get_style_display"], from_element)
-        self.hidden_elements[locator] = current_display
-        self.ctx.driver.execute_script(JS_LOOKUP["set_style_display"], from_element, "none")
-
-    @log_wrapper
-    @keyword
-    def show_element(self: "SeleniumTestability", locator: LocatorType) -> None:
-        """
-        Shows element via ``locator`` that has been previously been hidden with `Hide Element` keyword.
-        """
-        from_element = self.el.find_element(locator)
-        state = self.hidden_elements.get(locator, "")
-        self.ctx.driver.execute_script(JS_LOOKUP["set_style_display"], from_element, state)
-        del self.hidden_elements[locator]
-
-    def _element_blocked(self: "SeleniumTestability", locator: LocatorType) -> bool:
-        from_element = self.el.find_element(locator)
-        rect = self.ctx.driver.execute_script(JS_LOOKUP["get_rect"], from_element)
-        y = rect["y"] + (rect["height"] / 2)
-        x = rect["x"] + (rect["width"] / 2)
-        elem = self.ctx.driver.execute_script(JS_LOOKUP["get_element_at"], x, y)
-        try:
-            return from_element != elem.wrapped_element
-        except AttributeError:
-            return from_element != elem
-
-    @log_wrapper
-    @keyword
-    def get_webelement_at(self: "SeleniumTestability", x: int, y: int) -> WebElementType:
-        """Returns a topmost WebElement at given coordinates"""
-        element = self.ctx.driver.execute_script(JS_LOOKUP["get_element_at"], x, y)
-        # NOTE: Maybe we should always return just straight element  and not
-        # really care if its event firing or not?
-        try:
-            return element.wrapped_element
-        except AttributeError:
-            return element
-
-    @log_wrapper
-    @keyword
-    def is_element_blocked(self: "SeleniumTestability", locator: LocatorType) -> bool:
-        """
-        Returns `True` is ``locator`` is blocked, `False` if it is not.
-        Example:
-        | ${blocked}=       | Is Element Blocked    | id:some_id    |                  |
-        | Run Keyword If    | ${blocked} == True    | Hide  Element | id:some_other_id |
-        This will hide the element with id:some_other_id if  element id:some_id is being blocked
-        """
-        return self._element_blocked(locator)
-
-    @log_wrapper
-    @keyword
-    def element_should_be_blocked(self: "SeleniumTestability", locator: LocatorType) -> None:
-        """
-        Throws exception if element found with ``locator`` is not blocked by any overlays.
-        Example:
-        | Element Should Be Blocked  |  id:some_id |
-        If nothing is on top of of provided element, throws an exception
-        """
-        is_blocked = self._element_blocked(locator)
-        if not is_blocked:
-            raise AssertionError("Element with locator {} is not blocked".format(locator))
-
-    @log_wrapper
-    @keyword
-    def element_should_not_be_blocked(self: "SeleniumTestability", locator: LocatorType) -> None:
-        """
-        Throws exception if element found with ``locator`` is being blocked by overlays.
-        Example:
-        | Element Should Not Be Blocked  |  id:some_id |
-        If there's element on top of provided selector, throws an exception
-        """
-        is_blocked = self._element_blocked(locator)
-        if is_blocked:
-            raise AssertionError("Element with locator {} is blocked".format(locator))
 
     def _get_ff_log(self: "SeleniumTestability", name: str) -> BrowserLogsType:
         matcher = (
@@ -719,79 +541,6 @@ class SeleniumTestability(LibraryComponent):
 
     @log_wrapper
     @keyword
-    def set_element_attribute(self: "SeleniumTestability", locator: LocatorType, attribute: str, value: str) -> None:
-        """
-        Sets ``locator`` attribute ``attribute`` to ``value``
-        """
-        from_element = self.el.find_element(locator)
-        self.ctx.driver.execute_script(JS_LOOKUP["set_element_attribute"], from_element, attribute, value)
-
-    @log_wrapper
-    @keyword
-    def get_location_hash(self: "SeleniumTestability") -> str:
-        """
-        returns the fragment identifier of the URL prefexed by a '#'
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "hash")
-
-    @log_wrapper
-    @keyword
-    def get_location_host(self: "SeleniumTestability") -> str:
-        """
-        returns the hostname and the port of the URL appended by a ':'
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "host")
-
-    @log_wrapper
-    @keyword
-    def get_location_hostname(self: "SeleniumTestability") -> str:
-        """
-        return the hostname of the URL
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "hostname")
-
-    @log_wrapper
-    @keyword
-    def get_location_href(self: "SeleniumTestability") -> str:
-        """
-        returns the entire URL
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "href")
-
-    @log_wrapper
-    @keyword
-    def get_location_origin(self: "SeleniumTestability") -> str:
-        """
-        returns the canonical form of the origin of the specific location
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "origin")
-
-    @log_wrapper
-    @keyword
-    def get_location_port(self: "SeleniumTestability") -> str:
-        """
-        returns the port number of the URL
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "port")
-
-    @log_wrapper
-    @keyword
-    def get_location_protocol(self: "SeleniumTestability") -> str:
-        """
-        returns the protocol scheme of the URL
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "protocol")
-
-    @log_wrapper
-    @keyword
-    def get_location_search(self: "SeleniumTestability") -> str:
-        """
-        returns the sting containing a '?' followed by the parameters or ``querystring`` of the URL
-        """
-        return self.ctx.driver.execute_script(JS_LOOKUP["get_window_location"], "search")
-
-    @log_wrapper
-    @keyword
     def generate_firefox_profile(
         self: "SeleniumTestability",
         options: OptionalDictType = None,
@@ -813,40 +562,3 @@ class SeleniumTestability(LibraryComponent):
 
         profile.update_preferences()
         return profile
-
-    @log_wrapper
-    @keyword
-    def get_storage_length(self: "SeleniumTestability", storage_type: str = "localStorage") -> int:
-        return self.ctx.driver.execute_script(JS_LOOKUP["storage_length"], storage_type)
-
-    @log_wrapper
-    @keyword
-    def get_storage_keys(self: "SeleniumTestability", storage_type: str = "localStorage") -> StringArray:
-        return self.ctx.driver.execute_script(JS_LOOKUP["storage_keys"], storage_type)
-
-    @log_wrapper
-    @keyword
-    def get_storage_item(self: "SeleniumTestability", key: str, storage_type: str = "localStorage") -> StorageType:
-        matcher = r"^{.*}$"
-        storage_item = self.ctx.driver.execute_script(JS_LOOKUP["storage_getitem"], storage_type, key)
-        print(f"TYPE OF {key} is {type(storage_item)}")
-        if isinstance(storage_item, str) and re.match(matcher, storage_item):
-            storage_item = json.loads(storage_item)
-        return storage_item
-
-    @log_wrapper
-    @keyword
-    def set_storage_item(self: "SeleniumTestability", key: str, value: StorageType, storage_type: str = "localStorage") -> None:
-        if isinstance(value, dict):
-            value = json.dumps(value)
-        self.ctx.driver.execute_script(JS_LOOKUP["storage_setitem"], storage_type, key, value)
-
-    @log_wrapper
-    @keyword
-    def clear_storage(self: "SeleniumTestability", storage_type: str = "localStorage") -> None:
-        self.ctx.driver.execute_script(JS_LOOKUP["storage_clear"], storage_type)
-
-    @log_wrapper
-    @keyword
-    def remove_storage_item(self: "SeleniumTestability", key: str, storage_type: str = "localStorage") -> None:
-        return self.ctx.driver.execute_script(JS_LOOKUP["storage_removeitem"], storage_type, key)

@@ -4,7 +4,8 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.events import AbstractEventListener
 from robot.libraries.BuiltIn import BuiltIn
-from .logger import get_logger, kwargstr, argstr
+from .logger import get_logger
+from .utils import kwargstr, argstr
 import wrapt
 from typing import Callable, Any
 

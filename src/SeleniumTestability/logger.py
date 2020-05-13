@@ -28,11 +28,3 @@ def get_logger(name: str) -> Any:
     lgr.setLevel(set_to)
     lgr.debug(" **** New Session Created for {}  **** ".format(name))
     return lgr
-
-
-def kwargstr(kwargs: Any) -> str:
-    return ", ".join("%s=%r" % x for x in kwargs.items())
-
-
-def argstr(args: Any) -> str:
-    return ", ".join("%s" % x for x in args)
