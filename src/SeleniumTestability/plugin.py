@@ -805,8 +805,7 @@ class SeleniumTestability(LibraryComponent):
 
         profile.set_preference("devtools.console.stdout.content", True)
 
-        if accept_untrusted_certs:
-            profile.accept_untrusted_certs
+        profile.accept_untrusted_certs = accept_untrusted_certs
 
         if proxy:
             profile.set_proxy(proxy)
