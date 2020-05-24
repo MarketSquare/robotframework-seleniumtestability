@@ -687,6 +687,8 @@ class SeleniumTestability(LibraryComponent):
 
         Note: On firefox, the firefox profile has to have `devtools.console.stdout.content` property to be set.
         This can be done automatically with `Generate Firefox Profile` and then pass that to `Open Browser`.
+
+        This keyword will mostly likely not work with remote seleniun driver!
         """
         ret = []  # type: BrowserLogsType
         try:
@@ -794,13 +796,22 @@ class SeleniumTestability(LibraryComponent):
     @keyword
     def generate_firefox_profile(
         self: "SeleniumTestability",
-        options: OptionalDictType = None,
+        preferences: OptionalDictType = None,
         accept_untrusted_certs: bool = False,
         proxy: OptionalStrType = None,
     ) -> FirefoxProfile:
+        """
+        Generates a firefox profile that sets up few required preferences for SeleniumTestability to support all necessary features.
+        Parameters:
+        - ``preferences`` - firefox profile preferences in dictionary format.
+        - ``accept_untrusted_certs`` should we accept untrusted/self-signed certificates.
+        - ``proxy`` proxy options
+
+        Note: If you opt out using this keyword, you are not able to get logs with ``Get Logs`` and Firefox.
+        """
         profile = FirefoxProfile()
-        if options:
-            for key, value in options.items():  # type: ignore
+        if preferences:
+            for key, value in preferences.items():  # type: ignore
                 profile.set_preference(key, value)
 
         profile.set_preference("devtools.console.stdout.content", True)
@@ -816,19 +827,34 @@ class SeleniumTestability(LibraryComponent):
     @log_wrapper
     @keyword
     def get_storage_length(self: "SeleniumTestability", storage_type: str = "localStorage") -> int:
+        """
+        Returns a length (# of items) in specified storage.
+        Parameters:
+        - ``storage_type`` name of the storage. Valid options: localStorage, sessionStorage
+        """
         return self.ctx.driver.execute_script(JS_LOOKUP["storage_length"], storage_type)
 
     @log_wrapper
     @keyword
     def get_storage_keys(self: "SeleniumTestability", storage_type: str = "localStorage") -> StringArray:
+        """
+        Returns a list of keys in specified storage.
+        Parameters:
+        - ``storage_type`` name of the storage. Valid options: localStorage, sessionStorage
+        """
         return self.ctx.driver.execute_script(JS_LOOKUP["storage_keys"], storage_type)
 
     @log_wrapper
     @keyword
     def get_storage_item(self: "SeleniumTestability", key: str, storage_type: str = "localStorage") -> StorageType:
+        """
+        Returns value of ``key`` from specified storage.
+        Parameters:
+        - ``key`` name of the storage key
+        - ``storage_type`` name of the storage. Valid options: localStorage, sessionStorage
+        """
         matcher = r"^{.*}$"
         storage_item = self.ctx.driver.execute_script(JS_LOOKUP["storage_getitem"], storage_type, key)
-        print(f"TYPE OF {key} is {type(storage_item)}")
         if isinstance(storage_item, str) and re.match(matcher, storage_item):
             storage_item = json.loads(storage_item)
         return storage_item
@@ -836,6 +862,13 @@ class SeleniumTestability(LibraryComponent):
     @log_wrapper
     @keyword
     def set_storage_item(self: "SeleniumTestability", key: str, value: StorageType, storage_type: str = "localStorage") -> None:
+        """
+        Sets a value to the key in specified storage_type
+        Parameters:
+        - ``key`` name of the key
+        - ``value`` value that should be set to key
+        - ``storage_type`` name of the storage. Valid options: localStorage, sessionStorage
+        """
         if isinstance(value, dict):
             value = json.dumps(value)
         self.ctx.driver.execute_script(JS_LOOKUP["storage_setitem"], storage_type, key, value)
@@ -843,9 +876,20 @@ class SeleniumTestability(LibraryComponent):
     @log_wrapper
     @keyword
     def clear_storage(self: "SeleniumTestability", storage_type: str = "localStorage") -> None:
+        """
+        Clears all values in specified storage.
+        Parameters:
+        - ``storage_type`` name of the storage. Valid options: localStorage, sessionStorage
+        """
         self.ctx.driver.execute_script(JS_LOOKUP["storage_clear"], storage_type)
 
     @log_wrapper
     @keyword
     def remove_storage_item(self: "SeleniumTestability", key: str, storage_type: str = "localStorage") -> None:
+        """
+        Removes a key and its value from specified storage
+        Parameters:
+        - ``key`` name of the key
+        - ``storage_type`` name of the storage. Valid options: localStorage, sessionStorage
+        """
         return self.ctx.driver.execute_script(JS_LOOKUP["storage_removeitem"], storage_type, key)
