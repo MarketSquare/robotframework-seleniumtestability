@@ -226,24 +226,24 @@ class SeleniumTestability(LibraryComponent):
     @keyword
     def set_testability_config(self: "SeleniumTestability", config: Dict) -> None:
         """
-        Sets configuration that is used by SUT.  `config` dictionary should can have following keys: `maxTimeout` and `blackList`.
+        Sets configuration that is used by SUT.  `config` dictionary should can have following keys: `maxTimeout` and `blacklist`.
 
         Configuration has to be set before opening any browsers or before SUT is instrumented either automatically or manually.
 
-        `maxTimeout`
-        affects affects javascript `setTimeout()` calls and what is the maximum timeout that should be observed and waited. Value is milliseconds and defaults to 5000
-        `blacklist`
-        is array of dictionaries where each array element have 2 fields. `url` and `method`.  `url` should be a regular expression that matches the actual url or url of the Request object's url field.
+        - `maxTimeout` affects affects javascript `setTimeout()` calls and what is the maximum timeout that should be observed and waited. Value is milliseconds and defaults to 5000
+        - `blacklist` is array of dictionaries where each array element have 2 fields. `url` and `method`.  `url` should be a regular expression that matches the actual url or url of the Request object's url field.
         Do note that the regular expression should match what is actually passed to the async method - not the fully qualied url.
 
         Parameters:
         - ``config`` dictionary of testability.js config options.
 
         Example:
-        | &{longfetch}=          | Create Dictionary   | url=.*longfetch.* | method=GET             |
-        | @{blacklist}=          | Create List         | ${longfetch}      |                        |
-        | ${tc}=                 | Create Dictionary   | maxTimeout=5000   | blacklist=${blacklist} |
-        | Set Testability Config | ${tc}               |                   |                        |
+
+        | &{longfetch}=           | `Create Dictionary`   | url=.*longfetch.*            |  method=GET              |
+        | @{blacklist}=           | `Create List`         | ${longfetch}                 |                          |
+        | ${tc}=                  | `Create Dictionary`   | maxTimeout=5000              |  blacklist=${blacklist}  |
+        | Set Testability Config  |  ${tc}                |                              |                          |
+.
         """
         self.testability_config = config
 
