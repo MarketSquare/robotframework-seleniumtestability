@@ -1,4 +1,8 @@
-* Sun Apr 19 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 1.0.0rc1
+* Tue Jun 09 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 1.0.0
+- Update testability bindings to 2.0.0 (rev.eeff2507)
+- Few keyword documentation updates. (rev.058423e3)
+- Fix: accept_untrusted_certs usage fixed (rev.518e4037)
+- Improvements to config documentation (rev.97cc0be3)
 - Add blacklisting option to fetch and xhr requests. (rev.4fcccaea)
 - Allow smooth scrolling (rev.4bb47913)
 - Update Keyword documentation (rev.19c6621b)
