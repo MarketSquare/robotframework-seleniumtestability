@@ -120,7 +120,7 @@ def test(
     if coverage:
         ctx.run("coverage erase")
     cmd = "python"
-    extra = ""
+    extra = "--non-critical skipheadless"
     if xunit:
         xunit = f"--xunit {xunit}"
     else:
