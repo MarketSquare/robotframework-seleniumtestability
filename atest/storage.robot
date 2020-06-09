@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation   Verifies storage keywords
 Test Teardown   Teardown Web Environment
-Test Template   Test Storage 
+Test Template   Test Storage
 Suite Setup     Start Flask App
 Suite Teardown  Stop Flask App
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
@@ -44,6 +44,6 @@ Test Storage
   FOR   ${key}  IN  @{storage_keys}
     Remove Storage Item   ${key}    storage_type=sessionStorage
   END
-  
+
   ${session}=   Get Storage Length    storage_type=sessionStorage
   Should Be Equal As Integers  ${session}  0

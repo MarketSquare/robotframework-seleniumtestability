@@ -48,7 +48,3 @@ Navigator Tests
 
   ${product}=       Get Navigator Product
   Should Contain    ${product}    Gecko
-
-
-
-

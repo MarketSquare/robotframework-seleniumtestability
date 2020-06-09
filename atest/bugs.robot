@@ -27,6 +27,7 @@ Verify EventFiringWebElement conversion
 *** Keywords ***
 
 Internal Suite Setup
+  [Documentation]   Suite setup
   Set Selenium Timeout      1 second
   Setup Test Environment   ${FF}    ${URL}
   ${TIMEOUT}=   Get Selenium Timeout

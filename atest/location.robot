@@ -35,12 +35,12 @@ Test Cookies
 
   ${value}=    Get Location Origin
   Should Be Equal   ${value}   ${URL}
-  
+
   ${value}=    Get Location Port
   Should Be Equal   ${value}   5000
-  
+
   ${value}=    Get Location Protocol
   Should Be Equal   ${value}   http:
-  
+
   ${value}=    Get Location Search
   Should Be Equal   ${value}   ${EMPTY}
