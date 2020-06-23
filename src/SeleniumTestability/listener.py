@@ -129,4 +129,4 @@ class TestabilityListener(AbstractEventListener):
 
     @log_wrapper
     def on_exception(self: "TestabilityListener", exception: Exception, driver: WebDriver) -> None:
-        pass
+        self.logger.warn(str(exception))
