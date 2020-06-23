@@ -2,6 +2,7 @@
 Documentation   Verifies url keywords
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;True;29 seconds;False
 Resource        resources.robot
+Force Tags      skipci
 Suite Setup     Start Flask App
 Suite Teardown  Stop Flask App
 Test Template   Open Browser With Auth

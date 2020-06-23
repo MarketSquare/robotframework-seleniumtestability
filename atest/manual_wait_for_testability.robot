@@ -51,7 +51,7 @@ Manual Wait For Testability Ready
   Start Timer  ${TEST NAME}
   Click And Wait  ${ID}
   Stop Timer  ${TEST NAME}
-  Verify Single Timer  5 seconds  3.5 seconds  ${TEST NAME}
+  Verify Single Timer  10 seconds  3.5 seconds  ${TEST NAME}
   ${TIMEOUT}=   Get Selenium Timeout
   Should Be Equal   ${TIMEOUT}  1 second
   [Teardown]  Teardown Web Environment
