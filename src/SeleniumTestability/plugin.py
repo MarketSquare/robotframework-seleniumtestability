@@ -199,9 +199,9 @@ class SeleniumTestability(LibraryComponent):
         self.js_bundle = join(self.CWD, "js", "testability.js")
         self.ctx.event_firing_webdriver = TestabilityListener
         self.ctx.testability_settings = {"testability": self}
-        self.automatic_wait = automatic_wait
-        self.automatic_injection = automatic_injection
-        self.error_on_timeout = error_on_timeout
+        self.automatic_wait = is_truthy(automatic_wait)
+        self.automatic_injection = is_truthy(automatic_injection)
+        self.error_on_timeout = is_truthy(error_on_timeout)
         self.timeout = timeout  # type: ignore
         self.hidden_elements = {}  # type: Dict[str, str]
         self.browser_warn_shown = False
