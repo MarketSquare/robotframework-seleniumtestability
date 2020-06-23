@@ -1,3 +1,8 @@
+* Tue Jun 23 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 1.1.0
+- Log all js exceptions to logfile with level warn. (rev.14953470)
+- Add support for Drag&Drop files into browser. (rev.3c192843)
+- Fix init -  params where not converted to bools. (rev.dfc66f48)
+
 * Tue Jun 09 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 1.0.0
 - Update testability bindings to 2.0.0 (rev.eeff2507)
 - Few keyword documentation updates. (rev.058423e3)
