@@ -67,4 +67,32 @@ JS_LOOKUP = {
     "testability_config": """
         window.testability_config = arguments[0]
     """,
+    "drag_and_drop_file": """
+        var target = arguments[0],
+            parentElement = target.parentElement
+            offsetX = arguments[1],
+            offsetY = arguments[2],
+            document = target.ownerDocument || document,
+            window = document.defaultView || window;
+
+        var input = document.createElement('INPUT');
+        input.type = 'file';
+        input.onchange = function () {
+            var rect = target.getBoundingClientRect(),
+                x = rect.left + (offsetX || (rect.width >> 1)),
+                y = rect.top + (offsetY || (rect.height >> 1)),
+                dataTransfer = { files: this.files };
+
+            ['dragenter', 'dragover', 'drop'].forEach(function (name) {
+                var evt = document.createEvent('MouseEvent');
+                evt.initMouseEvent(name, !0, !0, window, 0, 0, 0, x, y, !1, !1, !1, !1, 0, null);
+                evt.dataTransfer = dataTransfer;
+                target.dispatchEvent(evt);
+            });
+
+            setTimeout(function () { parentElement.removeChild(input); }, 25);
+        };
+        parentElement.appendChild(input);
+        return input;
+    """,
 }
