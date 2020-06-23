@@ -5,7 +5,7 @@ Documentation   Verifies that scrolling can trigger testability waits.
 Suite Setup     Local Suite Setup
 Suite Teardown  Internal Suite Teardown
 Test Template   Scrolling Up And Down
-Force Tags      skipci,skipheadless
+Force Tags      skipci
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;False;29 seconds;False
 Library         Timer
 Resource        resources.robot
