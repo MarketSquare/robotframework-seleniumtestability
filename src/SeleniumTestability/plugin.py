@@ -29,6 +29,7 @@ import wrapt
 import re
 import json
 from time import time
+from pathlib import Path
 
 
 @wrapt.decorator
@@ -509,20 +510,39 @@ class SeleniumTestability(LibraryComponent):
         and the ``target`` is the locator of the target. See the
         `Locating elements` section for details about the locator syntax.
 
+        If you wish to drag and drop a file from a local filesystem, you can specify the locator as `file:/full/path/to/filename`
+        and SeleniumTestability will generate a drag'n'drop events to upload a file into a given `target` element.
+
         ``html5`` parameter is optional and if provided, `drag_and_drop`will utilize
         javascript to trigger the suitable events ensuring that html5 applications
-        receive the right events
+        receive the right events. If `locator` starts with file: prefix, html5 defaults to True.
 
         Example:
-        | `Drag And Drop` | css:div#element | css:div.target |  True |
+        | `Drag And Drop` | css:div#element | css:div.target |  html5=True |
+        | `Drag And Drop` | file:/home/rasjani/testfile.txt  |  id:demo-upload |
         """
+        file_prefix = "file:"
         html5 = is_truthy(html5)
+        if file_prefix in locator:
+            html5 = True
+
         if not html5:
             self.el.drag_and_drop(locator, target)
         else:
-            from_element = self.el.find_element(locator)
             to_element = self.el.find_element(target)
-            self.ctx.driver.execute_script(JS_LOOKUP["dragdrop"], from_element, to_element)
+            filename = None
+            if type(locator) == str and file_prefix in locator:
+                filename = locator[locator.startswith(file_prefix) and len(file_prefix):]
+
+            if filename is not None:
+                if Path(filename).exists():
+                    file_input = self.driver.execute_script(JS_LOOKUP["drag_and_drop_file"], to_element, 0, 0)
+                    file_input.send_keys(filename)
+                else:
+                    raise RuntimeError(f"Unable to upload {filename} - its missing")
+            else:
+                from_element = self.el.find_element(locator)
+                self.ctx.driver.execute_script(JS_LOOKUP["dragdrop"], from_element, to_element)
 
     @log_wrapper
     @keyword
