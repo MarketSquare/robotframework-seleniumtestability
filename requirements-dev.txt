@@ -14,6 +14,7 @@ robotframework-timer
 webdrivermanager
 coverage
 robotframework-lint
+robotframework-pythonlibcore
 psutil
 gcg
 -r requirements.txt

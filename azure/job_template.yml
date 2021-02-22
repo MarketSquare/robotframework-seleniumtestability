@@ -24,6 +24,20 @@ jobs:
         outputdir: testresults
         geckodriver: ${{ parameters.geckodriver }}
         chromedriver: ${{ parameters.chromedriver}}
+      Python38:
+        os_name:  ${{ parameters.name }}
+        coverage:  ${{ parameters.coverage}}
+        python_version: '3.8'
+        outputdir: testresults
+        geckodriver: ${{ parameters.geckodriver }}
+        chromedriver: ${{ parameters.chromedriver}}
+      Python39:
+        os_name:  ${{ parameters.name }}
+        coverage:  ${{ parameters.coverage}}
+        python_version: '3.9'
+        outputdir: testresults
+        geckodriver: ${{ parameters.geckodriver }}
+        chromedriver: ${{ parameters.chromedriver}}
     maxParallel: 6
 
   steps:
@@ -45,7 +59,7 @@ jobs:
       architecture: 'x64'
 
   - script: |
-      python -m pip install --upgrade pip
+      python -m pip install --upgrade pip wheel setuptools
       python -m pip install -r requirements-dev.txt
     displayName: 'Install requirements'
 
@@ -55,8 +69,7 @@ jobs:
 
   - bash: |
       brew update
-      brew tap caskroom/cask
-      brew cask install firefox google-chrome
+      brew install --cask firefox google-chrome
     condition: eq( variables['Agent.OS'], 'Darwin' )
     displayName: Install Latest Browsers on OSX
 

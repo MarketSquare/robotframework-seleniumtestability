@@ -10,7 +10,7 @@ Library         Collections
 
 *** Test Cases ***
 Logs With Firefox
-  ${FF}   loggingPrefs  2  7  11
+  ${FF}   loggingPrefs  2  9  11
 
 Logs With Chrome
   ${GC}   goog:loggingPrefs  2  5  10
@@ -26,7 +26,7 @@ Local Setup Test Environment
 
 Test Get Log
   [Arguments]  ${BROWSER}  ${PREFS}  ${ROWS}  ${FIRST}  ${SECOND}
-  [Documentation]  Verifies get_log returns something when possible and doesnt cause errors
+  [Documentation]  Verifies get_log returns something when possible and doesnt cause errors.
   Local Setup Test Environment  ${BROWSER}  ${PREFS}
   Click Button    id:log-button
   ${LOG}=  Get Log  browser
