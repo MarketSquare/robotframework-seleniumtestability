@@ -22,6 +22,6 @@ Dropzone Test
   [Arguments]   ${BROWSER}  ${URL}
   [Documentation]  Drags and drops image from element to another
   Setup Web Environment   ${BROWSER}    ${URL}
-  Element Should Not Contain    xpath://div[@class="dz-filename"]    ${FILENAME}
-  Drag And Drop   file:${CURDIR}${/}${FILENAME}    id:demo-upload
+  Page Should Not Contain    xpath://div[@class="dz-filename"]
+  Drag And Drop   file:${CURDIR}${/}${FILENAME}    xpath://div[contains(concat(' ',normalize-space(@class),' '),' dropzone ')]
   Element Should Contain    xpath://div[@class="dz-filename"]   ${FILENAME}
