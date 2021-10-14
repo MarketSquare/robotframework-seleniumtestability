@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from psutil import Process, wait_procs, NoSuchProcess
-from SeleniumLibrary.base.robotlibcore import DynamicCore, keyword
+from robotlibcore import DynamicCore
+from robot.api.deco import keyword
 from SeleniumTestability.types import ProcessType
 
 
