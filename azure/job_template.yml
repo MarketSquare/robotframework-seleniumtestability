@@ -55,7 +55,7 @@ jobs:
 
   - bash: |
       brew update
-      brew tap caskroom/cask
+      brew tap homebrew/cask
       brew cask install firefox google-chrome
     condition: eq( variables['Agent.OS'], 'Darwin' )
     displayName: Install Latest Browsers on OSX
