@@ -166,20 +166,20 @@ def clean(ctx):
                 fs_entry.unlink()
 
 
-@task
-def changelog(ctx, version=None):
-    if version is not None:
-        version = f"-c {version}"
-    else:
-        version = ""
-    ctx.run(f"gcg -x -o {CHANGELOG} -O rpm {version}")
-    filter_entries(CHANGELOG)
+# @task
+# def changelog(ctx, version=None):
+#     if version is not None:
+#         version = f"-c {version}"
+#     else:
+#         version = ""
+#     ctx.run(f"gcg -x -o {CHANGELOG} -O rpm {version}")
+#     filter_entries(CHANGELOG)
 
 
 @task
 def release(ctx, version=None):
     assert version != None
-    changelog(ctx, version)
+    # changelog(ctx, version)
     docs(ctx)
     ctx.run(f"git add docs{os.path.sep}* {CHANGELOG}")
     ctx.run(f"git commit -m {QUOTE}New Release {version}{QUOTE}")
