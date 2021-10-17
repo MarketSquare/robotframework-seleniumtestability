@@ -15,5 +15,5 @@ webdrivermanager
 coverage
 robotframework-lint
 psutil
-gcg
+#gcg
 -r requirements.txt
