@@ -32,7 +32,7 @@ jobs:
     robotPrefix: 'PATH=~/bin:${PATH} xvfb-run --auto-servernum --server-args="-screen 1, 1600x900x24"'
     coverage: 'true'
     timeout: 20
-    chromedriver: '91.0.4472.77'
+    chromedriver: '91.0.4472.101'
     geckodriver: 'latest'
 - template: azure/artifacts.yml
   parameters:
