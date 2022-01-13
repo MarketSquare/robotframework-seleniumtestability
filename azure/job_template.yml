@@ -55,13 +55,6 @@ jobs:
     displayName: Webdrivers
 
   - bash: |
-      brew update
-      brew tap homebrew/cask
-      brew cask install firefox google-chrome
-    condition: eq( variables['Agent.OS'], 'Darwin' )
-    displayName: Install Latest Browsers on OSX
-
-  - bash: |
       sudo apt-get update --yes
       sudo apt-get install firefox google-chrome-stable --yes
     condition: eq( variables['Agent.OS'], 'Linux' )
