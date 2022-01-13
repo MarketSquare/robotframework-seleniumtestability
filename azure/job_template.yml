@@ -51,6 +51,7 @@ jobs:
 
   - bash: |
       inv webdrivers --chromedriver=$(chromedriver) --geckodriver=$(geckodriver)
+    condition: ne( variables['os_name'], 'OSX' )
     displayName: Webdrivers
 
   - bash: |
