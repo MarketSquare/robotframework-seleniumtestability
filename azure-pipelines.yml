@@ -11,7 +11,7 @@ jobs:
 - template: azure/job_template.yml
   parameters:
     name: 'OSX'
-    vmImage: 'macOS-10.14'
+    vmImage: 'macOS-latest'
     coverage: 'false'
     timeout: 20
     chromedriver: 'latest'
