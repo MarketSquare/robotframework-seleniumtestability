@@ -8,32 +8,32 @@ Library         Timer
 Resource        resources.robot
 
 *** Test Cases ***
-# Verify Fetch In Firefox
-#   ${FF}  fetch-button
+Verify Fetch In Firefox
+  ${FF}  fetch-button  0  0.5
 
 Verify Timeout In Firefox
   ${FF}  shorttimeout-button  3.5  4.5
 
-# Verify XHR In Firefox
-#   ${FF}  xhr-button
+Verify XHR In Firefox
+  ${FF}  xhr-button  0  0.5
 
-# Verify CSS Transition In Firefox
-#   ${FF}  transition-button
+Verify CSS Transition In Firefox
+  ${FF}  transition-button  3.5  4.5
 
 Verify CSS Animation In Firefox
   ${FF}  animate-button  3.5  4.5
 
-# Verify Fetch In Chrome
-#   ${GC}  fetch-button
+Verify Fetch In Chrome
+  ${GC}  fetch-button  0  0.5
 
 Verify Timeout In Chrome
   ${GC}  shorttimeout-button  3.5  4.5
 
-# Verify XHR In Chrome
-#   ${GC}  xhr-button
+Verify XHR In Chrome
+  ${GC}  xhr-button  0  0.5
 
-# Verify CSS Transition In Chrome
-#   ${GC}  transition-button
+Verify CSS Transition In Chrome
+  ${GC}  transition-button  3.5  4.5
 
 Verify CSS Animation In Chrome
   ${GC}  animate-button  3.5  4.5
