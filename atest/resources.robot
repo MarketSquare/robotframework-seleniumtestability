@@ -19,6 +19,7 @@ Setup Web Environment
   ${URL}=  Set Variable  ${URL}
   ${FF_PROFILE}=     Generate Firefox Profile
   Set Selenium Speed  0 seconds
+  Set Selenium Timeout  10 seconds
   Open Browser  ${URL}  browser=${BROWSER}      ff_profile_dir=${FF_PROFILE.path}
   Wait For Document Ready
 
