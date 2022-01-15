@@ -10,34 +10,34 @@ Resource        resources.robot
 
 *** Test Cases ***
 Verify Fetch In Firefox
-  ${FF}  fetch-button  3.5  4.5
+  ${FF}  fetch  executed at least once  3.5  4.5
 
 Verify Timeout In Firefox
-  ${FF}  shorttimeout-button  3.5  4.5
+  ${FF}  shorttimeout  executed at least once  3.5  4.5
 
 Verify XHR In Firefox
-  ${FF}  xhr-button  3.5  4.5
+  ${FF}  xhr  executed at least once  3.5  4.5
 
 Verify CSS Transition In Firefox
-  ${FF}  transition-button  3.5  4.5
+  ${FF}  transition  executed at least once  3.5  4.5
 
 Verify CSS Animation In Firefox
-  ${FF}  animate-button  3.5  4.5
+  ${FF}  animate  executed at least once  3.5  4.5
 
 Verify Fetch In Chrome
-  ${GC}  fetch-button  3.5  4.5
+  ${GC}  fetch  executed at least once  3.5  4.5
 
 Verify Timeout In Chrome
-  ${GC}  shorttimeout-button  3.5  4.5
+  ${GC}  shorttimeout  executed at least once  3.5  4.5
 
 Verify XHR In Chrome
-  ${GC}  xhr-button  3.5  4.5
+  ${GC}  xhr  executed at least once  3.5  4.5
 
 Verify CSS Transition In Chrome
-  ${GC}  transition-button  3.5  4.5
+  ${GC}  transition  executed at least once  3.5  4.5
 
 Verify CSS Animation In Chrome
-  ${GC}  animate-button  3.5  4.5
+  ${GC}  animate  executed at least once  3.5  4.5
 
 *** Keywords ***
 Add Final Benchmark Table
@@ -51,16 +51,20 @@ Internal Suite Teardown
   Remove All Timers
 
 Automatically Call Testability Ready Extra Check
-  [Arguments]  ${BROWSER}  ${ID}  ${HIGHER_THAN}  ${LOWER_THAN}
+  [Arguments]  ${BROWSER}  ${ID}  ${MESSAGE}  ${HIGHER_THAN}  ${LOWER_THAN}
   [Documentation]  test template for manual waiting & injection tests
   Setup Web Environment   ${BROWSER}    ${URL}
   Start Timer  ${TEST NAME}-onClick
-  Click Element  id:${id}
+  Click Element  id:${id}-button
   Stop Timer  ${TEST NAME}-onClick
+  Start Timer  ${TEST NAME}-onGetText
+  Element Text Should Be  id:${id}-result  ${MESSAGE}
+  Stop Timer  ${TEST NAME}-onGetText
   Start Timer  ${TEST NAME}-onWait
   Wait For Testability Ready
   Stop Timer  ${TEST NAME}-onWait
-  Verify Single Timer  ${LOWER_THAN}  ${HIGHER_THAN}  ${TEST NAME}-onClick
+  Verify Single Timer  0.5  0  ${TEST NAME}-onClick
+  Verify Single Timer  ${LOWER_THAN}  ${HIGHER_THAN}  ${TEST NAME}-onGetText
   Verify Single Timer  0.5  0  ${TEST NAME}-onWait
   [Teardown]  Teardown Web Environment
 
