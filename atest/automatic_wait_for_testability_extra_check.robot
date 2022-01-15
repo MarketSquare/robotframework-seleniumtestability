@@ -10,34 +10,34 @@ Resource        resources.robot
 
 *** Test Cases ***
 Verify Fetch In Firefox
-  ${FF}  fetch  executed at least once  3.5  4.5
+  ${FF}  fetch  not executed  executed at least once  3.5  4.5
 
 Verify Timeout In Firefox
-  ${FF}  shorttimeout  executed at least once  3.5  4.5
+  ${FF}  shorttimeout  not executed  executed at least once  3.5  4.5
 
 Verify XHR In Firefox
-  ${FF}  xhr  executed at least once  3.5  4.5
+  ${FF}  xhr  not executed  executed at least once  3.5  4.5
 
 Verify CSS Transition In Firefox
-  ${FF}  transition  executed at least once  3.5  4.5
+  ${FF}  transition  not executed  executed at least once  3.5  4.5
 
 Verify CSS Animation In Firefox
-  ${FF}  animate  executed at least once  3.5  4.5
+  ${FF}  animate  not executed  executed at least once  3.5  4.5
 
 Verify Fetch In Chrome
-  ${GC}  fetch  executed at least once  3.5  4.5
+  ${GC}  fetch  not executed  executed at least once  3.5  4.5
 
 Verify Timeout In Chrome
-  ${GC}  shorttimeout  executed at least once  3.5  4.5
+  ${GC}  shorttimeout  not executed  executed at least once  3.5  4.5
 
 Verify XHR In Chrome
-  ${GC}  xhr  executed at least once  3.5  4.5
+  ${GC}  xhr  not executed  executed at least once  3.5  4.5
 
 Verify CSS Transition In Chrome
-  ${GC}  transition  executed at least once  3.5  4.5
+  ${GC}  transition  not executed  executed at least once  3.5  4.5
 
 Verify CSS Animation In Chrome
-  ${GC}  animate  executed at least once  3.5  4.5
+  ${GC}  animate  not executed  executed at least once  3.5  4.5
 
 *** Keywords ***
 Add Final Benchmark Table
@@ -51,14 +51,15 @@ Internal Suite Teardown
   Remove All Timers
 
 Automatically Call Testability Ready Extra Check
-  [Arguments]  ${BROWSER}  ${ID}  ${MESSAGE}  ${HIGHER_THAN}  ${LOWER_THAN}
+  [Arguments]  ${BROWSER}  ${ID}  ${PRE_MESSAGE}  ${POST_MESSAGE}  ${HIGHER_THAN}  ${LOWER_THAN}
   [Documentation]  test template for manual waiting & injection tests
   Setup Web Environment   ${BROWSER}    ${URL}
+  Element Text Should Be  id:${id}-result  ${PRE_MESSAGE}
   Start Timer  ${TEST NAME}-onClick
   Click Element  id:${id}-button
   Stop Timer  ${TEST NAME}-onClick
   Start Timer  ${TEST NAME}-onGetText
-  Element Text Should Be  id:${id}-result  ${MESSAGE}
+  Element Text Should Be  id:${id}-result  ${POST_MESSAGE}
   Stop Timer  ${TEST NAME}-onGetText
   Start Timer  ${TEST NAME}-onWait
   Wait For Testability Ready
