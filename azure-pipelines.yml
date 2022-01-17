@@ -11,11 +11,11 @@ jobs:
 - template: azure/job_template.yml
   parameters:
     name: 'OSX'
-    vmImage: 'macOS-10.14'
+    vmImage: 'macOS-latest'
     coverage: 'false'
     timeout: 20
-    chromedriver: '83.0.4103.39'
-    geckodriver: 'latest'
+    chromedriver: '96.0.4664.45'
+    geckodriver: 'v0.30.0'
 - template: azure/job_template.yml
   parameters:
     name: 'Windows'
@@ -23,16 +23,16 @@ jobs:
     robotPrefix: 'PATH=~/bin:${PATH}'
     coverage: 'false'
     timeout: 30
-    chromedriver: '83.0.4103.39'
-    geckodriver: 'v0.26.0'
+    chromedriver: 'latest'
+    geckodriver: 'latest'
 - template: azure/job_template.yml
   parameters:
     name: 'Linux'
-    vmImage: 'ubuntu-16.04'
+    vmImage: 'ubuntu-20.04'
     robotPrefix: 'PATH=~/bin:${PATH} xvfb-run --auto-servernum --server-args="-screen 1, 1600x900x24"'
     coverage: 'true'
     timeout: 20
-    chromedriver: '83.0.4103.39'
+    chromedriver: '96.0.4664.45'
     geckodriver: 'latest'
 - template: azure/artifacts.yml
   parameters:

@@ -10,17 +10,17 @@ jobs:
     vmImage: ${{ parameters.vmImage }}
   strategy:
     matrix:
-      Python36:
-        os_name:  ${{ parameters.name }}
-        coverage:  ${{ parameters.coverage}}
-        python_version: '3.6'
-        outputdir: testresults
-        geckodriver: ${{ parameters.geckodriver }}
-        chromedriver: ${{ parameters.chromedriver}}
       Python37:
         os_name:  ${{ parameters.name }}
         coverage:  ${{ parameters.coverage}}
         python_version: '3.7'
+        outputdir: testresults
+        geckodriver: ${{ parameters.geckodriver }}
+        chromedriver: ${{ parameters.chromedriver}}
+      Python38:
+        os_name:  ${{ parameters.name }}
+        coverage:  ${{ parameters.coverage}}
+        python_version: '3.8'
         outputdir: testresults
         geckodriver: ${{ parameters.geckodriver }}
         chromedriver: ${{ parameters.chromedriver}}
@@ -51,14 +51,8 @@ jobs:
 
   - bash: |
       inv webdrivers --chromedriver=$(chromedriver) --geckodriver=$(geckodriver)
+    condition: ne( variables['os_name'], 'OSX' )
     displayName: Webdrivers
-
-  - bash: |
-      brew update
-      brew tap caskroom/cask
-      brew cask install firefox google-chrome
-    condition: eq( variables['Agent.OS'], 'Darwin' )
-    displayName: Install Latest Browsers on OSX
 
   - bash: |
       sudo apt-get update --yes
