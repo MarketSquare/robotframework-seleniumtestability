@@ -1,6 +1,7 @@
 Flask==1.0.2
 Flask-BasicAuth
 twine
+mistune>=2.0.2
 m2r
 python-language-server[all]
 black
