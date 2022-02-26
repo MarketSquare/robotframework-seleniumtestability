@@ -1,5 +1,4 @@
 # flake8: noqa
-from pathlib import Path
 from invoke import task
 from pathlib import Path
 import os
@@ -24,14 +23,6 @@ def filter_entries(filename):
 
 
 assert Path.cwd() == Path(__file__).parent
-
-
-def patch_libdoc():
-    import robot.htmldata
-
-    old_template = Path(robot.htmldata.__file__).parent / robot.htmldata.LIBDOC
-    new_template = Path(__file__).parent / "assets" / "libdoc.html"
-    shutil.copy(str(new_template), str(old_template))
 
 
 @task
@@ -70,7 +61,6 @@ def rflint(ctx):
 @task
 def docs(ctx):
     """Generates keyword docs"""
-    patch_libdoc()
     ctx.run(
         f"python -m robot.libdoc --name {QUOTE}SeleniumLibrary with SeleniumTestability Plugin{QUOTE} --pythonpath src SeleniumLibrary::plugins=SeleniumTestability docs{os.path.sep}keywords.html"
     )
