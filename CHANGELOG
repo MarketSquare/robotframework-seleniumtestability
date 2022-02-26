@@ -1,3 +1,8 @@
+* Sat Feb 26 2022 Ed Manlove <emanlove@verizon.net> - 2.0.0rc1
+- Resolved libdoc issue (rev.46fe0a08)
+- Make compatible with Selenium 4 (rev.26fbd070)
+- Fixed test fixtures and tests (rev.fd2deaec)
+
 * Tue Jun 23 2020 Jani Mikkonen <jani.mikkonen@gmail.com> - 1.1.0
 - Log all js exceptions to logfile with level warn. (rev.14953470)
 - Add support for Drag&Drop files into browser. (rev.3c192843)
