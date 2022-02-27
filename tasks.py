@@ -85,7 +85,7 @@ def black(ctx):
 @task(pre=[generatejs])
 def build(ctx):
     """Generates dist tar ball"""
-    ctx.run("python setup.py sdist")
+    ctx.run("python setup.py sdist bdist_wheel")
 
 
 @task
