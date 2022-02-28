@@ -42,7 +42,7 @@ setup(
     description="SeleniumTestability library that helps speed up tests with" "asyncronous evens",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/rasjani/robotframework-%s" % LIBRARY_NAME.lower(),
+    url="https://github.com/marketsquare/robotframework-%s" % LIBRARY_NAME.lower(),
     author="Jani Mikkonen",
     author_email="jani.mikkonen@gmail.com",
     license="Apache License 2.0",

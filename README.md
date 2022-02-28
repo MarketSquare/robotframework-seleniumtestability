@@ -11,7 +11,7 @@ the web application. For example, if a rest api is called from the application,
 testcase can automatically wait for that call to finish before doing any
 interaction in the UI. There's also a bunch of functionality like fetching of
 browser logs,  keywords to interact with local and session storage.  See the
-keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html?tag=plugin)
+keyword documentation [here](https://marketsquare.github.io/robotframework-seleniumtestability/index.html?tag=plugin)
 for more details.
 
 SeleniumTestability relies on core Selenium's feature EventFiringWebdriver
@@ -87,7 +87,7 @@ python bindings. Do check the keyword documentation for up to date list of keywo
 
 # Keyword Documentation
 
-Keyword documentation [here](https://rasjani.github.io/robotframework-seleniumtestability/index.html?tag=plugin) and if you need to create one for offline usage:
+Keyword documentation [here](https://marketsquare.github.io/robotframework-seleniumtestability/index.html?tag=plugin) and if you need to create one for offline usage:
 
 ```
 python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability
@@ -95,5 +95,5 @@ python -m robot.libdoc SeleniumLibrary::plugins=SeleniumTestability
 
 # Contributing
 
-[CONTRIBUTING.md](https://github.com/rasjani/robotframework-seleniumtestability/blob/master/CONTRIBUTING.md) documents how to setup the environment for further development of SeleniumTestability.
+[CONTRIBUTING.md](https://github.com/marketsquare/robotframework-seleniumtestability/blob/master/CONTRIBUTING.md) documents how to setup the environment for further development of SeleniumTestability.
 
