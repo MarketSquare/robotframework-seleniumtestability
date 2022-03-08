@@ -1,4 +1,7 @@
-* Sat Feb 26 2022 Ed Manlove <emanlove@verizon.net> - 2.0.0rc1
+* Mon Mar 07 2022 Ed Manlove <emanlove@verizon.net> - 2.0.0
+- Updated libdoc html and css to handle long library name (rev.f47807f2)
+- Updated urls repointing towards repo under marketsquare (rev.27140473)
+- Added wheel distribution type to the build (rev.8dd37b22)
 - Resolved libdoc issue (rev.46fe0a08)
 - Make compatible with Selenium 4 (rev.26fbd070)
 - Fixed test fixtures and tests (rev.fd2deaec)
