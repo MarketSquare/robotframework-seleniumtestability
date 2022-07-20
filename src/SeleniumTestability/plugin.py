@@ -143,7 +143,6 @@ class SeleniumTestability(LibraryComponent):
         "ie": DesiredCapabilities.INTERNETEXPLORER,
         "internetexplorer": DesiredCapabilities.INTERNETEXPLORER,
         "edge": DesiredCapabilities.EDGE,
-        "opera": DesiredCapabilities.OPERA,
         "safari": DesiredCapabilities.SAFARI,
         "htmlunit": DesiredCapabilities.HTMLUNIT,
         "htmlunitwithjs": DesiredCapabilities.HTMLUNITWITHJS,
