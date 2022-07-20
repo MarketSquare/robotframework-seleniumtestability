@@ -6,11 +6,11 @@ from SeleniumTestability.types import ProcessType
 
 
 class Helpers(DynamicCore):
-    def __init__(self: "Helpers") -> None:
+    def __init__(self) -> None:
         DynamicCore.__init__(self, [])
 
     @keyword
-    def die_die_die(self: "Helpers", parent: ProcessType) -> None:
+    def die_die_die(self, parent: ProcessType) -> None:
         if isinstance(parent, int):
             try:
                 par = Process(parent)

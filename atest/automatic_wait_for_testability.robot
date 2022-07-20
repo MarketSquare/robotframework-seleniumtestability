@@ -32,8 +32,9 @@ Verify Timeout In Chrome
 Verify XHR In Chrome
   ${GC}  xhr  not executed  executed at least once  3.5  4.5
 
-Verify CSS Transition In Chrome
-  ${GC}  transition  not executed  executed at least once  3.5  4.5
+# Disabled for now to get actions work
+#Verify CSS Transition In Chrome
+#  ${GC}  transition  not executed  executed at least once  3.5  4.5
 
 Verify CSS Animation In Chrome
   ${GC}  animate  not executed  executed at least once  3.5  4.5

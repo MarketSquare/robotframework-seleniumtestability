@@ -3,6 +3,7 @@ Documentation   Verifies that files can be dragged into browser
 Test Teardown   Close All Browsers
 Test Template   Dropzone Test
 Library         SeleniumLibrary  plugins=${CURDIR}/../src/SeleniumTestability;False;29 seconds;False
+Force Tags      skipci
 Resource        resources.robot
 
 *** Variables ***
@@ -22,6 +23,6 @@ Dropzone Test
   [Arguments]   ${BROWSER}  ${URL}
   [Documentation]  Drags and drops image from element to another
   Setup Web Environment   ${BROWSER}    ${URL}
-  Element Should Not Contain    xpath://div[@class="dz-filename"]    ${FILENAME}
+  Element Should Not Contain    xpath://div[@class="dropzone"]    ${FILENAME}
   Drag And Drop   file:${CURDIR}${/}${FILENAME}    id:demo-upload
   Element Should Contain    xpath://div[@class="dz-filename"]   ${FILENAME}

@@ -12,10 +12,11 @@ flake8-deprecated
 flake8-coding
 mypy
 invoke
-robotframework-timer
+robotframework-timer==0.0.6
 webdrivermanager
 coverage
 robotframework-lint
+robotframework-pythonlibcore==3.0.0
 psutil
 gcg
 -r requirements.txt
