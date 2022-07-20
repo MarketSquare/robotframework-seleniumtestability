@@ -10,17 +10,18 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python: [3.8.13]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: [3.7, 3.8, 3.9, 3.10]
         browser: [chrome, firefox]
+        nodejs: 16
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up Python ${{ matrix.python }}
+    - name: Set up Python $({ matrix.python })
       uses: actions/setup-python@v4
       with:
-        python-version: "${{ matrix.python }}"
+        python-version: "$({ matrix.python })"
         cache: 'pip'
         cache-dependency-path: 'requirements-dev.txt'
 
@@ -31,7 +32,7 @@ jobs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: $({ matrix.nodejs })
 
     - name: Build javascript aassets
       run: |
