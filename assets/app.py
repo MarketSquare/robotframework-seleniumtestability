@@ -50,6 +50,10 @@ def fetch():
 def bigpage():
     return render_template('bigpage.html')
 
+@app.route("/context-menu")
+def contextmenu():
+    return render_template('contextmenu.html')
+
 @app.route('/')
 def index():
     return render_template('index.html')

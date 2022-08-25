@@ -132,5 +132,4 @@ var logTrigger = function() {
   logTriggerError()
 }
 
-
 storageTrigger()
