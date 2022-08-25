@@ -910,3 +910,11 @@ class SeleniumTestability(LibraryComponent):
         - ``storage_type`` name of the storage. Valid options: localStorage, sessionStorage
         """
         return self.ctx.driver.execute_script(JS_LOOKUP["storage_removeitem"], storage_type, key)
+
+    @log_wrapper
+    @keyword
+    def right_click_element(self: "SeleniumTestability", locator: LocatorType) -> None:
+        """ Sends right-click event to element identified by ``locator``.
+        This keyword is alias for `Open Context Menu` keyword.
+        """
+        self.el.open_context_menu(locator)
