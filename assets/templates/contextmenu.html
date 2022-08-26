@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      testability test
+    </title>
+  </head>
+  <script type="text/javascript" src="code.js"></script>
+  <body>
+    <table border="1">
+      <tr>
+        <td><div id="contextmenu-trigger">Right click here should update the next cell</td>
+        <td><div id="contextmenu-result">not executed</div></td>
+      </tr>
+    </table>
+    <script>
+    document.getElementById("contextmenu-trigger").oncontextmenu = function(e) {
+      document.getElementById('contextmenu-result').textContent = "executed at least once";
+      e.preventDefault()
+      return false;
+    }
+    </script>
+  </body>
+</html>
