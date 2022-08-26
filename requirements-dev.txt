@@ -17,6 +17,7 @@ webdrivermanager
 coverage
 robotframework-lint
 robotframework-pythonlibcore==3.0.0
+robotframework-ghareports==0.0.5
 psutil
 gcg
 -r requirements.txt

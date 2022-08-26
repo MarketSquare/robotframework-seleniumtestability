@@ -120,7 +120,7 @@ def test(
     if tests is None:
         tests = "atest"
     if skipci:
-        extras = f"{extras} --exclude skipci"
+        extras = f"{extras} --exclude skipci --listener GHAReports"
 
     ctx.run(
         f"{cmd} -m robot --pythonpath src --outputdir {outputdir} --loglevel TRACE:TRACE {extras} {xunit} {tests}"
