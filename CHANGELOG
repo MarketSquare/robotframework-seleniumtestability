@@ -1,4 +1,7 @@
-* Mon Mar 07 2022 Ed Manlove <emanlove@verizon.net> - 2.0.0
+* Fri Aug 26 2022 Jani Mikkonen <jani.mikkonen@gmail.com> - 2.1.0
+- Right Click Element alias for Open Context Menu (#70) (rev.3c73aa0b)
+- Removed OPERA support (#64) (rev.de5b3240)
+- Updated docs using modified libdoc for long library names (rev.bda7711d)
 - Updated libdoc html and css to handle long library name (rev.f47807f2)
 - Updated urls repointing towards repo under marketsquare (rev.27140473)
 - Added wheel distribution type to the build (rev.8dd37b22)
