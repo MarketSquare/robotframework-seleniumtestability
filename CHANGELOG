@@ -1,7 +1,5 @@
 * Tue Feb 14 2023 Ed Manlove <emanlove@verizon.net> - 2.1.0
 - Updated webpack version (rev.500498e0)
-
-* Mon Feb 13 2023 Ed Manlove <emanlove@verizon.net> - 2.1.0
 - Right Click Element alias for Open Context Menu (#70) (rev.3c73aa0b)
 - Removed OPERA support (#64) (rev.de5b3240)
 - Updated docs using modified libdoc for long library names (rev.bda7711d)
