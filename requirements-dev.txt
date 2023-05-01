@@ -1,5 +1,5 @@
 wheel
-Flask==2.0.3
+Flask==2.3.2
 Flask-BasicAuth
 twine
 mistune>=2.0.2
