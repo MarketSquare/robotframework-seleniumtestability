@@ -12,10 +12,10 @@
     "testability-browser-bindings": "^2.0.0",
     "testability.js": "^0.3.1",
     "webpack": "^5.75.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "build": "webpack --silent --config webpack.config.js"
+    "build": "webpack --config webpack.config.js"
   },
   "author": "Jani Mikkonen <jani.mikkonen@gmail.com>",
   "license": "ISC",
